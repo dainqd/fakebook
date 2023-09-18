@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org">
+<head>
+  <title>Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--===============================================================================================-->
+  <link
+          rel="icon"
+          href="../../image/logosem2.png"
+          type="image/png"
+          sizes="700x700"
+  />
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../js/vendor/bootstrap/css/bootstrap.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../js/vendor/animate/animate.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../js/vendor/css-hamburgers/hamburgers.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../js/vendor/select2/select2.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../../css/main.css">
+  <link rel="stylesheet" type="text/css" href="../../css/auth.css">
+  <link rel="stylesheet" type="text/css" href="../../css/base.css">
+  <!--===============================================================================================-->
+</head>
+<body>
+
+<body class="img js-fullheight" style="background-image: url(../../image/bg.jpg);">
+<section class="ftco-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center mb-5">
+        <h2 class="heading-section">Register</h2>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="login-wrap p-0">
+          <h3 class="mb-4 text-center">Don't have an account?</h3>
+          <form action="#" class="signin-form">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+              <input id="password-field" onkeyup='check_pass();' type="password" class="form-control" placeholder="Password"
+                     required>
+              <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+            </div>
+            <div class="form-group">
+              <input id="password-confirm" onkeyup='check_pass();' type="password" class="form-control" placeholder="Password Confirm"
+                     required>
+              <span toggle="#password-confirm" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+            </div>
+            <div class="form-group">
+              <button id="submit" type="submit" class="form-control btn btn-primary submit px-3">Sign Up</button>
+            </div>
+            <div class="form-group d-md-flex">
+              <div class="w-50 text-md-left ml-2">
+                <a href="/auth/forgot-password" style="color: #fff">Forgot Password</a>
+              </div>
+              <div class="w-50 text-md-right mr-2">
+                <a href="/auth/login" style="color: #fff">Sign In</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="../../js/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="../../js/vendor/bootstrap/js/popper.min.js"></script>
+<script src="../../js/vendor/bootstrap.min.js"></script>
+<script src="../../js/auth.js"></script>
+</body>
+
+<script>
+  $('.js-tilt').tilt({
+    scale: 1.1
+  })
+
+  function check_pass() {
+    if (document.getElementById('password-field').value === document.getElementById('password-confirm').value) {
+      document.getElementById('submit').disabled = false;
+    } else {
+      document.getElementById('submit').disabled = true;
+    }
+  }
+</script>
+
+</body>
+</html>
