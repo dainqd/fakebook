@@ -2,6 +2,7 @@ package com.example.fakebook.entities;
 
 import com.example.fakebook.dto.AccountDto;
 import com.example.fakebook.dto.request.RegisterRequest;
+import com.example.fakebook.dto.request.UpdateInfoRequest;
 import com.example.fakebook.entities.basic.BaseEntity;
 import com.example.fakebook.utils.Enums;
 import lombok.*;
@@ -64,5 +65,9 @@ public class Accounts extends BaseEntity {
 
     public Accounts(RegisterRequest registerRequest){
         BeanUtils.copyProperties(registerRequest,this);
+    }
+
+    public Accounts(UpdateInfoRequest updateInfoRequest){
+        BeanUtils.copyProperties(updateInfoRequest,this);
     }
 }
