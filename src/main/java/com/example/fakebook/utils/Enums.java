@@ -6,6 +6,10 @@ public class Enums {
     }
 
     public static enum AccountStatus {
-        ACTIVE, DELETED, DEACTIVE, BLOCKED
+        ACTIVE, DELETED, INACTIVE, BLOCKED
+    }
+
+    public static enum FriendshipStatus {
+        ACTIVE, DELETED, INACTIVE, BLOCKED
     }
 }

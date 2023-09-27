@@ -177,6 +177,12 @@
             <artifactId>spring-boot-starter-reactor-netty</artifactId>
         </dependency>
 
+<!--        Web socket-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
 
     </dependencies>
 

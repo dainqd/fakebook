@@ -60,7 +60,7 @@ public class AuthApi {
         if (!account.isVerified()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messageResourceService.getMessage("account.not.verified"));
         }
-        if (account.getStatus() == Enums.AccountStatus.DEACTIVE) {
+        if (account.getStatus() == Enums.AccountStatus.INACTIVE) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, messageResourceService.getMessage("account.not.active"));
         }
         if (account.getStatus() == Enums.AccountStatus.BLOCKED) {
