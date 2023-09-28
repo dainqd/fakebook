@@ -41,7 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/layout/**",
             "/templates/**",
             "/test/**",
-            "/api/v1/user/**",
             "/api/v1/auth/**",
     };
 

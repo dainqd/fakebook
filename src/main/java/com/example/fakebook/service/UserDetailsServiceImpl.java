@@ -18,14 +18,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     AccountRepository userRepository;
 
-    public List<Accounts> findAll() {
-        return userRepository.findAll();
-    }
-
-    public Optional<Accounts> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
     public Optional<Accounts> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -36,10 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public void save(Accounts user) {
         userRepository.save(user);
-    }
-
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
     }
 
     @Override

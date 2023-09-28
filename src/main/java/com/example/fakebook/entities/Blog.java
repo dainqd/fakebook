@@ -1,8 +1,11 @@
 package com.example.fakebook.entities;
 
+import com.example.fakebook.dto.AccountDto;
+import com.example.fakebook.dto.BlogDto;
 import com.example.fakebook.entities.basic.BaseEntity;
 import com.example.fakebook.utils.Enums;
 import lombok.*;
+import org.springframework.beans.BeanUtils;
 import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
@@ -29,12 +32,10 @@ public class Blog extends BaseEntity {
     private int views;
     private int comments;
     private int shares;
-    @OneToOne
-    @JoinColumn(name = "comment_id")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @Nullable
-    private Comments comment_id;
     @Enumerated(EnumType.STRING)
     private Enums.BlogStatus status = Enums.BlogStatus.ACTIVE;
+
+    public Blog(BlogDto blogDto) {
+        BeanUtils.copyProperties(blogDto, this);
+    }
 }

@@ -37,7 +37,7 @@ public class Accounts extends BaseEntity {
     @NotNull(message = "Incorrect email format!, Please re-enter")
     private String email;
     private String phoneNumber;
-    private Date birthday;
+    private String birthday;
     private String gender;
     private String address;
     private String verifyCode = "";

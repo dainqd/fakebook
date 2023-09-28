@@ -24,7 +24,7 @@ public class UserDetailsIpmpl implements UserDetails {
     private String username;
     private String email;
     private String phoneNumber;
-    private Date birthday;
+    private String birthday;
     private String gender;
     private String address;
     @JsonIgnore
@@ -33,7 +33,7 @@ public class UserDetailsIpmpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsIpmpl(Long id, String avt, String firstname, String lastName, String username, String email,
-                            String phoneNumber, Date birthday, String gender, String address, String password,
+                            String phoneNumber, String birthday, String gender, String address, String password,
                             Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.avt = avt;
