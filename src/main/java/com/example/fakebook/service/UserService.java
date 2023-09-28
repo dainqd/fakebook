@@ -87,7 +87,7 @@ public class UserService {
     }
 
     public Accounts updateInfo(long accountID, UpdateInfoRequest updateInfoRequest) {
-        try {
+//        try {
             Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
             if (!optionalAccounts.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -97,14 +97,14 @@ public class UserService {
 
             BeanUtils.copyProperties(updateInfoRequest, accounts);
             return accountRepository.save(accounts);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("update.error"));
-        }
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
     }
 
     public Accounts changeEmail(long accountID, String email) {
-        try {
+//        try {
             Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
             if (!optionalAccounts.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -113,14 +113,14 @@ public class UserService {
             Accounts accounts = optionalAccounts.get();
             accounts.setEmail(email);
             return accountRepository.save(accounts);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("update.error"));
-        }
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
     }
 
     public Accounts changeUsername(long accountID, String username) {
-        try {
+//        try {
             Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
             if (!optionalAccounts.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -129,14 +129,14 @@ public class UserService {
             Accounts accounts = optionalAccounts.get();
             accounts.setUsername(username);
             return accountRepository.save(accounts);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("update.error"));
-        }
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
     }
 
     public Accounts changePassword(long accountID, RegisterRequest registerRequest) {
-        try {
+//        try {
             Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
             if (!optionalAccounts.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -150,10 +150,10 @@ public class UserService {
             }
             accounts.setPassword(encoder.encode(registerRequest.getPassword()));
             return accountRepository.save(accounts);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("update.error"));
-        }
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
     }
 
     public void deleteById(long id, long adminID) {

@@ -12,4 +12,20 @@ public class Enums {
     public static enum FriendshipStatus {
         ACTIVE, DELETED, INACTIVE, BLOCKED
     }
+
+    public static enum BlogStatus {
+        ACTIVE, DELETED, INACTIVE
+    }
+
+    public static enum CommentStatus {
+        ACTIVE, DELETED, INACTIVE
+    }
+
+    public static enum MessageStatus {
+        SEEN, UNSEEN, HIDDEN, NOT_SEND, SEND, DELETED
+    }
+
+    public static enum NotificationStatus {
+        SEEN, UNSEEN, DELETED
+    }
 }

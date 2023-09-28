@@ -18,7 +18,7 @@ public class UpdateInfoRequest {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Date birthday;
+    private String birthday;
     private String gender;
     private String address;
 

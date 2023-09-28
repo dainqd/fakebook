@@ -37,10 +37,6 @@ public class AccountDto {
     private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
 
     public AccountDto(Accounts accounts) {
-        String pattern = "dd/MM/yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String sDateAsString = df.format(accounts.getBirthday());
         BeanUtils.copyProperties(accounts, this);
-        this.setBirthday(sDateAsString);
     }
 }
