@@ -34,7 +34,7 @@ public class AccountDto {
     private boolean verified = false;
     private String password;
     private Set<Roles> roles = new HashSet<>();
-    private Enums.AccountStatus status = Enums.AccountStatus.DEACTIVE;
+    private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
 
     public AccountDto(Accounts accounts) {
         String pattern = "dd/MM/yyyy";

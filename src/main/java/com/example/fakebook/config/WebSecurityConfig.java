@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/test/**",
             "/api/v1/user/**",
             "/api/v1/auth/**",
+            "/websocket/**",
     };
 
     private static final String[] USER_PATHS = {

@@ -51,7 +51,7 @@ public class Accounts extends BaseEntity {
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();
     @Enumerated(EnumType.STRING)
-    private Enums.AccountStatus status = Enums.AccountStatus.DEACTIVE;
+    private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
 
     public Accounts(String avt, String username, String email) {
         this.avt = avt;
