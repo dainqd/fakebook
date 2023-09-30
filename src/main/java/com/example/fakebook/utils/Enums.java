@@ -28,4 +28,12 @@ public class Enums {
     public static enum NotificationStatus {
         SEEN, UNSEEN, DELETED
     }
+
+    public static enum GroupStatus {
+        ACTIVE, DELETED, INACTIVE
+    }
+
+    public static enum GroupMembersStatus {
+        ACTIVE, DELETED, INACTIVE
+    }
 }
