@@ -27,7 +27,6 @@ import java.util.Set;
 public class UserService {
     final AccountRepository accountRepository;
     final RoleRepository roleRepository;
-    final PasswordEncoder encoder;
     final MessageResourceService messageResourceService;
     final RoleService roleService;
 
@@ -47,7 +46,6 @@ public class UserService {
         try {
             Accounts accounts = new Accounts();
             BeanUtils.copyProperties(accountDto, accounts);
-            accounts.setPassword(encoder.encode(accountDto.getPassword()));
             accounts.setCreatedAt(LocalDateTime.now());
             accounts.setCreatedBy(adminId);
 
@@ -148,7 +146,6 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         messageResourceService.getMessage("account.password.incorrect"));
             }
-            accounts.setPassword(encoder.encode(registerRequest.getPassword()));
             return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

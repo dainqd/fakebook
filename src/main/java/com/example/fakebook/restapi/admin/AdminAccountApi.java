@@ -25,7 +25,6 @@ import java.util.Optional;
 @RequestMapping("admin/api/user")
 public class AdminAccountApi {
     final UserService userService;
-    final UserDetailsServiceImpl userDetailsService;
     final RoleRepository roleRepository;
     final MessageResourceService messageResourceService;
 
@@ -40,14 +39,10 @@ public class AdminAccountApi {
         return userService.findAll(pageable).map(AccountDto::new);
     }
 
-    @GetMapping("{id}/{status}")
-    public AccountDto getDetail(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Enums.AccountStatus status) {
+    @GetMapping("{id}")
+    public AccountDto getDetail(@PathVariable(name = "id") Long id) {
         Optional<Accounts> optionalAccount;
-        if (status != null) {
-            optionalAccount = userService.findByIdAndStatus(id, status);
-        } else {
-            optionalAccount = userService.findById(id);
-        }
+        optionalAccount = userService.findById(id);
         if (!optionalAccount.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("account.not.found"));
@@ -58,7 +53,7 @@ public class AdminAccountApi {
     @PostMapping("")
     public AccountDto create(@RequestBody AccountDto accountDto) {
         String username = Utils.getUsername();
-        Optional<Accounts> optionalAccounts = userDetailsService.findByUsername(username);
+        Optional<Accounts> optionalAccounts = userService.findByUsername(username);
         if (!optionalAccounts.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("id.not.found"));
@@ -70,7 +65,7 @@ public class AdminAccountApi {
     @PutMapping("")
     public String update(@RequestBody AccountDto request) {
         String username = Utils.getUsername();
-        Optional<Accounts> optionalAccounts = userDetailsService.findByUsername(username);
+        Optional<Accounts> optionalAccounts = userService.findByUsername(username);
         if (!optionalAccounts.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("id.not.found"));
@@ -84,7 +79,7 @@ public class AdminAccountApi {
     public ResponseEntity<String> delete(@PathVariable("id") long id) {
         String username = Utils.getUsername();
         System.out.println(username);
-        Optional<Accounts> optionalAccounts = userDetailsService.findByUsername(username);
+        Optional<Accounts> optionalAccounts = userService.findByUsername(username);
         if (!optionalAccounts.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("id.not.found"));
