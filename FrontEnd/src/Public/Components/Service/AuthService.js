@@ -4,9 +4,9 @@ import axios from "axios";
 const API_ENDPOINT = {
     LOGIN_ACCOUNT: "/api/v1/auth/signin",
     REGISTER_ACCOUNT: "/api/v1/auth/signup",
-    REGISTER_VERIFY_ACCOUNT: "/api/v1/auth/verify-signup",
-    // FORGOT_PASSWORD: "/api/auth/forgot-password",
-    // CHANGE_PASSWORD: "/api/auth/verify-forgot-password"
+    REGISTER_VERIFY_ACCOUNT: "/api/v1/auth/verify-register",
+    FORGOT_PASSWORD: "/api/v1/auth/forgot-password",
+    CHANGE_PASSWORD: "/api/v1/auth/verify-forgot-password"
 }
 class AuthService {
 
@@ -22,13 +22,13 @@ class AuthService {
         return axios.post(BASE_URL_SERVER + API_ENDPOINT.REGISTER_VERIFY_ACCOUNT, data);
     }
 
-    // forgotPassword = (data) => {
-    //     return axios.post(BASE_URL_SERVER + API_ENDPOINT.FORGOT_PASSWORD, data);
-    // }
-    //
-    // changePasswordForgot = (data) => {
-    //     return axios.post(BASE_URL_SERVER + API_ENDPOINT.CHANGE_PASSWORD, data);
-    // }
+    forgotPassword = (data) => {
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.FORGOT_PASSWORD, data);
+    }
+
+    changePasswordForgot = (data) => {
+        return axios.post(BASE_URL_SERVER + API_ENDPOINT.CHANGE_PASSWORD, data);
+    }
 }
 const authService = new AuthService();
 export default authService;

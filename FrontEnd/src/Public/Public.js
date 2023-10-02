@@ -3,13 +3,13 @@ import { Route, Routes } from 'react-router-dom'
 import Login from './Components/Account/Login/Login'
 import Register from './Components/Account/Register/Register'
 import RegisterVerify from './Components/Account/Register/RegisterVerify'
-import Dasboard from './Components/Dasboard/Dasboard'
+import Dasboard from './Components/AdminApp/Dasboard/Dasboard'
 import Home from './Components/Home/Home'
 import Profile from './Components/Profile/Profile'
 import Error404 from './Components/Shared/Error/Error404'
-import Create from './Components/User/Create/Create'
-import Detail from './Components/User/Detail/Detail'
-import List from './Components/User/List/List'
+import Create from './Components/AdminApp/User/Create/Create'
+import Detail from './Components/AdminApp/User/Detail/Detail'
+import List from './Components/AdminApp/User/List/List'
 
 function Public() {
     return (

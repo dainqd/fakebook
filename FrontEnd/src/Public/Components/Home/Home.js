@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import Navbar from '../Shared/Navbar/Navbar';
+import Navbar from '../Shared/Client/Navbar/Navbar';
 import "./Home.scss"
 
 function Home() {

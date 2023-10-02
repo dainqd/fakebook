@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Header from '../Shared/Header/Header'
-import Sidebar from '../Shared/Sidebar/Sidebar'
+import Header from '../Shared/Admin/Header/Header'
+import Sidebar from '../Shared/Admin/Sidebar/Sidebar'
 
 function Profile() {
     const AuthName = sessionStorage.getItem("username")
@@ -20,7 +20,7 @@ function Profile() {
                             <li className="breadcrumb-item active">Profile</li>
                         </ol>
                     </nav>
-                </div>{/* End Page Title */}
+                </div>
                 <section className="section profile">
                     <div className="row">
                         <div className="col-xl-4">

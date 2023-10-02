@@ -15,10 +15,8 @@ function Register() {
         }
         await authService.registerAccount(data)
             .then((res) => {
-                localStorage.setItem("username", data.username);
-                localStorage.setItem("email", data.email);
-                message.success("Create account success! Please verify account")
-                navigate("/register-verify")
+                message.success("Create account success! Login to continue!")
+                navigate("/login")
             })
             .catch((err) => {
                 console.log(err)

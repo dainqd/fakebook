@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import Header from '../Shared/Header/Header';
-import Sidebar from '../Shared/Sidebar/Sidebar';
+import Header from '../../Shared/Admin/Header/Header';
+import Sidebar from '../../Shared/Admin/Sidebar/Sidebar';
 
 function Dasboard() {
     return (
