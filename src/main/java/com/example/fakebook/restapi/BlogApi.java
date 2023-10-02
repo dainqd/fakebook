@@ -1,16 +1,11 @@
 package com.example.fakebook.restapi;
 
-import com.example.fakebook.dto.AccountDto;
 import com.example.fakebook.dto.BlogDto;
-import com.example.fakebook.entities.Accounts;
 import com.example.fakebook.entities.Blog;
-import com.example.fakebook.repositories.RoleRepository;
 import com.example.fakebook.service.BlogService;
 import com.example.fakebook.service.MessageResourceService;
-import com.example.fakebook.service.UserDetailsServiceImpl;
 import com.example.fakebook.service.UserService;
 import com.example.fakebook.utils.Enums;
-import com.example.fakebook.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
