@@ -33,12 +33,11 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public Message create(MessageDto messageDto, long adminId) {
+    public Message create(MessageDto messageDto) {
         try {
             Message message = new Message();
             BeanUtils.copyProperties(messageDto, message);
             message.setCreatedAt(LocalDateTime.now());
-            message.setCreatedBy(adminId);
 
             return messageRepository.save(message);
         } catch (Exception exception) {
@@ -90,5 +89,25 @@ public class MessageService {
 
     public Optional<Message> findByIdAndStatus(long id, Enums.MessageStatus status) {
         return messageRepository.findByIdAndStatus(id, status);
+    }
+
+    public Page<Message> findAllByReceiverId(long receiverID, Pageable pageable) {
+        return messageRepository.findAllByReceiverId(receiverID, pageable);
+    }
+
+    public Page<Message> findAllByReceiverIdAndStatus(long receiverID, Enums.MessageStatus status, Pageable pageable) {
+        return messageRepository.findAllByReceiverIdAndStatus(receiverID, status, pageable);
+    }
+
+    public Page<Message> findAllBySenderId(long senderID, Pageable pageable) {
+        return messageRepository.findAllBySenderId(senderID, pageable);
+    }
+
+    public Page<Message> findAllBySenderIdAndStatus(long senderID, Enums.MessageStatus status, Pageable pageable) {
+        return messageRepository.findAllBySenderIdAndStatus(senderID, status, pageable);
+    }
+
+    public Page<Message> findAllBySenderIdAndReceiverId(long senderID, long receiverID, Pageable pageable) {
+        return messageRepository.findAllBySenderIdAndReceiverId(senderID, receiverID, pageable);
     }
 }

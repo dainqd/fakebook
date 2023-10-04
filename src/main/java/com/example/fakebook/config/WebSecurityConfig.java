@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/fonts/**",
             "/lib/**",
             "/icons/**",
-            "/assets/**",
+            "/asset/**",
             "/auth/**",
             "/element/**",
             "/error/**",
@@ -42,7 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/templates/**",
             "/test/**",
             "/api/v1/auth/**",
-            "/websocket/**",
+            "/ws/**",
+            "/app/**",
+            "/login",
+            "/chat",
     };
 
     private static final String[] USER_PATHS = {

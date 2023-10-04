@@ -15,4 +15,9 @@ public class HomeController {
     public String getHomepage() {
         return "v1/views/index";
     }
+
+    @GetMapping("/chat")
+    public String chat() {
+        return "v1/views/chat";
+    }
 }
