@@ -10,7 +10,7 @@ public class Enums {
     }
 
     public static enum FriendshipStatus {
-        ACTIVE, DELETED, INACTIVE, BLOCKED
+        APPROVED, DELETED, PENDING, BLOCKED, NONE
     }
 
     public static enum BlogStatus {

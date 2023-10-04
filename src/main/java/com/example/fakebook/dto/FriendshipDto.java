@@ -14,8 +14,8 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 public class FriendshipDto {
     private long id;
-    private Accounts user_id_first;
-    private Accounts user_id_second;
+    private Accounts receiverId;
+    private Accounts senderId;
     private String status;
 
     public FriendshipDto(Friendships friendships) {

@@ -19,17 +19,17 @@ public class Friendships extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @OneToOne
-    @JoinColumn(name = "user_id_first")
+    @JoinColumn(name = "receiverId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts user_id_first;
+    private Accounts receiverId;
     @OneToOne
-    @JoinColumn(name = "user_id_second")
+    @JoinColumn(name = "senderId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts user_id_second;
+    private Accounts senderId;
     @Enumerated(EnumType.STRING)
-    private Enums.FriendshipStatus status = Enums.FriendshipStatus.ACTIVE;
+    private Enums.FriendshipStatus status = Enums.FriendshipStatus.NONE;
 
     public Friendships(FriendshipDto friendshipDto) {
         BeanUtils.copyProperties(friendshipDto, this);
