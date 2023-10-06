@@ -18,7 +18,19 @@ function Login() {
                 sessionStorage.setItem("id", res.data.id);
                 sessionStorage.setItem("username", res.data.username);
                 message.success(`Welcome ${res.data.username} !`)
-                navigate("/")
+                let roles = res.data.roles;
+                let isAdmin = false;
+                for (let i = 0; i < roles.length; i++) {
+                    if (roles[i] == 'ADMIN') {
+                        isAdmin = true;
+                    }
+                }
+                if (isAdmin) {
+                    navigate('/dashboard')
+                } else {
+                    navigate('/profile')
+                }
+
             })
             .catch((err) => {
                 console.log(err)
@@ -38,7 +50,7 @@ function Login() {
                             <div className="d-flex justify-content-center py-4">
                                 <Link to="/" className="logo d-flex align-items-center w-auto">
                                     <img src="assets/img/logo.png" alt=""></img>
-                                        <span className="d-none d-lg-block">NiceAdmin</span>
+                                    <span className="d-none d-lg-block">NiceAdmin</span>
                                 </Link>
                             </div>
 
@@ -61,12 +73,12 @@ function Login() {
                                                 rules={[
                                                     {
                                                         required: true,
-                                                        message: 'Please input your username!' ,
+                                                        message: 'Please input your username!',
                                                     }
                                                 ]}
                                                 hasFeedback
                                             >
-                                                <Input allowClear type="text" placeholder="Username" />
+                                                <Input allowClear type="text" placeholder="Username"/>
                                             </Form.Item>
                                         </div>
 
@@ -81,7 +93,7 @@ function Login() {
                                                     }
                                                 ]}
                                             >
-                                                <Input allowClear type="password"  placeholder="Password" />
+                                                <Input allowClear type="password" placeholder="Password"/>
                                             </Form.Item>
                                         </div>
 
@@ -106,7 +118,7 @@ function Login() {
                 </div>
             </section>
         </div>
-)
+    )
 }
 
 export default Login

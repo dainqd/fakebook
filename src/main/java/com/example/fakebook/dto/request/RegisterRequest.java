@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 public class RegisterRequest {
     private String username;
     private String email;
+    private String currentPassword;
     private String password;
     private String passwordConfirm;
 

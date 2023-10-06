@@ -3,8 +3,8 @@ import axios from "axios";
 
 const API_ENDPOINT = {
     //
-    FIND_USER_EMAIL: "/api/find/user-by-email/",
-    FIND_USER_USERNAME: "/api/find/user-by-username/",
+    FIND_USER_EMAIL: "/api/v1/user/find/user-by-email/",
+    FIND_USER_USERNAME: "/api/v1/user/find/user-by-username/",
     //
     LIST_ACCOUNT: "/api/v1/user",
     DETAIL_ACCOUNT: "/api/v1/user/",
@@ -23,11 +23,21 @@ const API_ENDPOINT = {
 class AccountService {
     // Find
     findUserByEmail = (email) => {
-        return axios.get(BASE_URL_SERVER + API_ENDPOINT.FIND_USER_EMAIL + email)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            }
+        };
+        return axios.get(BASE_URL_SERVER + API_ENDPOINT.FIND_USER_EMAIL + email, config)
     }
 
     findUserByUsername = (username) => {
-        return axios.get(BASE_URL_SERVER + API_ENDPOINT.FIND_USER_USERNAME + username)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            }
+        };
+        return axios.get(BASE_URL_SERVER + API_ENDPOINT.FIND_USER_USERNAME + username, config)
     }
 
     // api/settings/change-email/1213

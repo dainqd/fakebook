@@ -4,6 +4,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom'
 import accountService from '../../../Service/AccountService';
 import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
+import Footer from "../../../Shared/Admin/Footer/Footer";
 
 
 function Detail() {
@@ -270,6 +271,7 @@ function Detail() {
             </div>
           </section>
         </main>
+          <Footer />
       </>
   )
 }

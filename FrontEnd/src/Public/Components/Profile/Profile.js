@@ -1,10 +1,103 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {Link, useNavigate} from 'react-router-dom'
 import Header from '../Shared/Admin/Header/Header'
 import Sidebar from '../Shared/Admin/Sidebar/Sidebar'
+import Footer from '../Shared/Admin/Footer/Footer'
+import accountService from "../Service/AccountService";
+import {Form, message} from "antd";
 
 function Profile() {
+    const navigate = useNavigate();
     const AuthName = sessionStorage.getItem("username")
+    const Token = sessionStorage.getItem("accessToken")
+
+    const [data, setData] = useState([]);
+
+    const checkLogin = async () => {
+        if (AuthName == null || Token == null){
+            navigate('/login')
+        }
+    };
+
+    const check_pass = async () => {
+        if (document.getElementById('newPassword').value === document.getElementById('renewPassword').value) {
+            document.getElementById('change-pass-btn').disabled = false;
+        } else {
+            document.getElementById('change-pass-btn').disabled = true;
+        }
+    }
+
+    const isUser = async () => {
+        await accountService.findUserByUsername(AuthName)
+            .then((res) => {
+                if (res.status === 200){
+                    console.log("find user" + AuthName, res.data)
+                    setData(res.data);
+                }
+            })
+    };
+
+    //api/upload/image
+
+    const updateInfo = async (values) => {
+        let id = sessionStorage.getItem('id');
+
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var phoneNumber = document.getElementById("phone").value;
+        var birthday = document.getElementById("birthday").value;
+        var gender = document.getElementById("gender").value;
+        var address = document.getElementById("address").value;
+
+        let data = {
+            avatar: "",
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            birthday: birthday,
+            gender: gender,
+            address: address
+        }
+
+        await accountService.updateAccount(id, data)
+            .then((res) => {
+                console.log("update", res.data)
+                alert("Update information success!")
+            })
+            .catch((err) => {
+                console.log(err)
+                message.error("Update information error! Please try again")
+            })
+    };
+
+    const changePass = async (values) => {
+        let id = sessionStorage.getItem('id');
+
+        var oldPassword = document.getElementById("currentPassword").value;
+        var password = document.getElementById("newPassword").value;
+        var confirmPassword = document.getElementById("renewPassword").value;
+
+        let data = {
+            currentPassword: oldPassword,
+            password: password,
+            passwordConfirm: confirmPassword
+        }
+        await accountService.changePassAccount(id, data)
+            .then((res) => {
+                console.log("changepass", res.data)
+                alert("Change password success!")
+            })
+            .catch((err) => {
+                console.log(err)
+                message.error("Change password error! Please try again")
+            })
+    };
+
+    useEffect(() => {
+        checkLogin();
+        isUser();
+        check_pass();
+    }, []);
 
     return (
         <>
@@ -15,26 +108,20 @@ function Profile() {
                     <h1>Profile</h1>
                     <nav>
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><Link to="/dashboard">Home</Link></li>
+                            <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                             <li className="breadcrumb-item">Users</li>
                             <li className="breadcrumb-item active">Profile</li>
                         </ol>
                     </nav>
-                </div>
+                </div>{/* End Page Title */}
                 <section className="section profile">
                     <div className="row">
                         <div className="col-xl-4">
                             <div className="card">
                                 <div className="card-body profile-card pt-4 d-flex flex-column align-items-center">
-                                    <img src="assets/img/profile-img.jpg" alt="Profile" className="rounded-circle" />
+                                    <img src={data.avatar} alt="Profile" className="rounded-circle" />
                                     <h2>{AuthName}</h2>
-                                    <h3>Web Designer</h3>
-                                    <div className="social-links mt-2">
-                                        <Link to="#" className="twitter"><i className="bi bi-twitter" /></Link>
-                                        <Link to="#" className="facebook"><i className="bi bi-facebook" /></Link>
-                                        <Link to="#" className="instagram"><i className="bi bi-instagram" /></Link>
-                                        <Link to="#" className="linkedin"><i className="bi bi-linkedin" /></Link>
-                                    </div>
+                                    <h3>{data.email}</h3>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +136,7 @@ function Profile() {
                                             <button className="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
                                         </li>
                                         <li className="nav-item">
-                                            <button className="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button>
+                                            <button className="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Options</button>
                                         </li>
                                         <li className="nav-item">
                                             <button className="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
@@ -57,127 +144,106 @@ function Profile() {
                                     </ul>
                                     <div className="tab-content pt-2">
                                         <div className="tab-pane fade show active profile-overview" id="profile-overview">
-                                            <h5 className="card-title">About</h5>
-                                            <p className="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde.</p>
                                             <h5 className="card-title">Profile Details</h5>
                                             <div className="row">
-                                                <div className="col-lg-3 col-md-4 label ">Full Name</div>
-                                                <div className="col-lg-9 col-md-8">{AuthName}</div>
+                                                <div className="col-lg-3 col-md-4 label ">Full Name: </div>
+                                                <div className="col-lg-9 col-md-8">{data.firstName} {data.lastName}</div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Company</div>
-                                                <div className="col-lg-9 col-md-8">Lueilwitz, Wisoky and Leuschke</div>
+                                                <div className="col-lg-3 col-md-4 label">Username: </div>
+                                                <div className="col-lg-9 col-md-8">{data.username}</div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Job</div>
-                                                <div className="col-lg-9 col-md-8">Web Designer</div>
+                                                <div className="col-lg-3 col-md-4 label">Gender</div>
+                                                <div className="col-lg-9 col-md-8">{data.gender}</div>
                                             </div>
                                             <div className="row">
-                                                <div className="col-lg-3 col-md-4 label">Country</div>
-                                                <div className="col-lg-9 col-md-8">USA</div>
+                                                <div className="col-lg-3 col-md-4 label">Birthday</div>
+                                                <div className="col-lg-9 col-md-8">{data.birthday}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Address</div>
-                                                <div className="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
+                                                <div className="col-lg-9 col-md-8">{data.address}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Phone</div>
-                                                <div className="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
+                                                <div className="col-lg-9 col-md-8">{data.phoneNumber}</div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-lg-3 col-md-4 label">Email</div>
-                                                <div className="col-lg-9 col-md-8">k.anderson@example.com</div>
+                                                <div className="col-lg-9 col-md-8">{data.email}</div>
                                             </div>
                                         </div>
                                         <div className="tab-pane fade profile-edit pt-3" id="profile-edit">
                                             {/* Profile Edit Form */}
-                                            <form>
+                                            <Form className="form-update-info" onFinish={updateInfo}>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="profileImage" className="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                                                    <label htmlFor="profileImage" className="col-md-4 col-lg-3 col-form-label">Avatar: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <img src="assets/img/profile-img.jpg" alt="Profile" />
+                                                        <img style={{borderRadius:"50%"}} src={data.avatar} alt="Profile" />
                                                         <div className="pt-2">
-                                                            <Link to="#" className="btn btn-primary btn-sm" title="Upload new profile image"><i className="bi bi-upload" /></Link>
-                                                            <Link to="#" className="btn btn-danger btn-sm" title="Remove my profile image"><i className="bi bi-trash" /></Link>
+                                                            <div className="btn btn-primary btn-sm" >
+                                                                <label className="upload position-relative">
+                                                                    <p className="mb-0"><i
+                                                                        className="bi bi-cloud-arrow-up text-white fs-6"></i>
+                                                                    </p>
+                                                                    <input
+                                                                        className="opacity-0 hidden position-absolute" style={{padding:"8px"}}
+                                                                        type="file" name="avt"></input>
+                                                                </label>
+                                                            </div>
+                                                            <Link to="#" className="btn btn-danger btn-sm"
+                                                                  title="Remove my profile image"><i
+                                                                className="bi bi-trash"></i></Link>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="fullName" className="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                                                    <label htmlFor="fullName" className="col-md-4 col-lg-3 col-form-label">First Name: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="fullName" type="text" className="form-control" id="fullName" defaultValue={AuthName} />
+                                                        <input name="firstName" type="text" className="form-control" id="firstName" defaultValue={data.firstName} />
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="about" className="col-md-4 col-lg-3 col-form-label">About</label>
+                                                    <label htmlFor="about" className="col-md-4 col-lg-3 col-form-label">Last Name: </label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <textarea name="about" className="form-control" id="about" style={{ height: 100 }} defaultValue={"Sunt est soluta temporibus accusantium neque nam maiores cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at unde."} />
+                                                        <input name="lastName" type="text" className="form-control" id="lastName" defaultValue={data.lastName} />                                                    </div>
+                                                </div>
+                                                <div className="row mb-3">
+                                                    <label htmlFor="company" className="col-md-4 col-lg-3 col-form-label">Username: </label>
+                                                    <div className="col-md-8 col-lg-9">
+                                                        {/*<input name="username" type="text" className="form-control" id="username" defaultValue={data.username} />*/}
+                                                        <span className="form-control">{data.username}</span>
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="company" className="col-md-4 col-lg-3 col-form-label">Company</label>
+                                                    <label htmlFor="Job" className="col-md-4 col-lg-3 col-form-label">Gender</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="company" type="text" className="form-control" id="company" defaultValue="Lueilwitz, Wisoky and Leuschke" />
+                                                        <input name="gender" type="text" className="form-control" id="gender" defaultValue={data.gender} />
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
-                                                    <label htmlFor="Job" className="col-md-4 col-lg-3 col-form-label">Job</label>
+                                                    <label htmlFor="Country" className="col-md-4 col-lg-3 col-form-label">Birthday</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="job" type="text" className="form-control" id="Job" defaultValue="Web Designer" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Country" className="col-md-4 col-lg-3 col-form-label">Country</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="country" type="text" className="form-control" id="Country" defaultValue="USA" />
+                                                        <input name="birthday" type="text" className="form-control" id="birthday" defaultValue={data.birthday} />
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
                                                     <label htmlFor="Address" className="col-md-4 col-lg-3 col-form-label">Address</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="address" type="text" className="form-control" id="Address" defaultValue="A108 Adam Street, New York, NY 535022" />
+                                                        <input name="address" type="text" className="form-control" id="address" defaultValue={data.address} />
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
                                                     <label htmlFor="Phone" className="col-md-4 col-lg-3 col-form-label">Phone</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="phone" type="text" className="form-control" id="Phone" defaultValue="(436) 486-3538 x29071" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Email" className="col-md-4 col-lg-3 col-form-label">Email</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="email" type="email" className="form-control" id="Email" defaultValue="k.anderson@example.com" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Twitter" className="col-md-4 col-lg-3 col-form-label">Twitter Profile</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="twitter" type="text" className="form-control" id="Twitter" defaultValue="https://twitter.com/#" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Facebook" className="col-md-4 col-lg-3 col-form-label">Facebook Profile</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="facebook" type="text" className="form-control" id="Facebook" defaultValue="https://facebook.com/#" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Instagram" className="col-md-4 col-lg-3 col-form-label">Instagram Profile</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="instagram" type="text" className="form-control" id="Instagram" defaultValue="https://instagram.com/#" />
-                                                    </div>
-                                                </div>
-                                                <div className="row mb-3">
-                                                    <label htmlFor="Linkedin" className="col-md-4 col-lg-3 col-form-label">Linkedin Profile</label>
-                                                    <div className="col-md-8 col-lg-9">
-                                                        <input name="linkedin" type="text" className="form-control" id="Linkedin" defaultValue="https://linkedin.com/#" />
+                                                        <input name="phone" type="text" className="form-control" id="phone" defaultValue={data.phoneNumber} />
                                                     </div>
                                                 </div>
                                                 <div className="text-center">
                                                     <button type="submit" className="btn btn-primary">Save Changes</button>
                                                 </div>
-                                            </form>{/* End Profile Edit Form */}
+                                            </Form>{/* End Profile Edit Form */}
                                         </div>
                                         <div className="tab-pane fade pt-3" id="profile-settings">
                                             {/* Settings Form */}
@@ -218,7 +284,7 @@ function Profile() {
                                         </div>
                                         <div className="tab-pane fade pt-3" id="profile-change-password">
                                             {/* Change Password Form */}
-                                            <form>
+                                            <Form className="form-change-password" onFinish={changePass}>
                                                 <div className="row mb-3">
                                                     <label htmlFor="currentPassword" className="col-md-4 col-lg-3 col-form-label">Current Password</label>
                                                     <div className="col-md-8 col-lg-9">
@@ -228,27 +294,28 @@ function Profile() {
                                                 <div className="row mb-3">
                                                     <label htmlFor="newPassword" className="col-md-4 col-lg-3 col-form-label">New Password</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="newpassword" type="password" className="form-control" id="newPassword" />
+                                                        <input name="newpassword" type="password" onKeyUp={check_pass} className="form-control" id="newPassword" />
                                                     </div>
                                                 </div>
                                                 <div className="row mb-3">
                                                     <label htmlFor="renewPassword" className="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                                                     <div className="col-md-8 col-lg-9">
-                                                        <input name="renewpassword" type="password" className="form-control" id="renewPassword" />
+                                                        <input name="renewpassword" type="password" onKeyUp={check_pass} className="form-control" id="renewPassword" />
                                                     </div>
                                                 </div>
                                                 <div className="text-center">
-                                                    <button type="submit" className="btn btn-primary">Change Password</button>
+                                                    <button id="change-pass-btn" type="submit" className="btn btn-primary">Change Password</button>
                                                 </div>
-                                            </form>{/* End Change Password Form */}
+                                            </Form>
                                         </div>
-                                    </div>{/* End Bordered Tabs */}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-            </main>{/* End #main */}
+            </main>
+            <Footer />
         </>
 
     )

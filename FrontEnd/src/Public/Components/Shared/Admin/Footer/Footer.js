@@ -6,10 +6,10 @@ function Footer() {
         <div>
             <footer id="footer" className="footer">
                 <div className="copyright">
-                    © Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+                    © Copyright <strong><span>Fakebook</span></strong>. All Rights Reserved
                 </div>
                 <div className="credits">
-                    Designed by <Link to="#">BootstrapMade</Link>
+                    Designed by <Link to="#">Fakebook Team</Link>
                 </div>
             </footer>
         </div>

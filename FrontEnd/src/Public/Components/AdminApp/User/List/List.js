@@ -4,6 +4,7 @@ import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
 import { Button, Form, message, Table } from 'antd';
 import accountService from '../../../Service/AccountService';
 import { Link } from 'react-router-dom';
+import Footer from "../../../Shared/Admin/Footer/Footer";
 
 // Modal Component
 function DeleteAccountModal({ id, handleDelete }) {
@@ -173,6 +174,7 @@ function List() {
                     onChange={handleTableChange}
                 />
             </main>
+            <Footer />
         </div>
     );
 }

@@ -9,7 +9,7 @@ function Header() {
     const handleLogout = () => {
         sessionStorage.clear();
         message.success("Logout")
-        navigate("/login")
+        navigate("/")
     }
 
     return (

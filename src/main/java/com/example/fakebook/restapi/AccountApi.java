@@ -43,6 +43,28 @@ public class AccountApi {
         return new AccountDto(optionalAccount.get());
     }
 
+    @GetMapping("find/user-by-email/{email}")
+    public AccountDto findUserByEmail(@PathVariable(name = "email") String email) {
+        Optional<Accounts> optionalAccount;
+        optionalAccount = userService.findByEmail(email);
+        if (!optionalAccount.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        return new AccountDto(optionalAccount.get());
+    }
+
+    @GetMapping("find/user-by-username/{username}")
+    public AccountDto findUserByUsername(@PathVariable(name = "username") String username) {
+        Optional<Accounts> optionalAccount;
+        optionalAccount = userService.findByUsername(username);
+        if (!optionalAccount.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        return new AccountDto(optionalAccount.get());
+    }
+
     @PutMapping("/update-information/{id}")
     public String updateInfomation(@PathVariable(name = "id") Long id, @RequestBody UpdateInfoRequest request) {
         Optional<Accounts> optionalAccounts = userService.findById(id);

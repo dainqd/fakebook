@@ -29,6 +29,7 @@ public class UserService {
     final RoleRepository roleRepository;
     final MessageResourceService messageResourceService;
     final RoleService roleService;
+    final PasswordEncoder encoder;
 
     public Page<Accounts> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
@@ -86,15 +87,15 @@ public class UserService {
 
     public Accounts updateInfo(long accountID, UpdateInfoRequest updateInfoRequest) {
 //        try {
-            Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-            if (!optionalAccounts.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            Accounts accounts = optionalAccounts.get();
+        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        Accounts accounts = optionalAccounts.get();
 
-            BeanUtils.copyProperties(updateInfoRequest, accounts);
-            return accountRepository.save(accounts);
+        BeanUtils.copyProperties(updateInfoRequest, accounts);
+        return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 //                    messageResourceService.getMessage("update.error"));
@@ -103,14 +104,14 @@ public class UserService {
 
     public Accounts changeEmail(long accountID, String email) {
 //        try {
-            Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-            if (!optionalAccounts.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            Accounts accounts = optionalAccounts.get();
-            accounts.setEmail(email);
-            return accountRepository.save(accounts);
+        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        Accounts accounts = optionalAccounts.get();
+        accounts.setEmail(email);
+        return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 //                    messageResourceService.getMessage("update.error"));
@@ -119,14 +120,14 @@ public class UserService {
 
     public Accounts changeUsername(long accountID, String username) {
 //        try {
-            Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-            if (!optionalAccounts.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            Accounts accounts = optionalAccounts.get();
-            accounts.setUsername(username);
-            return accountRepository.save(accounts);
+        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        Accounts accounts = optionalAccounts.get();
+        accounts.setUsername(username);
+        return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 //                    messageResourceService.getMessage("update.error"));
@@ -135,18 +136,26 @@ public class UserService {
 
     public Accounts changePassword(long accountID, RegisterRequest registerRequest) {
 //        try {
-            Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-            if (!optionalAccounts.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            Accounts accounts = optionalAccounts.get();
+        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        Accounts accounts = optionalAccounts.get();
 
-            if (!registerRequest.getPassword().equals(registerRequest.getPasswordConfirm())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.password.incorrect"));
-            }
-            return accountRepository.save(accounts);
+        boolean result = encoder.matches(registerRequest.getCurrentPassword(), accounts.getPassword());
+        System.out.println(result);
+        if (!result){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.password.incorrect"));
+        }
+
+        if (!registerRequest.getPassword().equals(registerRequest.getPasswordConfirm())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.password.invalid"));
+        }
+        accounts.setPassword(encoder.encode(registerRequest.getPassword()));
+        return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 //                    messageResourceService.getMessage("update.error"));
@@ -180,5 +189,9 @@ public class UserService {
 
     public Optional<Accounts> findByUsername(String username) {
         return accountRepository.findByUsername(username);
+    }
+
+    public Optional<Accounts> findByEmail(String email) {
+        return accountRepository.findByEmail(email);
     }
 }
