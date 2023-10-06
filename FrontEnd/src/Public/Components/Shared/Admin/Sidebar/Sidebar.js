@@ -35,12 +35,12 @@ function Sidebar() {
                         </Link>
                         <ul id="charts-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="charts-chartjs.html">
+                                <a href="/admin/blog/create">
                                     <i className="bi bi-circle" /><span>List Blog</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="charts-apexcharts.html">
+                                <a href="/admin/blog/create">
                                     <i className="bi bi-circle" /><span>Create Blog</span>
                                 </a>
                             </li>

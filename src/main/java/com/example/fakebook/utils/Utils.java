@@ -4,6 +4,7 @@ import com.example.fakebook.entities.Accounts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.text.*;
 import java.time.Instant;
@@ -140,18 +141,25 @@ public class Utils {
         return s;
     }
 
+//    public static String getUsername() {
+//        Accounts adminName = (Accounts) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        System.out.println(adminName);
+////        Pattern pattern = Pattern.compile("username=([^,\\s]+)");
+////        Matcher matcher = pattern.matcher(adminName);
+////        String username;
+////        if (matcher.find()) {
+////            username = matcher.group(1);
+////        } else {
+////            username = "admin";
+////        }
+//        return adminName.getUsername();
+//    }
+
     public static String getUsername() {
-        Accounts adminName = (Accounts) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Pattern pattern = Pattern.compile("username=([^,\\s]+)");
-//        Matcher matcher = pattern.matcher(adminName);
-//        String username;
-//        if (matcher.find()) {
-//            username = matcher.group(1);
-//        } else {
-//            username = "admin";
-//        }
-        return adminName.getUsername();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
     }
+
 
     private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
 

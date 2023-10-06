@@ -302,7 +302,7 @@ function Create() {
 
                       <div className="col-12">
                         <Form.Item>
-                          <Button htmlType="submit" type="primary">Submit form</Button>
+                          <Button htmlType="submit" type="primary">Submit</Button>
                         </Form.Item>
                       </div>
                     </Form>

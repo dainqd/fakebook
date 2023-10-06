@@ -11,6 +11,8 @@ import Create from './Components/AdminApp/User/Create/Create'
 import Detail from './Components/AdminApp/User/Detail/Detail'
 import List from './Components/AdminApp/User/List/List'
 
+import BlogCreate from './Components/AdminApp/Blog/Create/Create'
+
 function Public() {
     return (
         <div>
@@ -25,6 +27,9 @@ function Public() {
                 <Route path='/account/:id' element={<Detail />} />
                 <Route path='/*' element={<Error404 />} />
                 <Route path='/profile' element={<Profile />} />
+                {/*blog*/}
+                {/*<Route path='/admin/blog/list' element={<BlogCreate />} />*/}
+                <Route path='/admin/blog/create' element={<BlogCreate />} />
             </Routes>
         </div>
     )

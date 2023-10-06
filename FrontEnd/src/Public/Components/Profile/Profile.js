@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import Header from '../Shared/Admin/Header/Header'
-import Sidebar from '../Shared/Admin/Sidebar/Sidebar'
+import Sidebar from '../Shared/Client/Sidebar/Sidebar'
 import Footer from '../Shared/Admin/Footer/Footer'
 import accountService from "../Service/AccountService";
 import {Form, message} from "antd";
@@ -31,7 +31,6 @@ function Profile() {
         await accountService.findUserByUsername(AuthName)
             .then((res) => {
                 if (res.status === 200){
-                    console.log("find user" + AuthName, res.data)
                     setData(res.data);
                 }
             })

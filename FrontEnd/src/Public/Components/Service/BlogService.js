@@ -10,12 +10,12 @@ const API_ENDPOINT = {
     UPDATE_BLOG: "/admin/api/blog",
     DELETE_BLOG: "/admin/api/blog/",
     //
-    ADMIN_LIST_BLOG: "/admin/api/blog",
-    ADMIN_LIST_STATUS_BLOG: "/admin/api/blog/",
-    ADMIN_DETAIL_BLOG: "/admin/api/blog/",
-    ADMIN_CREATE_BLOG: "/admin/api/blog",
-    ADMIN_UPDATE_BLOG: "/admin/api/blog",
-    ADMIN_DELETE_BLOG: "/admin/api/blog/",
+    ADMIN_LIST_BLOG: "/admin/api/blogs",
+    ADMIN_LIST_STATUS_BLOG: "/admin/api/blogs/",
+    ADMIN_DETAIL_BLOG: "/admin/api/blogs/",
+    ADMIN_CREATE_BLOG: "/admin/api/blogs",
+    ADMIN_UPDATE_BLOG: "/admin/api/blogs",
+    ADMIN_DELETE_BLOG: "/admin/api/blogs/",
 }
 class BlogService {
 
