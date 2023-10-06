@@ -49,7 +49,7 @@ public class UserService {
             BeanUtils.copyProperties(accountDto, accounts);
             accounts.setCreatedAt(LocalDateTime.now());
             accounts.setCreatedBy(adminId);
-
+            accounts.setPassword(encoder.encode(accountDto.getPassword()));
             accounts.setVerified(true);
             Set<Roles> roles = new HashSet<>();
             Roles userRole = roleService.findByName(Enums.Roles.USER)

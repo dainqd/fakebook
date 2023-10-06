@@ -51,8 +51,6 @@ function Header() {
                     }
                     if (itemAdmin) {
                         localStorage.setItem('isAdmin', 1);
-                    } else {
-                        navigate('/not-found')
                     }
                 }
             })

@@ -14,6 +14,7 @@ function Login() {
         }
         await authService.loginAccount(data)
             .then((res) => {
+                localStorage.clear();
                 sessionStorage.setItem("accessToken", res.data.token);
                 sessionStorage.setItem("id", res.data.id);
                 sessionStorage.setItem("username", res.data.username);
