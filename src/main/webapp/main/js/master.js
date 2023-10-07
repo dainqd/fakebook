@@ -29,3 +29,65 @@ function logout() {
     deleteCookie('username');
     window.location.href = '/login';
 }
+
+// async function checkAdmin(token) {
+//     let url = ``;
+//
+//     let headers = {
+//         'content-type': 'application/json',
+//         'Authorization': `Bearer ${token}`
+//     };
+//
+//     await
+//         $.ajax({
+//             url: url,
+//             method: 'GET',
+//             data: headers,
+//         })
+//             .done(function (response) {
+//                 return response.json();
+//             })
+//             .fail(function (_, textStatus) {
+//
+//                 console.log(textStatus)
+//             });
+//
+// }
+var isAdmin = false;
+
+async function checkAdmin() {
+    await fetch('http://localhost:8888/api/v1/user/find/user-by-username/' + username, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(response => {
+            if (response.status == 200) {
+                return response.json();
+            }
+        })
+        .then((response) => {
+            let listRole = response.roles;
+            for (let i = 0; i < listRole.length; i++) {
+                if (listRole[i].name == 'ADMIN') {
+                    isAdmin = true;
+                }
+            }
+        })
+        .catch(error => console.log(error));
+}
+
+checkAdmin();
+
+async function adminOpen() {
+    let admin = $('#myAdmin');
+    await admin.removeClass('d-none');
+
+    await admin.on('click', function () {
+        window.location.href = 'http://localhost:3000';
+    })
+}
+
+adminOpen();
