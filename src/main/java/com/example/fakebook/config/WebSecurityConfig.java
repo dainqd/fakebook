@@ -20,7 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] IGNORE_PATHS = {
+            // env
             "/", "/css/**", "/img/**", "/favicon.ico",
+            //config swagger
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/webjars/**",
@@ -28,22 +30,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/privacy",
             "/v2/api-docs",
             "/configuration/ui",
+            // templates
             "/js/**",
             "/fonts/**",
             "/lib/**",
             "/icons/**",
             "/assets/**",
             "/auth/**",
+            "/main/**",
             "/error/**",
             "/v1/**",
             "/views/**",
             "/layout/**",
             "/templates/**",
-            "/test/**",
+            // auth api
             "/api/v1/auth/**",
+            // auth url
             "/login",
             "/register",
+            // websocket
             "/websocket/**",
+            //main url
     };
 
     private static final String[] USER_PATHS = {

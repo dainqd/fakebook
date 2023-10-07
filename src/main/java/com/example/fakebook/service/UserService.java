@@ -211,6 +211,13 @@ public class UserService {
         response.addCookie(accessCookie);
     }
 
+    public void clearAccessCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
     public Accounts active(Accounts account) {
         account.setVerified(true);
         account.setVerifyCode(null);

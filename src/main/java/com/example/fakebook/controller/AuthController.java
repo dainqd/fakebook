@@ -55,6 +55,13 @@ public class AuthController {
         return "v1/auth/register";
     }
 
+    @GetMapping("logout")
+    public String logout(HttpServletResponse response) {
+        userDetailsService.clearAccessCookie(response, "accessToken");
+        userDetailsService.clearAccessCookie(response, "username");
+        return "v1/auth/login";
+    }
+
     @PostMapping("login")
     public String processServiceLogin(
             @Valid @ModelAttribute LoginRequest loginRequest,
