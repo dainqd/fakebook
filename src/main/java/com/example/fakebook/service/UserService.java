@@ -13,14 +13,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.servlet.http.Cookie;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,9 @@ public class UserService {
     final MessageResourceService messageResourceService;
     final RoleService roleService;
     final PasswordEncoder encoder;
+
+    public static final String ACCESS_TOKEN_KEY = "accessToken";
+    private static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Page<Accounts> findAll(Pageable pageable) {
         return accountRepository.findAll(pageable);
@@ -193,5 +199,28 @@ public class UserService {
 
     public Optional<Accounts> findByEmail(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    public boolean checkPasswordMatch(String rawPassword, Accounts accounts) {
+        return passwordEncoder.matches(rawPassword, accounts.getPassword());
+    }
+
+    public void saveAccessCookie(HttpServletResponse response, String accessToken) {
+        Cookie accessCookie = new Cookie(ACCESS_TOKEN_KEY, accessToken);
+        accessCookie.setSecure(true);
+        response.addCookie(accessCookie);
+    }
+
+    public Accounts active(Accounts account) {
+        account.setVerified(true);
+        account.setVerifyCode(null);
+        account.setStatus(Enums.AccountStatus.ACTIVE);
+        account.setUpdatedAt(LocalDateTime.now());
+        account.setUpdatedBy(account.getId());
+        return this.save(account);
+    }
+
+    public boolean checkVerifyCode(Accounts account, String verifyCode) {
+        return account.getVerifyCode().equals(verifyCode);
     }
 }

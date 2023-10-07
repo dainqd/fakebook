@@ -36,3 +36,4 @@ mvnw
 mvnw.cmd
 ### Setting ###
 src/main/resources/application.properties
+src/main/webapp/templates/baseAdminTemplate

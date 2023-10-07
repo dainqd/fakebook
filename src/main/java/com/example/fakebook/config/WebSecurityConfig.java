@@ -34,7 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/icons/**",
             "/assets/**",
             "/auth/**",
-            "/element/**",
             "/error/**",
             "/v1/**",
             "/views/**",
@@ -42,6 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/templates/**",
             "/test/**",
             "/api/v1/auth/**",
+            "/login",
+            "/register",
             "/websocket/**",
     };
 
