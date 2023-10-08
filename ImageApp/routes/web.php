@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('upload-image', [ImageServeController::class, 'uploadImage'])->name('user.upload.image');
+Route::get('upload-image', [ImageServeController::class, 'uploadImage'])->name('show.upload.image');
+Route::post('upload-image', [ImageServeController::class, 'uploadImageMain'])->name('user.upload.image');

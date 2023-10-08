@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head th:insert="fragments/main.html :: header-main(Fakebook)"></head>
+
 <body>
 <div class="theme-layout">
     <div class="" th:insert="fragments/main.html :: headerMain"></div>
@@ -106,7 +107,8 @@
                                 <div class="central-meta">
                                     <div class="new-postbox">
                                         <figure>
-                                            <img class="avtCurrentUser" th:src="@{/main/images/resources/admin2.jpg}" alt="">
+                                            <img class="avtCurrentUser" th:src="@{/main/images/resources/admin2.jpg}"
+                                                 alt="">
                                         </figure>
                                         <div class="newpst-input">
                                             <form method="post">
@@ -114,27 +116,10 @@
                                                 <div class="attachments">
                                                     <ul>
                                                         <li>
-                                                            <i class="fa fa-music"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-image"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-video-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
+                                                            <i id="uploadImage" data-toggle="modal"
+                                                               data-target="#myModalItem" class="fa fa-image"></i>
+                                                            <label class="fileContainer d-none">
+                                                                <input id="inputThumbnail" name="thumbnail" type="file">
                                                             </label>
                                                         </li>
                                                         <li>
@@ -431,6 +416,13 @@
         </div>
     </section>
 
+    <!-- The Modal -->
+    <div class="modal" id="myModalItem">
+        <div class="" id="myModal">
+
+        </div>
+    </div>
+
     <div class="" th:insert="fragments/main.html :: footerMain"></div>
 </div>
 </body>
@@ -438,7 +430,6 @@
 <script th:src="@{/main/js/master.js}"></script>
 <script>
     $(document).ready(function () {
-
         $('.commentShow').on('click', function () {
             let id = $(this).data('id');
             let element = $('#listComment-' + id);
@@ -541,6 +532,28 @@
             });
     }
 
+    async function showFormUpload() {
+        try {
+            const url = `http://127.0.0.1:8000/upload-image`;
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+            })
+                .done(function (response) {
+                    $('#myModal').empty().append(response);
+                })
+                .fail(function (_, textStatus) {
+                    console.log(textStatus)
+                });
+
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    showFormUpload();
 </script>
 <script>
     const socket = new WebSocket('ws://localhost:8888/websocket');

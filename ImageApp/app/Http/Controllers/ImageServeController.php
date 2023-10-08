@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 
 class ImageServeController extends Controller
 {
-    public function uploadImage(Request $request)
+    public function uploadImageMain(Request $request)
     {
+        $imageName = null;
         if ($request->hasFile('thumbnail')) {
             $thumbnail = $request->file('thumbnail');
-            $thumbnailPath = $thumbnail->store('thumbnails', 'public');
-            $imageName = asset('images/' . $thumbnailPath);
+            $thumbnailPath = $thumbnail->store('images/thumbnails', 'public');
+            $imageName = asset('storage/' . $thumbnailPath);
         }
         return $imageName;
+    }
+
+    public function uploadImage()
+    {
+        return view('welcome');
     }
 }
