@@ -46,12 +46,12 @@ public class CommentApi {
 
     @PostMapping("")
     public CommentDto create(@RequestBody CommentDto commentDto) {
-        return new CommentDto(commentService.create(commentDto, commentDto.getUser_id().getId()));
+        return new CommentDto(commentService.create(commentDto, commentDto.getUserId().getId()));
     }
 
     @PutMapping("")
     public String update(@RequestBody CommentDto request) {
-        commentService.update(request, request.getUser_id().getId());
+        commentService.update(request, request.getUserId().getId());
         return messageResourceService.getMessage("update.success");
     }
 
@@ -63,7 +63,15 @@ public class CommentApi {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("id.not.found"));
         }
-        commentService.deleteById(id, optionalComments.get().getUser_id().getId());
+        commentService.deleteById(id, optionalComments.get().getUserId().getId());
         return new ResponseEntity<>(messageResourceService.getMessage("delete.success"), HttpStatus.OK);
+    }
+
+    @GetMapping("list/{id}")
+    public Page<CommentDto> getList(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                    @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                    @PathVariable("id") long id) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return commentService.findAllByStatusAndBlogId(Enums.CommentStatus.ACTIVE, id, pageable).map(commentService::convertToCommentDto);
     }
 }

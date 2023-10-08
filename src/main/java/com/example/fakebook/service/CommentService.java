@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -91,5 +92,20 @@ public class CommentService {
 
     public Optional<Comments> findByIdAndStatus(long id, Enums.CommentStatus status) {
         return commentRepository.findByIdAndStatus(id, status);
+    }
+
+    public Page<Comments> findAllByStatusAndBlogId(Enums.CommentStatus status, long blogID, Pageable pageable) {
+        return commentRepository.findAllByStatusAndBlogId(status, blogID, pageable);
+    }
+
+    public Page<Comments> findAllByStatusAndCommentParent(Enums.CommentStatus status, long commentID, Pageable pageable) {
+        return commentRepository.findAllByStatusAndParentId(status, commentID, pageable);
+    }
+
+    public CommentDto convertToCommentDto(Comments comments) {
+        List<Comments> commentsChildren = commentRepository.findAllByStatusAndParentId(Enums.CommentStatus.ACTIVE, comments.getId());
+        CommentDto commentDto = new CommentDto(comments);
+        commentDto.setCommentsChild(commentsChildren);
+        return commentDto;
     }
 }

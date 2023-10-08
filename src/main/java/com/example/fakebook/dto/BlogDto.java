@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,8 +18,10 @@ import org.springframework.beans.BeanUtils;
 public class BlogDto {
     private long id;
     private Accounts user_id;
+    private LocalDateTime createdAt;
     private String content;
     private int likes;
+    private String thumbnail;
     private int views;
     private int comments;
     private int shares;

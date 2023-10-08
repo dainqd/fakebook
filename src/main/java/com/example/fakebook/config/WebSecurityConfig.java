@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // websocket
             "/websocket/**",
             //main url
+            "/api/v1/comments/list/**",
     };
 
     private static final String[] USER_PATHS = {

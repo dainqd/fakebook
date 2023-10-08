@@ -26,6 +26,7 @@ public class Blog extends BaseEntity {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Accounts user_id;
+    private String thumbnail;
     @Lob
     private String content;
     private int likes;
@@ -37,5 +38,16 @@ public class Blog extends BaseEntity {
 
     public Blog(BlogDto blogDto) {
         BeanUtils.copyProperties(blogDto, this);
+    }
+
+    public Blog(Accounts user_id, String thumbnail, String content, int likes, int views, int comments, int shares, Enums.BlogStatus status) {
+        this.user_id = user_id;
+        this.thumbnail = thumbnail;
+        this.content = content;
+        this.likes = likes;
+        this.views = views;
+        this.comments = comments;
+        this.shares = shares;
+        this.status = status;
     }
 }

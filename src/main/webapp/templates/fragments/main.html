@@ -372,12 +372,9 @@
                 </li>
             </ul>
             <div class="user-img">
-                <img th:src="@{/main/images/resources/admin.jpg}" alt="">
+                <img class="avtCurrentUser" th:src="@{/main/images/resources/admin.jpg}" alt="" width="60px" height="60px">
                 <span class="status f-online"></span>
                 <div class="user-setting">
-                    <a href="#" title=""><span class="status f-online"></span>online</a>
-                    <a href="#" title=""><span class="status f-away"></span>away</a>
-                    <a href="#" title=""><span class="status f-off"></span>offline</a>
                     <a href="#" id="myAdmin" class="d-none"><i class="ti-user"></i> admin</a>
                     <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
                     <a href="#" title=""><i class="ti-target"></i>activity log</a>
@@ -504,7 +501,7 @@
     <!-- Template Main JS File -->
     <script th:src="@{/assets/js/main.js}"></script>
 </div>
-<script th:src="@{/main/js/master.js}"></script>
+<!--<script th:src="@{/main/js/master.js}"></script>-->
 <!--Main footer-->
 <div th:fragment="script-main">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -10,18 +10,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
     private long id;
-    private Accounts user_id;
-    private Blog blog_id;
+    private Accounts userId;
+    private LocalDateTime createdAt;
+    private long blogId;
     private String content;
     private int likes;
-    private Comments comment_parent;
+    private long commentParent;
     private Enums.CommentStatus status = Enums.CommentStatus.ACTIVE;
+    private List<Comments> commentsChild;
 
     public CommentDto(Comments comments) {
         BeanUtils.copyProperties(comments, this);

@@ -63,11 +63,19 @@ public class Accounts extends BaseEntity {
         BeanUtils.copyProperties(accountDto, this);
     }
 
-    public Accounts(RegisterRequest registerRequest){
-        BeanUtils.copyProperties(registerRequest,this);
+    public Accounts(RegisterRequest registerRequest) {
+        BeanUtils.copyProperties(registerRequest, this);
     }
 
-    public Accounts(UpdateInfoRequest updateInfoRequest){
-        BeanUtils.copyProperties(updateInfoRequest,this);
+    public Accounts(UpdateInfoRequest updateInfoRequest) {
+        BeanUtils.copyProperties(updateInfoRequest, this);
+    }
+
+    public Accounts(String avt, String username, String email, String password, Enums.AccountStatus accountStatus) {
+        this.avt = avt;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.status = accountStatus;
     }
 }

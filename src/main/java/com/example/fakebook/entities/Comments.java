@@ -25,13 +25,13 @@ public class Comments extends BaseEntity {
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts user_id;
+    private Accounts userId;
     @OneToOne
     @JoinColumn(name = "blog_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Nullable
-    private Blog blog_id;
+    private Blog blog;
     @Lob
     private String content;
     private int likes;
@@ -40,11 +40,20 @@ public class Comments extends BaseEntity {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Nullable
-    private Comments comment_parent;
+    private Comments parent;
     @Enumerated(EnumType.STRING)
     private Enums.CommentStatus status = Enums.CommentStatus.ACTIVE;
 
     public Comments(CommentDto commentDto) {
         BeanUtils.copyProperties(commentDto, this);
+    }
+
+    public Comments(Accounts userId, Blog blog, String content, int likes, Comments commentParent, Enums.CommentStatus status) {
+        this.userId = userId;
+        this.blog = blog;
+        this.content = content;
+        this.likes = likes;
+        this.parent = commentParent;
+        this.status = status;
     }
 }

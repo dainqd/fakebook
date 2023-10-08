@@ -75,6 +75,10 @@ async function checkAdmin() {
                     isAdmin = true;
                 }
             }
+
+            $(".avtCurrentUser").attr("src",response.avt);
+
+            adminOpen();
         })
         .catch(error => console.log(error));
 }
@@ -83,11 +87,12 @@ checkAdmin();
 
 async function adminOpen() {
     let admin = $('#myAdmin');
-    await admin.removeClass('d-none');
-
-    await admin.on('click', function () {
-        window.location.href = 'http://localhost:3000';
-    })
+    if (isAdmin){
+        await admin.removeClass('d-none');
+        await admin.on('click', function () {
+            window.location.href = 'http://localhost:3000';
+        })
+    } else {
+        await admin.addClass('d-none');
+    }
 }
-
-adminOpen();
