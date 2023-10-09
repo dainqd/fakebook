@@ -66,4 +66,10 @@ public class BlogApi {
         blogService.deleteById(id, optionalBlog.get().getUser_id().getId());
         return new ResponseEntity<>(messageResourceService.getMessage("delete.success"), HttpStatus.OK);
     }
+
+    @PostMapping("{id}")
+    public BlogDto likeBlog(@PathVariable(name = "id") Long id, @RequestParam(value = "check", required = false, defaultValue = "1") int check) {
+        Blog blog = blogService.likeBlog(id, check);
+        return new BlogDto(blog);
+    }
 }

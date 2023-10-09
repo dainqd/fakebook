@@ -31,6 +31,10 @@ function logout() {
     window.location.href = '/login';
 }
 
+function messageUrl() {
+    window.location.href = `/message`;
+}
+
 // async function checkAdmin(token) {
 //     let url = ``;
 //
@@ -77,7 +81,7 @@ async function checkAdmin() {
                 }
             }
 
-            $(".avtCurrentUser").attr("src",response.avt);
+            $(".avtCurrentUser").attr("src", response.avt);
             localStorage.setItem('user_id', response.id)
 
             adminOpen();
@@ -89,7 +93,7 @@ checkAdmin();
 
 async function adminOpen() {
     let admin = $('#myAdmin');
-    if (isAdmin){
+    if (isAdmin) {
         await admin.removeClass('d-none');
         await admin.on('click', function () {
             window.location.href = 'http://localhost:3000';
@@ -98,3 +102,17 @@ async function adminOpen() {
         await admin.addClass('d-none');
     }
 }
+
+const socket = new WebSocket('ws://localhost:8888/websocket');
+
+socket.addEventListener('open', (event) => {
+    console.log('WebSocket is open now.');
+});
+
+socket.addEventListener('message', (event) => {
+    console.log('Received message:', event.data);
+});
+
+socket.addEventListener('close', (event) => {
+    console.log('WebSocket is closed now.');
+});

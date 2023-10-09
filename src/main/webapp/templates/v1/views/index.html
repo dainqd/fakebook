@@ -163,66 +163,30 @@
 															</span>
                                                             </li>
                                                             <li>
-															<span class="like" data-toggle="tooltip" title="like">
+
+															<span class="likeBlog like" data-toggle="tooltip"
+                                                                  th:id="|like-${item.id}|"
+                                                                  title="like" th:data-id="${item.id}"
+                                                                  data-value="1">
 																<i class="ti-heart"></i>
-																<ins>[[${item.likes}]]</ins>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
 															</span>
+
+                                                                <span class="likeBlog dislike d-none"
+                                                                      th:id="|dislike-${item.id}|"
+                                                                      data-toggle="tooltip" th:data-id="${item.id}"
+                                                                      data-value="0"
+                                                                      title="dislike">
+																<i class="ti-heart-broken"></i>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
+															</span>
+
                                                             </li>
                                                             <li>
-															<span class="dislike" data-toggle="tooltip" title="dislike">
-																<i class="ti-heart-broken"></i>
+															<span class="dislike" data-toggle="tooltip" title="share">
+																<i class="fa fa-share-alt"></i>
 																<ins>[[${item.shares}]]</ins>
 															</span>
-                                                            </li>
-                                                            <li class="social-media">
-                                                                <div class="menu">
-                                                                    <div class="btn trigger"><i
-                                                                            class="fa fa-share-alt"></i></div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-html5"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-facebook"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-google-plus"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-twitter"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-css3"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-instagram"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-dribbble"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#"
-                                                                                                     title=""><i
-                                                                                class="fa fa-pinterest"></i></a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -447,6 +411,13 @@
         //     let element = $('#listComment-' + id);
         //     loadComment(element, id);
         // })
+
+        $('.likeBlog').on('click', function () {
+            let id = $(this).data('id');
+            let check = $(this).data('value');
+
+            likeBlog(id, check);
+        })
     })
 
     function processCreateComment(id) {
@@ -633,7 +604,6 @@
             };
 
 
-
             if (content) {
                 fetch(createComment, {
                     method: 'POST',
@@ -662,21 +632,32 @@
             console.error('Error:', error);
         }
     }
-</script>
-<script>
-    const socket = new WebSocket('ws://localhost:8888/websocket');
 
-    socket.addEventListener('open', (event) => {
-        console.log('WebSocket is open now.');
-    });
-
-    socket.addEventListener('message', (event) => {
-        console.log('Received message:', event.data);
-    });
-
-    socket.addEventListener('close', (event) => {
-        console.log('WebSocket is closed now.');
-    });
-
+    async function likeBlog(id, check) {
+        let likeUrl = `/api/v1/blogs/` + id + `?check=` + check;
+        fetch(likeUrl, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ` + `${myToken}`
+            },
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            })
+            .then(response => {
+                if (check == 1) {
+                    $('#like-' + id).addClass('d-none');
+                    $('#dislike-' + id).removeClass('d-none');
+                } else {
+                    $('#like-' + id).removeClass('d-none');
+                    $('#dislike-' + id).addClass('d-none');
+                }
+                $('.likeQty-' + id).text(response.likes);
+            })
+            .catch(error => console.log(error));
+    }
 </script>
 </html>

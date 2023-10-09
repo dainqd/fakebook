@@ -92,4 +92,20 @@ public class BlogService {
     public Optional<Blog> findByIdAndStatus(long id, Enums.BlogStatus status) {
         return blogRepository.findByIdAndStatus(id, status);
     }
+
+    public Blog likeBlog(long id, long check) {
+        Optional<Blog> blogOptional = blogRepository.findById(id);
+        if (!blogOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("id.not.found"));
+        }
+        Blog blog = blogOptional.get();
+        if (check == 1) {
+            blog.setLikes(blog.getLikes() + 1);
+        } else {
+            blog.setLikes(blog.getLikes() - 1);
+        }
+        blogRepository.save(blog);
+        return blog;
+    }
 }
