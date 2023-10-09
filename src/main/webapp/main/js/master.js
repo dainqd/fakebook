@@ -27,6 +27,7 @@ function deleteCookie(cookieName) {
 function logout() {
     deleteCookie('accessToken');
     deleteCookie('username');
+    localStorage.clear();
     window.location.href = '/login';
 }
 
@@ -77,6 +78,7 @@ async function checkAdmin() {
             }
 
             $(".avtCurrentUser").attr("src",response.avt);
+            localStorage.setItem('user_id', response.id)
 
             adminOpen();
         })

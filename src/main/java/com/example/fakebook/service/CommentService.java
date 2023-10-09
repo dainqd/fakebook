@@ -1,6 +1,7 @@
 package com.example.fakebook.service;
 
 import com.example.fakebook.dto.CommentDto;
+import com.example.fakebook.entities.Blog;
 import com.example.fakebook.entities.Comments;
 import com.example.fakebook.repositories.CommentRepository;
 import com.example.fakebook.utils.Enums;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentService {
     final CommentRepository commentRepository;
+    final BlogService blogService;
     final MessageResourceService messageResourceService;
 
     public Page<Comments> findAll(Pageable pageable) {
@@ -38,6 +40,16 @@ public class CommentService {
         try {
             Comments comments = new Comments();
             BeanUtils.copyProperties(commentDto, comments);
+            Optional<Blog> optionalBlog = blogService.findById(commentDto.getBlogId());
+            if (!optionalBlog.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        messageResourceService.getMessage("id.not.found"));
+            }
+            Blog blog = optionalBlog.get();
+            blog.setComments(blog.getComments() + 1);
+            blog.setViews(blog.getViews() + 1);
+            blogService.save(blog);
+            comments.setBlog(blog);
             comments.setCreatedAt(LocalDateTime.now());
             comments.setCreatedBy(adminId);
             comments.setStatus(Enums.CommentStatus.ACTIVE);

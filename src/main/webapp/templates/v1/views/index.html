@@ -111,8 +111,9 @@
                                                  alt="">
                                         </figure>
                                         <div class="newpst-input">
-                                            <form method="post">
-                                                <textarea rows="2" placeholder="write something"></textarea>
+                                            <form>
+                                                <textarea id="contentBlog" required rows="2"
+                                                          placeholder="write something"></textarea>
                                                 <div class="attachments">
                                                     <ul>
                                                         <li>
@@ -123,7 +124,7 @@
                                                             </label>
                                                         </li>
                                                         <li>
-                                                            <button type="submit">Post</button>
+                                                            <button id="btnCreateBlog" type="button">Post</button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -131,7 +132,7 @@
                                         </div>
                                     </div>
                                 </div><!-- add post new box -->
-                                <div class="loadMore">
+                                <div class="loadMore" id="loadBlog">
                                     <div class="central-meta item" th:each="item : ${blogDtos}">
                                         <div class="user-post">
                                             <div class="friend-info">
@@ -230,7 +231,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="coment-area" th:id="|listComment-${item.id}|"
+                                            <div class="coment-area mt-5" th:id="|listComment-${item.id}|"
                                                  th:data-id="${item.id}">
 
                                             </div>
@@ -435,7 +436,22 @@
             let element = $('#listComment-' + id);
             loadComment(element, id);
         })
+
+        $('#btnCreateBlog').on('click', function () {
+            postBlog();
+        })
+
+        // $('.btnCreateComment').on('click', function () {
+        //     let id = $(this).data('id');
+        //     createComment(id);
+        //     let element = $('#listComment-' + id);
+        //     loadComment(element, id);
+        // })
     })
+
+    function processCreateComment(id) {
+        createComment(id);
+    }
 
     function loadComment(element, id) {
         renderBlog(element, id);
@@ -491,40 +507,18 @@
                 }
                 let mainComment = `<ul class="we-comet">
                                                     ${comments}
-                                                    <li>
-                                                        <a href="#" title="" class="showmore underline">more
-                                                            comments</a>
-                                                    </li>
                                                     <li class="post-comment">
                                                         <div class="comet-avatar">
                                                             <img th:src="@{/main/images/resources/comet-1.jpg}" alt="">
                                                         </div>
                                                         <div class="post-comt-box">
-                                                            <form method="post">
-                                                                <textarea placeholder="Post your comment"></textarea>
-                                                                <div class="add-smiles">
-                                                                    <span class="em em-expressionless"
-                                                                          title="add icon"></span>
-                                                                </div>
-                                                                <div class="smiles-bunch">
-                                                                    <i class="em em---1"></i>
-                                                                    <i class="em em-smiley"></i>
-                                                                    <i class="em em-anguished"></i>
-                                                                    <i class="em em-laughing"></i>
-                                                                    <i class="em em-angry"></i>
-                                                                    <i class="em em-astonished"></i>
-                                                                    <i class="em em-blush"></i>
-                                                                    <i class="em em-disappointed"></i>
-                                                                    <i class="em em-worried"></i>
-                                                                    <i class="em em-kissing_heart"></i>
-                                                                    <i class="em em-rage"></i>
-                                                                    <i class="em em-stuck_out_tongue"></i>
-                                                                </div>
-                                                                <button type="submit"></button>
+                                                            <form>
+                                                                <textarea id="contentComment-${id}" placeholder="Post your comment"></textarea>
+                                                                <button class="btn btn-success text-black btnCreateComment" onclick="processCreateComment(${id});" type="button" data-id="${id}">Comment</button>
                                                             </form>
                                                         </div>
                                                     </li>
-                        </ul>`
+                        </ul> `
                 element.empty().append(mainComment);
             })
             .fail(function (_, textStatus) {
@@ -553,7 +547,121 @@
         }
     }
 
-    showFormUpload();
+    // showFormUpload();
+
+    function getCookieValue(cookieName) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(`${cookieName}=`)) {
+                return cookie.substring(cookieName.length + 1, cookie.length);
+            }
+        }
+        return null;
+    }
+
+    let myToken = getCookieValue('accessToken');
+
+
+    async function postBlog() {
+        try {
+            let createBlog = `/api/v1/blogs`;
+
+            let content = $('#contentBlog').val();
+
+            let user = {
+                id: localStorage.getItem('user_id')
+            };
+
+            let requestData = {
+                comments: 0,
+                content: content,
+                likes: 0,
+                shares: 0,
+                status: `ACTIVE`,
+                thumbnail: `https://www.techsmith.com/blog/wp-content/uploads/2021/02/video-thumbnails-social.png`,
+                user_id: user,
+                views: 0,
+            };
+
+
+            if (content) {
+                fetch(createBlog, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ` + `${myToken}`
+                    },
+                    body: JSON.stringify(requestData),
+
+                })
+                    .then(response => {
+                        if (response.status == 200) {
+                            alert('Success')
+                            window.location.reload();
+                        } else {
+                            alert("Error! Please try again");
+                        }
+                    })
+                    .catch(error => console.log(error));
+
+            } else {
+                alert('Please enter the content of blog!')
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function createComment(id) {
+        try {
+            let createComment = `/api/v1/comments`;
+
+            let content = $('#contentComment-' + id).val();
+
+            let user = {
+                id: localStorage.getItem('user_id')
+            };
+
+            let requestData = {
+                blogId: id,
+                content: content,
+                likes: 0,
+                status: `ACTIVE`,
+                userId: user,
+            };
+
+
+
+            if (content) {
+                fetch(createComment, {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ` + `${myToken}`
+                    },
+                    body: JSON.stringify(requestData),
+
+                })
+                    .then(response => {
+                        if (response.status == 200) {
+                            alert('Success')
+                            let element = $('#listComment-' + id);
+                            loadComment(element, id);
+                        } else {
+                            alert("Error! Please try again");
+                        }
+                    })
+                    .catch(error => console.log(error));
+
+            } else {
+                alert('Please enter the content of blog!')
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 </script>
 <script>
     const socket = new WebSocket('ws://localhost:8888/websocket');

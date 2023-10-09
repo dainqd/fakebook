@@ -1,11 +1,9 @@
 package com.example.fakebook.controller;
 
 import com.example.fakebook.dto.BlogDto;
-import com.example.fakebook.dto.CommentDto;
 import com.example.fakebook.service.BlogService;
-import com.example.fakebook.service.CommentService;
 import com.example.fakebook.utils.Enums;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
