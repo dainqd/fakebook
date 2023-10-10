@@ -14,6 +14,7 @@ class ImageServeController extends Controller
             $thumbnailPath = $thumbnail->store('images/thumbnails', 'public');
             $imageName = asset('storage/' . $thumbnailPath);
         }
+
         return $imageName;
     }
 

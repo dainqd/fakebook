@@ -21,6 +21,7 @@ import java.util.Set;
 public class AccountDto {
     private long id;
     private String avt;
+    private String thumbnail;
     private String firstName;
     private String lastName;
     private String username;
@@ -32,6 +33,8 @@ public class AccountDto {
     private String verifyCode = "";
     private String referralCode = "";
     private boolean verified = false;
+    private int likes;
+    private int views;
     private String password;
     private Set<Roles> roles = new HashSet<>();
     private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;

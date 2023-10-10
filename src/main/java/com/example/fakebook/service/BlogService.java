@@ -1,6 +1,7 @@
 package com.example.fakebook.service;
 
 import com.example.fakebook.dto.BlogDto;
+import com.example.fakebook.entities.Accounts;
 import com.example.fakebook.entities.Blog;
 import com.example.fakebook.repositories.BlogRepository;
 import com.example.fakebook.utils.Enums;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class BlogService {
     final BlogRepository blogRepository;
     final MessageResourceService messageResourceService;
+    final UserService userService;
 
     public Page<Blog> findAll(Pageable pageable) {
         return blogRepository.findAll(pageable);
@@ -99,12 +101,46 @@ public class BlogService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     messageResourceService.getMessage("id.not.found"));
         }
+
         Blog blog = blogOptional.get();
+        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser_id().getId());
+
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+
+        Accounts accounts = optionalAccounts.get();
         if (check == 1) {
             blog.setLikes(blog.getLikes() + 1);
+            accounts.setLikes(accounts.getLikes() + 1);
         } else {
             blog.setLikes(blog.getLikes() - 1);
+            accounts.setLikes(accounts.getLikes() - 1);
         }
+        userService.save(accounts);
+        blogRepository.save(blog);
+        return blog;
+    }
+
+    public Blog viewBlog(long id) {
+        Optional<Blog> blogOptional = blogRepository.findById(id);
+        if (!blogOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("id.not.found"));
+        }
+        Blog blog = blogOptional.get();
+
+        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser_id().getId());
+        if (!optionalAccounts.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        Accounts accounts = optionalAccounts.get();
+        accounts.setViews(accounts.getViews() + 1);
+
+        blog.setViews(blog.getViews() + 1);
+        userService.save(accounts);
         blogRepository.save(blog);
         return blog;
     }

@@ -30,6 +30,8 @@ public class Accounts extends BaseEntity {
     private long id;
     @Lob
     private String avt;
+    @Lob
+    private String thumbnail;
     private String firstName;
     private String lastName;
     @NotNull(message = "Username cannot be left blank")
@@ -43,6 +45,8 @@ public class Accounts extends BaseEntity {
     private String verifyCode = "";
     private String referralCode = "";
     private boolean verified = false;
+    private int likes = 0;
+    private int views = 0;
     @NotNull(message = "Password cannot be left blank")
     @Size(min = 6, message = "password must be greater than or equal to 6")
     private String password;
@@ -73,6 +77,7 @@ public class Accounts extends BaseEntity {
 
     public Accounts(String avt, String username, String email, String password, Enums.AccountStatus accountStatus) {
         this.avt = avt;
+        this.thumbnail = "https://i.stack.imgur.com/l60Hf.png";
         this.username = username;
         this.email = email;
         this.password = password;

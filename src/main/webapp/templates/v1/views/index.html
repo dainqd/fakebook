@@ -134,7 +134,7 @@
                                 </div><!-- add post new box -->
                                 <div class="loadMore" id="loadBlog">
                                     <div class="central-meta item" th:each="item : ${blogDtos}">
-                                        <div class="user-post">
+                                        <div class="user-post user-blog-item">
                                             <div class="friend-info">
                                                 <figure>
                                                     <img th:src="${item.user_id.avt}" alt="">
@@ -151,7 +151,7 @@
                                                             <li>
 															<span class="views" data-toggle="tooltip" title="views">
 																<i class="fa fa-eye"></i>
-																<ins>[[${item.views}]]</ins>
+																<ins th:class="|viewQty-${item.id}|">[[${item.views}]]</ins>
 															</span>
                                                             </li>
                                                             <li>
@@ -159,7 +159,7 @@
                                                                   title="Comments"
                                                                   th:data-id="|${item.id}|">
 																<i class="fa fa-comments-o"></i>
-																<ins>[[${item.comments}]]</ins>
+																<ins th:class="|commentQty-${item.id}|">[[${item.comments}]]</ins>
 															</span>
                                                             </li>
                                                             <li>
@@ -228,24 +228,10 @@
                                                 <!-- Tab panes -->
                                                 <div class="tab-content">
                                                     <div class="tab-pane active fade show " id="link1">
-                                                        <span><i class="ti-heart"></i>884</span>
-                                                        <a href="#" title="weekly-likes">35 new likes this week</a>
-                                                        <div class="users-thumb-list">
-                                                            <a href="#" title="Anderw" data-toggle="tooltip">
-                                                                <img th:src="@{/main/images/resources/userlist-1.jpg}"
-                                                                     alt="">
-                                                            </a>
-                                                        </div>
+                                                        <span><i class="ti-heart"></i><span class="likeUser">0 </span></span>
                                                     </div>
                                                     <div class="tab-pane fade" id="link2">
-                                                        <span><i class="ti-eye"></i>440</span>
-                                                        <a href="#" title="weekly-likes">440 new views this week</a>
-                                                        <div class="users-thumb-list">
-                                                            <a href="#" title="Anderw" data-toggle="tooltip">
-                                                                <img th:src="@{/main/images/resources/userlist-1.jpg}"
-                                                                     alt="">
-                                                            </a>
-                                                        </div>
+                                                        <span><i class="ti-eye"></i><span class="viewUser">0 </span></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -399,6 +385,7 @@
             let id = $(this).data('id');
             let element = $('#listComment-' + id);
             loadComment(element, id);
+            viewBlog(id);
         })
 
         $('#btnCreateBlog').on('click', function () {
@@ -418,6 +405,11 @@
 
             likeBlog(id, check);
         })
+
+        // $('.btnCreateComment').on('click', function () {
+        //     let id = $(this).data('id');
+        //
+        // })
     })
 
     function processCreateComment(id) {
@@ -533,7 +525,6 @@
 
     let myToken = getCookieValue('accessToken');
 
-
     async function postBlog() {
         try {
             let createBlog = `/api/v1/blogs`;
@@ -554,7 +545,6 @@
                 user_id: user,
                 views: 0,
             };
-
 
             if (content) {
                 fetch(createBlog, {
@@ -602,7 +592,6 @@
                 status: `ACTIVE`,
                 userId: user,
             };
-
 
             if (content) {
                 fetch(createComment, {
@@ -655,9 +644,43 @@
                     $('#like-' + id).removeClass('d-none');
                     $('#dislike-' + id).addClass('d-none');
                 }
+                let user = response.user_id.id;
+                findUserId(user);
                 $('.likeQty-' + id).text(response.likes);
             })
             .catch(error => console.log(error));
+    }
+
+    async function viewBlog(id) {
+        let likeUrl = `/api/v1/blogs/view/` + id;
+        fetch(likeUrl, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ` + `${myToken}`
+            },
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    return response.json();
+                }
+            })
+            .then(response => {
+                let user = response.user_id.id;
+                findUserId(user);
+                $('.viewQty-' + id).text(response.views);
+            })
+            .catch(error => console.log(error));
+    }
+
+    function isElementVisible(element) {
+        var top = element.offset().top;
+        var bottom = top + element.outerHeight();
+
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+
+        return (bottom > viewportTop && top < viewportBottom);
     }
 </script>
 </html>

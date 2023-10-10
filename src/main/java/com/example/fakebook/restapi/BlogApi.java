@@ -1,6 +1,7 @@
 package com.example.fakebook.restapi;
 
 import com.example.fakebook.dto.BlogDto;
+import com.example.fakebook.entities.Accounts;
 import com.example.fakebook.entities.Blog;
 import com.example.fakebook.service.BlogService;
 import com.example.fakebook.service.MessageResourceService;
@@ -41,7 +42,10 @@ public class BlogApi {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("account.not.found"));
         }
-        return new BlogDto(optionalBlog.get());
+        Blog blog = optionalBlog.get();
+        blog.setViews(blog.getViews() + 1);
+        blog = blogService.save(blog);
+        return new BlogDto(blog);
     }
 
     @PostMapping("")
@@ -70,6 +74,11 @@ public class BlogApi {
     @PostMapping("{id}")
     public BlogDto likeBlog(@PathVariable(name = "id") Long id, @RequestParam(value = "check", required = false, defaultValue = "1") int check) {
         Blog blog = blogService.likeBlog(id, check);
+        return new BlogDto(blog);
+    }
+    @PostMapping("view/{id}")
+    public BlogDto viewBlog(@PathVariable(name = "id") Long id) {
+        Blog blog = blogService.viewBlog(id);
         return new BlogDto(blog);
     }
 }

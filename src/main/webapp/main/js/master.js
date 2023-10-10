@@ -35,29 +35,6 @@ function messageUrl() {
     window.location.href = `/message`;
 }
 
-// async function checkAdmin(token) {
-//     let url = ``;
-//
-//     let headers = {
-//         'content-type': 'application/json',
-//         'Authorization': `Bearer ${token}`
-//     };
-//
-//     await
-//         $.ajax({
-//             url: url,
-//             method: 'GET',
-//             data: headers,
-//         })
-//             .done(function (response) {
-//                 return response.json();
-//             })
-//             .fail(function (_, textStatus) {
-//
-//                 console.log(textStatus)
-//             });
-//
-// }
 var isAdmin = false;
 
 async function checkAdmin() {
@@ -83,13 +60,53 @@ async function checkAdmin() {
 
             $(".avtCurrentUser").attr("src", response.avt);
             localStorage.setItem('user_id', response.id)
-
+            $(".likeUser").text(response.likes);
+            $(".viewUser").text(response.views);
             adminOpen();
         })
         .catch(error => console.log(error));
 }
 
 checkAdmin();
+
+async function findUserId(id) {
+    await fetch('/api/v1/user/' + id, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(response => {
+            if (response.status == 200) {
+                return response.json();
+            }
+        })
+        .then((response) => {
+
+            $(".likeUser").text(response.likes);
+            $(".viewUser").text(response.views);
+            $('.imgUserThumbnail').attr("src", response.thumbnail);
+            $('.imgUserAvatar').attr("src", response.avt);
+            let name;
+            if (!response.firstName) {
+                name = 'Default';
+            } else {
+                name = response.firstName;
+            }
+            if (!response.lastName) {
+                name = name + ' ' + 'Default';
+            } else {
+                name = name + ' ' + response.lastName;
+            }
+            $('.fullName').text(name);
+            $('.username').text(response.username);
+
+        })
+        .catch(error => console.log(error));
+}
+
+findUserId(localStorage.getItem('user_id'));
 
 async function adminOpen() {
     let admin = $('#myAdmin');
@@ -102,6 +119,32 @@ async function adminOpen() {
         await admin.addClass('d-none');
     }
 }
+
+function uploadImageMain() {
+    return new Promise(function (resolve, reject) {
+        const urlUpload = 'http://127.0.0.1:8000/upload-image';
+        const formData = new FormData();
+        const photo = $('#uploadThumbnail')[0].files[0];
+
+        formData.append('thumbnail', photo);
+
+        $.ajax({
+            url: urlUpload,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                resolve(response); // Trả về response khi thành công
+            },
+            error: function (error) {
+                reject(error); // Trả về error khi có lỗi
+            }
+        });
+    });
+}
+
 
 const socket = new WebSocket('ws://localhost:8888/websocket');
 
