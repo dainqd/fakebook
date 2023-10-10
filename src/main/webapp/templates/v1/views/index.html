@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head th:insert="fragments/main.html :: header-main(Fakebook)"></head>
-
+<style>
+    .imgDemoUpload {
+        width: 100%;
+        height: 400px;
+        margin: 16px 0;
+    }
+</style>
 <body>
 <div class="theme-layout">
     <div class="" th:insert="fragments/main.html :: headerMain"></div>
@@ -115,12 +121,15 @@
                                                 <textarea id="contentBlog" required rows="2"
                                                           placeholder="write something"></textarea>
                                                 <div class="attachments">
+                                                    <img class="imgDemoUpload d-none" id="imgDemoUpload"
+                                                         src=""
+                                                         alt="">
                                                     <ul>
-                                                        <li>
+                                                        <li class="mr-3">
                                                             <i id="uploadImage" data-toggle="modal"
                                                                data-target="#myModalItem" class="fa fa-image"></i>
                                                             <label class="fileContainer d-none">
-                                                                <input id="inputThumbnail" name="thumbnail" type="file">
+                                                                <input id="inputThumbnail" name="thumbnail" type="text">
                                                             </label>
                                                         </li>
                                                         <li>
@@ -145,7 +154,7 @@
                                                     <span>published: [[${item.createdAt}]]</span>
                                                 </div>
                                                 <div class="post-meta">
-                                                    <img th:src="@{/main/images/resources/user-post.jpg}" alt="">
+                                                    <img th:src="${item.thumbnail}" alt="">
                                                     <div class="we-video-info">
                                                         <ul>
                                                             <li>
@@ -228,10 +237,12 @@
                                                 <!-- Tab panes -->
                                                 <div class="tab-content">
                                                     <div class="tab-pane active fade show " id="link1">
-                                                        <span><i class="ti-heart"></i><span class="likeUser">0 </span></span>
+                                                        <span><i class="ti-heart"></i><span
+                                                                class="likeUser">0 </span></span>
                                                     </div>
                                                     <div class="tab-pane fade" id="link2">
-                                                        <span><i class="ti-eye"></i><span class="viewUser">0 </span></span>
+                                                        <span><i class="ti-eye"></i><span
+                                                                class="viewUser">0 </span></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -369,8 +380,22 @@
 
     <!-- The Modal -->
     <div class="modal" id="myModalItem">
-        <div class="" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
 
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnail" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUpload" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -392,24 +417,23 @@
             postBlog();
         })
 
-        // $('.btnCreateComment').on('click', function () {
-        //     let id = $(this).data('id');
-        //     createComment(id);
-        //     let element = $('#listComment-' + id);
-        //     loadComment(element, id);
-        // })
-
         $('.likeBlog').on('click', function () {
             let id = $(this).data('id');
             let check = $(this).data('value');
-
             likeBlog(id, check);
         })
 
-        // $('.btnCreateComment').on('click', function () {
-        //     let id = $(this).data('id');
-        //
-        // })
+        $('#submitUpload').on('click', function (e) {
+            e.preventDefault();
+            uploadImageMain('uploadThumbnail').then(function (response) {
+                console.log(response)
+                $('#imgDemoUpload').removeClass('d-none')
+                $('#imgDemoUpload').attr("src", response);
+                $('#inputThumbnail').val(response);
+            }).catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
     })
 
     function processCreateComment(id) {
@@ -489,40 +513,6 @@
             });
     }
 
-    async function showFormUpload() {
-        try {
-            const url = `http://127.0.0.1:8000/upload-image`;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-            })
-                .done(function (response) {
-                    $('#myModal').empty().append(response);
-                })
-                .fail(function (_, textStatus) {
-                    console.log(textStatus)
-                });
-
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    // showFormUpload();
-
-    function getCookieValue(cookieName) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith(`${cookieName}=`)) {
-                return cookie.substring(cookieName.length + 1, cookie.length);
-            }
-        }
-        return null;
-    }
-
     let myToken = getCookieValue('accessToken');
 
     async function postBlog() {
@@ -530,6 +520,12 @@
             let createBlog = `/api/v1/blogs`;
 
             let content = $('#contentBlog').val();
+            let inputThumbnail = $('#inputThumbnail').val();
+            console.log(inputThumbnail);
+            if (!inputThumbnail) {
+                inputThumbnail = `https://www.techsmith.com/blog/wp-content/uploads/2021/02/video-thumbnails-social.png`;
+            }
+
 
             let user = {
                 id: localStorage.getItem('user_id')
@@ -541,7 +537,7 @@
                 likes: 0,
                 shares: 0,
                 status: `ACTIVE`,
-                thumbnail: `https://www.techsmith.com/blog/wp-content/uploads/2021/02/video-thumbnails-social.png`,
+                thumbnail: inputThumbnail,
                 user_id: user,
                 views: 0,
             };

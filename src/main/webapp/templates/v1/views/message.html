@@ -11,6 +11,18 @@
         width: 200px;
         height: 200px !important;
     }
+
+    .top-right {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+    }
+
+    .imageDemo {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
 </style>
 <body>
 <div class="theme-layout">
@@ -18,7 +30,7 @@
 
     <section>
         <div class="feature-photo">
-            <figure><img class="imgUserThumbnail" alt=""></figure>
+            <figure><img src="" class="imgUserThumbnail" alt=""></figure>
             <div class="add-btn">
                 <span>1205 followers</span>
                 <a href="#" title="" data-ripple="">Add Friend</a>
@@ -36,11 +48,15 @@
                         <div class="user-avatar">
                             <figure>
                                 <img class="imgUserAvatar" alt="">
+                                <div class="imageDemo d-none">
+                                    <img class="imgUserAvatarDemo" alt="">
+                                    <button class="top-right btn btn-warning">Review Image</button>
+                                </div>
                                 <form class="edit-phto">
                                     <i class="fa fa-camera-retro"></i>
-                                    <label class="fileContainer">
+                                    <label class="fileContainer" data-toggle="modal"
+                                           data-target="#modalUploadAvt">
                                         Edit Display Photo
-                                        <input id="uploadThumbnail" type="file"/>
                                     </label>
                                 </form>
                             </figure>
@@ -49,6 +65,9 @@
                     <div class="col-lg-10 col-sm-9">
                         <div class="timeline-info">
                             <ul>
+                                <li>
+                                    <button id="btnSaveAvt" class="d-none btn btn-success">Save</button>
+                                </li>
                                 <li class="admin-name">
                                     <h5 class="fullName">Janice Griffith</h5>
                                     <span class="username">Group Admin</span>
@@ -81,8 +100,9 @@
                                     <div class="advertisment-box">
                                         <h4 class="">advertisment</h4>
                                         <figure>
-                                            <a href="#" title="Advertisment"><img src="images/resources/ad-widget.jpg"
-                                                                                  alt=""></a>
+                                            <a href="#" title="Advertisment"><img
+                                                    th:src="@{/main/images/resources/ad-widget.jpg}"
+                                                    alt=""></a>
                                         </figure>
                                     </div>
                                     <div class="widget stick-widget">
@@ -336,9 +356,28 @@
         </div>
     </section>
 
-    <button class="btn btn-primary mainBtnUpload">
-        upload
-    </button>
+    <!-- The Modal -->
+    <div class="modal" id="modalUploadAvt">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnail" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUpload" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="text" class="d-none" id="inputAvtUploaded">
 
     <div class="" th:insert="fragments/main.html :: footerMain"></div>
 </div>
@@ -347,15 +386,49 @@
 <script th:src="@{/main/js/master.js}"></script>
 <script>
     $(document).ready(function () {
-        $('.mainBtnUpload').on('click', function (e) {
+        $('#submitUpload').on('click', function (e) {
             e.preventDefault();
-            uploadImageMain().then(function (response) {
-                console.log(response);
+            uploadImageMain('uploadThumbnail').then(function (response) {
+                $('#btnSaveAvt').removeClass('d-none')
+                $('.imgUserAvatar').addClass('d-none')
+                $('.imageDemo').removeClass('d-none')
+                $('.imgUserAvatarDemo').attr("src", response);
+                $('#inputAvtUploaded').val(response);
             }).catch(function (error) {
                 console.error('Error:', error);
             });
         });
+
+        $('#btnSaveAvt').on('click', function () {
+            changeAvt();
+        })
     });
+
+    let myToken = getCookieValue('accessToken');
+
+    async function changeAvt() {
+        try {
+            let urlChangeAvt = `/api/v1/user/change-avt/` + localStorage.getItem('user_id');
+            let requestData =  $('#inputAvtUploaded').val();
+
+            fetch(urlChangeAvt, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ` + `${myToken}`
+                },
+                body: requestData,
+
+            })
+                .then(response => {
+                    alert('Change avatar success')
+                    window.location.reload();
+                })
+                .catch(error => console.log(error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
 </script>
 </html>

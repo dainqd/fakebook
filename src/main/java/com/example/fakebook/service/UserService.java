@@ -74,12 +74,7 @@ public class UserService {
 
     public Accounts update(AccountDto accountDto, long adminID) {
         try {
-            Optional<Accounts> optionalAccounts = accountRepository.findById(accountDto.getId());
-            if (!optionalAccounts.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            Accounts accounts = optionalAccounts.get();
+            Accounts accounts = findAccount(accountDto.getId());
 
             BeanUtils.copyProperties(accountDto, accounts);
             accounts.setUpdatedAt(LocalDateTime.now());
@@ -93,12 +88,7 @@ public class UserService {
 
     public Accounts updateInfo(long accountID, UpdateInfoRequest updateInfoRequest) {
 //        try {
-        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("account.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
+        Accounts accounts = findAccount(accountID);
 
         BeanUtils.copyProperties(updateInfoRequest, accounts);
         return accountRepository.save(accounts);
@@ -110,13 +100,25 @@ public class UserService {
 
     public Accounts changeEmail(long accountID, String email) {
 //        try {
-        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("account.not.found"));
+        Accounts accounts = findAccount(accountID);
+
+        Optional<Accounts> accountsOptional = accountRepository.findByEmail(email);
+        if (!accountsOptional.isPresent()) {
+            accounts.setEmail(email);
+            return accountRepository.save(accounts);
         }
-        Accounts accounts = optionalAccounts.get();
-        accounts.setEmail(email);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                messageResourceService.getMessage("account.email.exist"));
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
+    }
+
+    public Accounts changeAvt(long accountID, String avt) {
+//        try {
+        Accounts accounts = findAccount(accountID);
+        accounts.setAvt(avt);
         return accountRepository.save(accounts);
 //        } catch (Exception exception) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -126,12 +128,7 @@ public class UserService {
 
     public Accounts changeUsername(long accountID, String username) {
 //        try {
-        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("account.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
+        Accounts accounts = findAccount(accountID);
         accounts.setUsername(username);
         return accountRepository.save(accounts);
 //        } catch (Exception exception) {
@@ -142,16 +139,11 @@ public class UserService {
 
     public Accounts changePassword(long accountID, RegisterRequest registerRequest) {
 //        try {
-        Optional<Accounts> optionalAccounts = accountRepository.findById(accountID);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("account.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
+        Accounts accounts = findAccount(accountID);
 
         boolean result = encoder.matches(registerRequest.getCurrentPassword(), accounts.getPassword());
         System.out.println(result);
-        if (!result){
+        if (!result) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     messageResourceService.getMessage("account.password.incorrect"));
         }
@@ -170,15 +162,11 @@ public class UserService {
 
     public void deleteById(long id, long adminID) {
         try {
-            Optional<Accounts> accountsOptional = accountRepository.findById(id);
-            if (!accountsOptional.isPresent()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        messageResourceService.getMessage("account.not.found"));
-            }
-            accountsOptional.get().setStatus(Enums.AccountStatus.DELETED);
-            accountsOptional.get().setDeletedAt(LocalDateTime.now());
-            accountsOptional.get().setDeletedBy(adminID);
-            accountRepository.save(accountsOptional.get());
+            Accounts accounts = findAccount(id);
+            accounts.setStatus(Enums.AccountStatus.DELETED);
+            accounts.setDeletedAt(LocalDateTime.now());
+            accounts.setDeletedBy(adminID);
+            accountRepository.save(accounts);
         } catch (Exception exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     messageResourceService.getMessage("cancel.error"));
@@ -229,5 +217,14 @@ public class UserService {
 
     public boolean checkVerifyCode(Accounts account, String verifyCode) {
         return account.getVerifyCode().equals(verifyCode);
+    }
+
+    private Accounts findAccount(long id) {
+        Optional<Accounts> accountsOptional = accountRepository.findById(id);
+        if (!accountsOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("account.not.found"));
+        }
+        return accountsOptional.get();
     }
 }

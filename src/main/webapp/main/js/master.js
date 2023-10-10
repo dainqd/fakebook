@@ -120,11 +120,11 @@ async function adminOpen() {
     }
 }
 
-function uploadImageMain() {
+function uploadImageMain(idInput) {
     return new Promise(function (resolve, reject) {
         const urlUpload = 'http://127.0.0.1:8000/upload-image';
         const formData = new FormData();
-        const photo = $('#uploadThumbnail')[0].files[0];
+        const photo = $('#' + idInput)[0].files[0];
 
         formData.append('thumbnail', photo);
 
@@ -144,7 +144,6 @@ function uploadImageMain() {
         });
     });
 }
-
 
 const socket = new WebSocket('ws://localhost:8888/websocket');
 

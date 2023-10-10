@@ -67,49 +67,31 @@ public class AccountApi {
 
     @PutMapping("/update-information/{id}")
     public String updateInfomation(@PathVariable(name = "id") Long id, @RequestBody UpdateInfoRequest request) {
-        Optional<Accounts> optionalAccounts = userService.findById(id);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    messageResourceService.getMessage("id.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
-        userService.updateInfo(accounts.getId(), request);
+        userService.updateInfo(id, request);
         return messageResourceService.getMessage("update.success");
     }
 
     @PutMapping("/change-email/{id}")
     public String changeEmail(@PathVariable(name = "id") Long id, @RequestBody String email) {
-        Optional<Accounts> optionalAccounts = userService.findById(id);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    messageResourceService.getMessage("id.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
-        userService.changeEmail(accounts.getId(), email);
+        userService.changeEmail(id, email);
         return messageResourceService.getMessage("update.success");
     }
 
     @PutMapping("/change-password/{id}")
     public String changePassword(@PathVariable(name = "id") Long id, @RequestBody RegisterRequest request) {
-        Optional<Accounts> optionalAccounts = userService.findById(id);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    messageResourceService.getMessage("id.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
-        userService.changePassword(accounts.getId(), request);
+        userService.changePassword(id, request);
         return messageResourceService.getMessage("update.success");
     }
 
     @PutMapping("/change-username/{id}")
     public String changeUsername(@PathVariable(name = "id") Long id, @RequestBody String username) {
-        Optional<Accounts> optionalAccounts = userService.findById(id);
-        if (!optionalAccounts.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    messageResourceService.getMessage("id.not.found"));
-        }
-        Accounts accounts = optionalAccounts.get();
-        userService.changeUsername(accounts.getId(), username);
+        userService.changeUsername(id, username);
+        return messageResourceService.getMessage("update.success");
+    }
+
+    @PutMapping("/change-avt/{id}")
+    public String changeAvt(@PathVariable(name = "id") Long id, @RequestBody String avt) {
+        userService.changeAvt(id, avt);
         return messageResourceService.getMessage("update.success");
     }
 }

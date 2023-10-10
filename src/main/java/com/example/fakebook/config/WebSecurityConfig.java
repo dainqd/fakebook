@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/views/**",
             "/layout/**",
             "/templates/**",
+            "/images/**",
             // auth api
             "/api/v1/auth/**",
             // auth url
