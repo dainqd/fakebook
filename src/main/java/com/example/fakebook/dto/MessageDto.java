@@ -1,5 +1,6 @@
 package com.example.fakebook.dto;
 
+import com.example.fakebook.entities.Accounts;
 import com.example.fakebook.entities.Message;
 import com.example.fakebook.utils.Enums;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,8 @@ public class MessageDto {
     private String content;
     private Long senderId;
     private Long receiverId;
+    private Accounts sender;
+    private Accounts receiver;
     private Enums.MessageStatus status = Enums.MessageStatus.UNSEEN;
 
     public MessageDto(Message message) {

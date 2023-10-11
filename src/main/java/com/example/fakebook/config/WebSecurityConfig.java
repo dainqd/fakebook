@@ -56,7 +56,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/app/**",
             //main url
             "/api/v1/comments/list/**",
-            "/api/v1/friendships/**",
             "/message/**",
     };
 
@@ -64,6 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/v1/user/**",
             "/api/v1/comments/**",
             "/api/v1/blogs/**",
+            "/api/v1/friendships/**",
     };
 
     private static final String[] ADMIN_PATHS = {

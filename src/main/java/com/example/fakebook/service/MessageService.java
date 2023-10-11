@@ -2,6 +2,7 @@ package com.example.fakebook.service;
 
 import com.example.fakebook.dto.FriendshipDto;
 import com.example.fakebook.dto.MessageDto;
+import com.example.fakebook.entities.Friendships;
 import com.example.fakebook.entities.Message;
 import com.example.fakebook.repositories.MessageRepository;
 import com.example.fakebook.utils.Enums;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -112,5 +114,10 @@ public class MessageService {
 
     public Page<Message> findAllBySenderIdAndReceiverId(long senderID, long receiverID, Pageable pageable) {
         return messageRepository.findAllBySenderIdAndReceiverId(senderID, receiverID, pageable);
+    }
+
+    public List<MessageDto> getFriendshipsByReceiverId(Long senderId, Long receiverId) {
+        List<Message> messages = messageRepository.findAllBySenderIdAndReceiverIdOrderBy(senderId, receiverId);
+        return messages.stream().map(MessageDto::new).collect(Collectors.toList());
     }
 }

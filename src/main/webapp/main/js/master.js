@@ -145,16 +145,23 @@ function uploadImageMain(idInput) {
     });
 }
 
-// const socket = new WebSocket('/ws');
-//
-// socket.addEventListener('open', (event) => {
-//     console.log('WebSocket is open now.');
-// });
-//
-// socket.addEventListener('message', (event) => {
-//     console.log('Received message:', event.data);
-// });
-//
-// socket.addEventListener('close', (event) => {
-//     console.log('WebSocket is closed now.');
-// });
+function getUserDetail(id) {
+    return fetch('/api/v1/user/' + id, {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Error fetching user detail');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;
+        });
+}

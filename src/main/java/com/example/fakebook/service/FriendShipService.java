@@ -50,6 +50,10 @@ public class FriendShipService {
         }
     }
 
+    public Friendships changeFriend(Friendships friendships) {
+        return friendShipRepository.save(friendships);
+    }
+
     public Friendships update(long id, Enums.FriendshipStatus status) {
         try {
             Optional<Friendships> optionalFriendships = friendShipRepository.findById(id);
@@ -123,6 +127,11 @@ public class FriendShipService {
 
     public List<FriendshipDto> getFriendshipsByReceiverId(Long receiverId) {
         List<Friendships> friendships = friendShipRepository.findByReceiverIdAndStatus(receiverId, Enums.FriendshipStatus.APPROVED);
+        return friendships.stream().map(FriendshipDto::new).collect(Collectors.toList());
+    }
+
+    public List<FriendshipDto> getFollowerByReceiverId(Long receiverId) {
+        List<Friendships> friendships = friendShipRepository.findByReceiverIdAndStatus(receiverId, Enums.FriendshipStatus.PENDING);
         return friendships.stream().map(FriendshipDto::new).collect(Collectors.toList());
     }
 }
