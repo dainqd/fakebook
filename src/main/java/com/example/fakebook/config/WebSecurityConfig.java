@@ -51,8 +51,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/register",
             // websocket
             "/websocket/**",
+            "/ws/**",
+            "/topic/**",
+            "/app/**",
             //main url
             "/api/v1/comments/list/**",
+            "/api/v1/friendships/**",
             "/message/**",
     };
 

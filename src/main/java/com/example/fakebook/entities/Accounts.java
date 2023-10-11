@@ -50,7 +50,7 @@ public class Accounts extends BaseEntity {
     @NotNull(message = "Password cannot be left blank")
     @Size(min = 6, message = "password must be greater than or equal to 6")
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "accounts_roles", joinColumns = @JoinColumn(name = "account_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,9 @@ public interface FriendShipRepository extends JpaRepository<Friendships, Long> {
     Page<Friendships> findByReceiverIdAndStatus(Long receiverId, Enums.FriendshipStatus status, Pageable pageable);
 
     Page<Friendships> findBySenderIdAndStatus(Long senderId, Enums.FriendshipStatus status, Pageable pageable);
+
+    Optional<Friendships> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
+
+    //    Page<Friendships> findByReceiverIdAndStatus(Long receiverId, Enums.FriendshipStatus status, Pageable pageable);
+    List<Friendships> findByReceiverIdAndStatus(Long receiverId, Enums.FriendshipStatus status);
 }

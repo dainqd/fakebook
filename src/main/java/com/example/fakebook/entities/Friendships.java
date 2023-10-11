@@ -22,12 +22,12 @@ public class Friendships extends BaseEntity {
     @JoinColumn(name = "receiverId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts receiverId;
+    private Accounts receiver;
     @OneToOne
     @JoinColumn(name = "senderId")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts senderId;
+    private Accounts sender;
     @Enumerated(EnumType.STRING)
     private Enums.FriendshipStatus status = Enums.FriendshipStatus.NONE;
 

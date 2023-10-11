@@ -1,4 +1,4 @@
-package com.example.fakebook.config;
+package com.example.fakebook.config.websocket;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;

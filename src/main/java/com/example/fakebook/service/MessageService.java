@@ -1,5 +1,6 @@
 package com.example.fakebook.service;
 
+import com.example.fakebook.dto.FriendshipDto;
 import com.example.fakebook.dto.MessageDto;
 import com.example.fakebook.entities.Message;
 import com.example.fakebook.repositories.MessageRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -90,5 +92,25 @@ public class MessageService {
 
     public Optional<Message> findByIdAndStatus(long id, Enums.MessageStatus status) {
         return messageRepository.findByIdAndStatus(id, status);
+    }
+
+    public Page<Message> findAllByReceiverId(long receiverID, Pageable pageable) {
+        return messageRepository.findAllByReceiverId(receiverID, pageable);
+    }
+
+    public Page<Message> findAllByReceiverIdAndStatus(long receiverID, Enums.MessageStatus status, Pageable pageable) {
+        return messageRepository.findAllByReceiverIdAndStatus(receiverID, status, pageable);
+    }
+
+    public Page<Message> findAllBySenderId(long senderID, Pageable pageable) {
+        return messageRepository.findAllBySenderId(senderID, pageable);
+    }
+
+    public Page<Message> findAllBySenderIdAndStatus(long senderID, Enums.MessageStatus status, Pageable pageable) {
+        return messageRepository.findAllBySenderIdAndStatus(senderID, status, pageable);
+    }
+
+    public Page<Message> findAllBySenderIdAndReceiverId(long senderID, long receiverID, Pageable pageable) {
+        return messageRepository.findAllBySenderIdAndReceiverId(senderID, receiverID, pageable);
     }
 }

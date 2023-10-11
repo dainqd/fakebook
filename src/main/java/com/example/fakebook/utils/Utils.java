@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 @Slf4j
 @RequiredArgsConstructor
 public class Utils {
+    private static final String TIME_FORMATTER= "HH:mm:ss";
+
     public static LocalDateTime converLocalDateTime(String dateTime) {
         ZoneId zoneId = ZoneId.of("Europe/London");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -126,10 +128,6 @@ public class Utils {
     }
 
     public static String convertToString(String date) {
-//        String pattern = "dd/MM/yyyy";
-//        DateFormat df = new SimpleDateFormat(pattern);
-//        String todayAsString = df.format(date);
-//        String[] parts = todayAsString.split("-");
         String[] parts = date.split("/");
         String doneDay = parts[0];
         String doneMonth = parts[1];
@@ -140,20 +138,6 @@ public class Utils {
         String s = dayCuoi + ", " + monthCuoi + ", " + parts[2];
         return s;
     }
-
-//    public static String getUsername() {
-//        Accounts adminName = (Accounts) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        System.out.println(adminName);
-////        Pattern pattern = Pattern.compile("username=([^,\\s]+)");
-////        Matcher matcher = pattern.matcher(adminName);
-////        String username;
-////        if (matcher.find()) {
-////            username = matcher.group(1);
-////        } else {
-////            username = "admin";
-////        }
-//        return adminName.getUsername();
-//    }
 
     public static String getUsername() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -180,5 +164,10 @@ public class Utils {
         long truncated = value / (divideBy / 10);
         boolean hasDecimal = truncated < 100 && (truncated / 10d) != (truncated / 10);
         return hasDecimal ? (truncated / 10d) + suffix : (truncated / 10) + suffix;
+    }
+
+    public static String getCurrentTimeStamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TIME_FORMATTER);
+        return LocalDateTime.now().format(formatter);
     }
 }

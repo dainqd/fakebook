@@ -145,16 +145,16 @@ function uploadImageMain(idInput) {
     });
 }
 
-const socket = new WebSocket('ws://localhost:8888/websocket');
-
-socket.addEventListener('open', (event) => {
-    console.log('WebSocket is open now.');
-});
-
-socket.addEventListener('message', (event) => {
-    console.log('Received message:', event.data);
-});
-
-socket.addEventListener('close', (event) => {
-    console.log('WebSocket is closed now.');
-});
+// const socket = new WebSocket('/ws');
+//
+// socket.addEventListener('open', (event) => {
+//     console.log('WebSocket is open now.');
+// });
+//
+// socket.addEventListener('message', (event) => {
+//     console.log('Received message:', event.data);
+// });
+//
+// socket.addEventListener('close', (event) => {
+//     console.log('WebSocket is closed now.');
+// });

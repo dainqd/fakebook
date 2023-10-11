@@ -1,12 +1,8 @@
 package com.example.fakebook.controller;
 
-import com.example.fakebook.dto.BlogDto;
-import com.example.fakebook.service.BlogService;
 import com.example.fakebook.service.MessageService;
-import com.example.fakebook.utils.Enums;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,8 +21,8 @@ public class MessageController {
 
     @GetMapping("")
     public String getMessage(Model model,
-                              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                              @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+                             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
         return "v1/views/message";
