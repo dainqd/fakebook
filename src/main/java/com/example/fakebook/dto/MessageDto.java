@@ -20,8 +20,6 @@ public class MessageDto {
     private String content;
     private Long senderId;
     private Long receiverId;
-    private Accounts sender;
-    private Accounts receiver;
     private Enums.MessageStatus status = Enums.MessageStatus.UNSEEN;
 
     public MessageDto(Message message) {

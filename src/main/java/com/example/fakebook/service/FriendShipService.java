@@ -126,7 +126,7 @@ public class FriendShipService {
 //    }
 
     public List<FriendshipDto> getFriendshipsByReceiverId(Long receiverId) {
-        List<Friendships> friendships = friendShipRepository.findByReceiverIdAndStatus(receiverId, Enums.FriendshipStatus.APPROVED);
+        List<Friendships> friendships = friendShipRepository.findByReceiverIdAndStatusOrderBy(receiverId, Enums.FriendshipStatus.APPROVED);
         return friendships.stream().map(FriendshipDto::new).collect(Collectors.toList());
     }
 

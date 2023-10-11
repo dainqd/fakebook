@@ -5,6 +5,8 @@ import com.example.fakebook.utils.Enums;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,5 +29,11 @@ public interface FriendShipRepository extends JpaRepository<Friendships, Long> {
     Optional<Friendships> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
 
     //    Page<Friendships> findByReceiverIdAndStatus(Long receiverId, Enums.FriendshipStatus status, Pageable pageable);
+
     List<Friendships> findByReceiverIdAndStatus(Long receiverId, Enums.FriendshipStatus status);
+
+    @Query("SELECT e FROM Friendships e WHERE (e.receiver.id = :receiverId AND e.status = :status) OR (e.sender.id = :receiverId AND e.status = :status) ORDER BY e.id")
+    List<Friendships> findByReceiverIdAndStatusOrderBy(@Param("receiverId") Long receiverId, @Param("status") Enums.FriendshipStatus status);
+
+//    List<Friendships> findAllByReceiverIdOrSenderIdAndStatus(Long receiverId, Enums.FriendshipStatus status);
 }
