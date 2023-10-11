@@ -126,6 +126,17 @@ public class UserService {
 //        }
     }
 
+    public Accounts changeThumbnail(long accountID, String thumbnail) {
+//        try {
+        Accounts accounts = findAccount(accountID);
+        accounts.setThumbnail(thumbnail);
+        return accountRepository.save(accounts);
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("update.error"));
+//        }
+    }
+
     public Accounts changeUsername(long accountID, String username) {
 //        try {
         Accounts accounts = findAccount(accountID);

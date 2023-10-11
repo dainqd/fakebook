@@ -94,4 +94,10 @@ public class AccountApi {
         userService.changeAvt(id, avt);
         return messageResourceService.getMessage("update.success");
     }
+
+    @PutMapping("/change-thumbnail/{id}")
+    public String changeThumbnail(@PathVariable(name = "id") Long id, @RequestBody String thumbnail) {
+        userService.changeThumbnail(id, thumbnail);
+        return messageResourceService.getMessage("update.success");
+    }
 }

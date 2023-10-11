@@ -38,6 +38,10 @@
         margin-right: 10px;
         float: left;
     }
+
+    .cursor {
+        cursor: pointer !important;
+    }
 </style>
 <body>
 <div class="theme-layout">
@@ -45,9 +49,11 @@
 
     <section>
         <div class="feature-photo">
-            <figure><img src="" class="imgUserThumbnail" alt=""></figure>
+            <figure><img src="" class="imgUserThumbnail" id="imgUserThumbnail" alt=""></figure>
             <div class="add-btn">
-                <a href="#" title="" data-ripple="">Edit Cover Photo</a>
+                <a title="" id="btnEditCoverPhoto" data-toggle="modal" class="cursor"
+                   data-target="#modalUploadThumbnail">Edit Cover Photo</a>
+                <a title="" class="cursor d-none" id="btnSaveCoverPhoto">Save Cover Photo</a>
             </div>
             <div class="container-fluid">
                 <div class="row merged">
@@ -59,10 +65,10 @@
                                     <img class="imgUserAvatarDemo" alt="">
                                     <button class="top-right btn btn-warning">Review Image</button>
                                 </div>
-                                <form class="edit-phto">
+                                <form class="edit-phto" data-toggle="modal"
+                                      data-target="#modalUploadAvt">
                                     <i class="fa fa-camera-retro"></i>
-                                    <label class="fileContainer" data-toggle="modal"
-                                           data-target="#modalUploadAvt">
+                                    <label class="fileContainer">
                                         Edit Display Photo
                                     </label>
                                 </form>
@@ -229,7 +235,30 @@
         </div>
     </div>
 
+    <div class="modal" id="modalUploadThumbnail">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadImage" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUploadThumbnail" data-dismiss="modal">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <input type="text" class="d-none" id="inputAvtUploaded">
+    <input type="text" class="d-none" id="inputThumbnailUploaded">
 
     <div class="" th:insert="fragments/main.html :: footerMain"></div>
 </div>
@@ -251,8 +280,25 @@
             });
         });
 
+        $('#submitUploadThumbnail').on('click', function (e) {
+            e.preventDefault();
+            uploadImageMain('uploadImage').then(function (response) {
+                $('#btnSaveAvt').removeClass('d-none')
+                $('#btnEditCoverPhoto').addClass('d-none')
+                $('#btnSaveCoverPhoto').removeClass('d-none')
+                $('#imgUserThumbnail').attr("src", response);
+                $('#inputThumbnailUploaded').val(response);
+            }).catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+
         $('#btnSaveAvt').on('click', function () {
             changeAvt();
+        })
+
+        $('#btnSaveCoverPhoto').on('click', function () {
+            changeThumbnail();
         })
     });
 
@@ -274,6 +320,30 @@
             })
                 .then(response => {
                     alert('Change avatar success')
+                    window.location.reload();
+                })
+                .catch(error => console.log(error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function changeThumbnail() {
+        try {
+            let urlChangeThumbnail = `/api/v1/user/change-thumbnail/` + localStorage.getItem('user_id');
+            let requestData = $('#inputThumbnailUploaded').val();
+
+            fetch(urlChangeThumbnail, {
+                method: 'PUT',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ` + `${myToken}`
+                },
+                body: requestData,
+
+            })
+                .then(response => {
+                    alert('Change cover photo success!')
                     window.location.reload();
                 })
                 .catch(error => console.log(error));
