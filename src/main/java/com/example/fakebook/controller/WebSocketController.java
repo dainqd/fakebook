@@ -70,8 +70,8 @@ public class WebSocketController {
     public Message addUser(@DestinationVariable("id") Long id, @Payload Message chat, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chat.getSenderId());
-        headerAccessor.getSessionAttributes().put("username", chat.getSenderId());
-        headerAccessor.getSessionAttributes().put("username", chat.getSenderId());
+        headerAccessor.getSessionAttributes().put("sender", chat.getSenderId());
+        headerAccessor.getSessionAttributes().put("receiver", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("room", id);
         return chat;
     }
