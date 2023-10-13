@@ -22,7 +22,7 @@ public class Enums {
     }
 
     public static enum MessageStatus {
-        SEEN, UNSEEN, HIDDEN, NOT_SEND, SEND, DELETED
+        SEEN, UNSEEN, HIDDEN, NOT_SEND, SEND, DELETED, CHAT, JOIN, LEAVE
     }
 
     public static enum NotificationStatus {

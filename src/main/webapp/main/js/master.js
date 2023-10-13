@@ -9,8 +9,8 @@ function getCookieValue(cookieName) {
     return null;
 }
 
-const token = getCookieValue('accessToken');
-const username = getCookieValue('username');
+var token = getCookieValue('accessToken');
+var username = getCookieValue('username');
 
 function checkLogin() {
     if (!token || !username) {

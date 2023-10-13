@@ -1,39 +1,102 @@
-// Khởi tạo kết nối WebSocket
-var socket = new WebSocket('ws://localhost:8080/ws'); // Thay đổi URL và cổng tùy theo cài đặt của bạn
+'use strict';
 
-// Xử lý khi kết nối mở
-socket.addEventListener('open', (event) => {
-    console.log('Đã kết nối tới server WebSocket');
-});
 
-// Xử lý khi nhận tin nhắn từ server
-socket.addEventListener('message', (event) => {
-    const message = JSON.parse(event.data);
-    console.log('Nhận tin nhắn từ server:', message);
+var messageForm = document.querySelector('#messageForm');
+var messageInput = document.querySelector('#message');
+var messageArea = document.querySelector('#messageArea');
+var connectingElement = document.querySelector('#connecting');
 
-    // Xử lý tin nhắn ở đây
-    if (message.image) {
-        // Nếu tin nhắn chứa hình ảnh
-    } else {
-        // Nếu tin nhắn không phải hình ảnh
+console.log(connectingElement)
+
+var stompClient = null;
+var username = null;
+
+
+function connect() {
+    // username = document.querySelector('#username').innerText.trim();
+    // username = localStorage.getItem('user_id')
+    username = `2`;
+
+    var socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, onConnected, onError);
+}
+
+// Connect to WebSocket Server.
+// const id = document.getElementById('room').innerText;
+var id = localStorage.getItem('room')
+if (!id) {
+    id = 1;
+}
+console.log(id);
+
+connect();
+
+function onConnected() {
+    // Subscribe to the Public Topic
+    stompClient.subscribe(`/topic/publicChatRoom/${id}`, onMessageReceived);
+
+    // Tell your username to the server
+    stompClient.send(`/app/chat.addUser/${id}`,
+        {},
+        JSON.stringify({senderId: username, receiverId: id, type: 'JOIN'})
+    )
+
+    connectingElement.classList.add('d-none');
+}
+
+
+function onError(error) {
+    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+    connectingElement.style.color = 'red';
+}
+
+
+function sendMessage(event) {
+    var messageContent = messageInput.value.trim();
+    if (messageContent && stompClient) {
+        var chatMessage = {
+            senderId: username,
+            receiverId: id,
+            content: messageInput.value,
+            type: 'CHAT'
+        };
+        stompClient.send(`/app/chat.sendMessage/${id}`, {}, JSON.stringify(chatMessage));
+        messageInput.value = '';
     }
-});
-
-// Hàm để gửi tin nhắn đến server
-function sendMessage(type, content) {
-    const message = {
-        type: type,
-        content: content
-    };
-    socket.send(JSON.stringify(message));
+    event.preventDefault();
 }
 
-// Gửi tin nhắn hình ảnh (đây chỉ là một ví dụ, bạn cần có cách xác định tin nhắn là hình ảnh)
-function sendImageMessage(binaryImage) {
-    sendMessage('image', binaryImage);
+function onMessageReceived(payload) {
+    var message = JSON.parse(payload.body);
+
+    var messageElement = document.createElement('li');
+
+    if (message.type === 'JOIN') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' joined!';
+    } else if (message.type === 'LEAVE') {
+        messageElement.classList.add('event-message');
+        message.content = message.sender + ' left!';
+    } else {
+        messageElement.classList.add('chat-message');
+        var usernameElement = document.createElement('strong');
+        usernameElement.classList.add('nickname');
+        // var usernameText = document.createTextNode(message.sender);
+        var usernameText = document.createTextNode(message.senderId);
+        usernameElement.appendChild(usernameText);
+        messageElement.appendChild(usernameElement);
+    }
+
+    var textElement = document.createElement('span');
+    var messageText = document.createTextNode(message.content);
+    textElement.appendChild(messageText);
+
+    messageElement.appendChild(textElement);
+
+    messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-// Gửi tin nhắn văn bản
-function sendTextMessage(text) {
-    sendMessage('text', text);
-}
+messageForm.addEventListener('submit', sendMessage, true);
