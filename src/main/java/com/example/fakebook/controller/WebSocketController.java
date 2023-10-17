@@ -42,12 +42,12 @@ public class WebSocketController {
 //        return messageDtos;
 //    }
 //
-//    @MessageMapping("/getFriends/{receiverId}")
-//    @SendTo("/topic/friends/{receiverId}")
-//    public List<FriendshipDto> getFriendships(@DestinationVariable Long receiverId) {
-//        List<FriendshipDto> friendships = friendShipService.getFriendshipsByReceiverId(receiverId);
-//        return friendships;
-//    }
+    @MessageMapping("/getFriends/{receiverId}")
+    @SendTo("/topic/friends/{receiverId}")
+    public List<FriendshipDto> getFriendships(@DestinationVariable Long receiverId) {
+        List<FriendshipDto> friendships = friendShipService.getFriendshipsByReceiverId(receiverId);
+        return friendships;
+    }
 //
 //    @MessageMapping("/getFollower/{receiverId}")
 //    @SendTo("/topic/follower/{receiverId}")
@@ -55,7 +55,7 @@ public class WebSocketController {
 //        List<FriendshipDto> followers = friendShipService.getFollowerByReceiverId(receiverId);
 //        return followers;
 //    }
-
+//
     @MessageMapping("/chat.sendMessage/{id}")
     @SendTo("/topic/publicChatRoom/{id}")
     public List<MessageDto> sendMessage(@DestinationVariable("id") Long id, @Payload MessageDto chat) {
@@ -65,11 +65,19 @@ public class WebSocketController {
         return messageDtos;
     }
 
+//    @MessageMapping("/chat.sendMessage/{id}")
+//    @SendTo("/topic/publicChatRoom/{id}")
+//    public MessageDto sendMessage(@DestinationVariable("id") Long id, @Payload MessageDto chat) {
+//        Message message = new Message(chat);
+//        Message savedMessage = messageService.save(message);
+//        return chat;
+//    }
+
     @MessageMapping("/chat.addUser/{id}")
     @SendTo("/topic/publicChatRoom/{id}")
-    public Message addUser(@DestinationVariable("id") Long id, @Payload Message chat, SimpMessageHeaderAccessor headerAccessor) {
+    public MessageDto addUser(@DestinationVariable("id") Long id, @Payload MessageDto chat, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chat.getSenderId());
+        headerAccessor.getSessionAttributes().put("username", chat.getSender());
         headerAccessor.getSessionAttributes().put("sender", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("receiver", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("room", id);
