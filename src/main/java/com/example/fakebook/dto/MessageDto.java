@@ -18,8 +18,10 @@ import javax.persistence.*;
 public class MessageDto {
     private Long id;
     private String content;
+    private String sender;
     private Long senderId;
     private Long receiverId;
+    private String type;
     private Enums.MessageStatus status = Enums.MessageStatus.UNSEEN;
 
     public MessageDto(Message message) {

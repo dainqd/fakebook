@@ -1,3 +1,5 @@
+const baseUrl = `http://localhost:`;
+
 function getCookieValue(cookieName) {
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
@@ -9,8 +11,19 @@ function getCookieValue(cookieName) {
     return null;
 }
 
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
 var token = getCookieValue('accessToken');
 var username = getCookieValue('username');
+var userIdLogined = 0;
 
 function checkLogin() {
     if (!token || !username) {
@@ -59,6 +72,8 @@ async function checkAdmin() {
             }
 
             $(".avtCurrentUser").attr("src", response.avt);
+            userIdLogined = response.id;
+            setCookie(`userId`, response.id, 7),
             localStorage.setItem('user_id', response.id)
             $(".likeUser").text(response.likes);
             $(".viewUser").text(response.views);
@@ -69,8 +84,8 @@ async function checkAdmin() {
 
 checkAdmin();
 
-async function findUserId(id) {
-    await fetch('/api/v1/user/' + id, {
+async function findUserId() {
+    await fetch('/api/v1/user/' + localStorage.getItem('user_id'), {
         method: 'GET',
         headers: {
             'content-type': 'application/json',
@@ -106,14 +121,17 @@ async function findUserId(id) {
         .catch(error => console.log(error));
 }
 
-findUserId(localStorage.getItem('user_id'));
+findUserId();
 
 async function adminOpen() {
     let admin = $('#myAdmin');
     if (isAdmin) {
         await admin.removeClass('d-none');
         await admin.on('click', function () {
-            window.location.href = 'http://localhost:3000';
+            let port = `3000`;
+            const adminUrl = `${baseUrl}${port}/?accessToken=${token}&username=${username}&id=${userIdLogined}`;
+            // window.location.href = adminUrl;
+            window.open(adminUrl, "_blank");
         })
     } else {
         await admin.addClass('d-none');

@@ -152,110 +152,55 @@
                             </div><!-- sidebar -->
                             <div class="col-lg-6">
                                 <div class="central-meta">
-                                    <div class="messages">
-                                        <h5 class="f-title">
-                                            <i class="ti-bell"></i>
-                                            All Messages
-                                        </h5>
+                                    <div id="chat-container" class="messages">
+                                        <h5 class="f-title">All Messages</h5>
                                         <div class="message-box">
-                                            <ul class="peoples">
-                                                <li>
-                                                    <figure>
-                                                        <img src="images/resources/friend-avatar2.jpg" alt="">
-                                                        <span class="status f-online"></span>
-                                                    </figure>
-                                                    <div class="people-name">
-                                                        <span>Molly cyrus</span>
-                                                    </div>
-                                                </li>
-                                                <li>
+                                            <ul class="peoples" id="listFriend">
 
-                                                    <figure><img src="images/resources/friend-avatar3.jpg" alt="">
-                                                        <span class="status f-away"></span>
-                                                    </figure>
-                                                    <div class="people-name">
-                                                        <span>Andrew</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-
-                                                    <figure>
-                                                        <img src="images/resources/friend-avatar.jpg" alt="">
-                                                        <span class="status f-online"></span>
-                                                    </figure>
-
-                                                    <div class="people-name">
-                                                        <span>jason bourne</span>
-                                                    </div>
-                                                </li>
-                                                <li>
-
-                                                    <figure><img src="images/resources/friend-avatar4.jpg" alt="">
-                                                        <span class="status off-online"></span>
-                                                    </figure>
-                                                    <div class="people-name">
-                                                        <span>Sarah Grey</span>
-                                                    </div>
-                                                </li>
                                             </ul>
-                                            <div class="peoples-mesg-box" id="chat-container">
-                                                <div class="conversation-head">
-                                                    <figure><img src="images/resources/friend-avatar.jpg" alt=""></figure>
-                                                    <span>jason bourne <i>online</i></span>
+
+                                            <div class="peoples-mesg-box">
+                                                <div class="conversation-head" id="chatUserCurrent">
+
                                                 </div>
+
                                                 <div id="connecting">Connecting...</div>
-                                                <ul class="chatting-area" id="messageArea">
-<!--                                                    <li class="you">-->
-<!--                                                        <figure><img src="images/resources/userlist-2.jpg" alt=""></figure>-->
-<!--                                                        <p>what's liz short for? :)</p>-->
-<!--                                                    </li>-->
-<!--                                                    <li class="me">-->
-<!--                                                        <figure><img src="images/resources/userlist-1.jpg" alt=""></figure>-->
-<!--                                                        <p>Elizabeth lol</p>-->
-<!--                                                    </li>-->
-<!--                                                    <li class="me">-->
-<!--                                                        <figure><img src="images/resources/userlist-1.jpg" alt=""></figure>-->
-<!--                                                        <p>wanna know whats my second guess was?</p>-->
-<!--                                                    </li>-->
-<!--                                                    <li class="you">-->
-<!--                                                        <figure><img src="images/resources/userlist-2.jpg" alt=""></figure>-->
-<!--                                                        <p>yes</p>-->
-<!--                                                    </li>-->
+                                                <ul id="messageArea" style="overflow-y: scroll">
                                                 </ul>
-                                                <div class="message-text-container">
-                                                    <form id="messageForm" name="messageForm">
-                                                        <div class="input-message">
-                                                            <textarea type="text" id="message" autocomplete="off"
-                                                                      placeholder="Type a message..."></textarea>
-                                                            <button type="submit" title="send"><i class="fa fa-paper-plane"></i></button>
-                                                        </div>
-                                                    </form>
-                                                </div>
+
+                                                <form id="messageForm" name="messageForm">
+                                                    <div class="input-message">
+                                                        <input type="text" id="message" autocomplete="off"
+                                                               placeholder="Type a message..."/>
+                                                        <button type="submit">Send</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
-<!--                                    <div class="messages">-->
-<!--                                        <h5 class="f-title">All Messages</h5>-->
-<!--                                        <div class="message-box">-->
-<!--                                            <ul class="peoples" id="listFriend">-->
+                                    <span class="d-none" id="room">9</span>
+                                    <!--                                    <div class="messages">-->
+                                    <!--                                        <h5 class="f-title">All Messages</h5>-->
+                                    <!--                                        <div class="message-box">-->
+                                    <!--                                            <ul class="peoples" id="listFriend">-->
 
-<!--                                            </ul>-->
+                                    <!--                                            </ul>-->
 
-<!--                                            <div class="peoples-mesg-box">-->
-<!--                                                <div class="conversation-head" id="chatUserCurrent">-->
+                                    <!--                                            <div class="peoples-mesg-box">-->
+                                    <!--                                                <div class="conversation-head" id="chatUserCurrent">-->
 
-<!--                                                </div>-->
+                                    <!--                                                </div>-->
 
-<!--                                                <ul class="chatting-area" id="chatContainer">-->
+                                    <!--                                                <ul class="chatting-area" id="chatContainer">-->
 
-<!--                                                </ul>-->
+                                    <!--                                                </ul>-->
 
-<!--                                                <div class="message-text-container d-none" id="mainFormChat">-->
+                                    <!--                                                <div class="message-text-container d-none" id="mainFormChat">-->
 
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
+                                    <!--                                                </div>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
                                 </div>
                             </div><!-- centerl meta -->
                             <div class="col-lg-3">
