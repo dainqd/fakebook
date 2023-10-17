@@ -9,6 +9,10 @@ public class Enums {
         ACTIVE, DELETED, INACTIVE, BLOCKED
     }
 
+    public static enum TypeUser {
+        NORMAL, VIP, SUPER_VIP
+    }
+
     public static enum FriendshipStatus {
         APPROVED, DELETED, PENDING, BLOCKED, NONE
     }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
-import { Button, Form, message, Table } from 'antd';
+import {Button, Form, message, Table} from 'antd';
 import accountService from '../../../Service/AccountService';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Footer from "../../../Shared/Admin/Footer/Footer";
 import Modal from "react-bootstrap/Modal";
 
@@ -46,7 +46,7 @@ function List() {
         for (let i = 0; i < listBtnDelete.length; i++) {
             let item = listBtnDelete[i];
             let value = item.getAttribute('data-id');
-            if (value == id){
+            if (value == id) {
                 item.disabled = true;
             }
         }
@@ -64,6 +64,7 @@ function List() {
             message.error('Error deleting account');
         }
     };
+
     useEffect(() => {
         getListAccount();
         checkIsDelete();
@@ -143,10 +144,10 @@ function List() {
 
     return (
         <div>
-            <Header />
-            <Sidebar />
+            <Header/>
+            <Sidebar/>
 
-            <main id="main" className="main" style={{ backgroundColor: "#f6f9ff" }}>
+            <main id="main" className="main" style={{backgroundColor: "#f6f9ff"}}>
                 <div className="pagetitle">
                     <h1>List Account</h1>
                     <nav>
@@ -158,7 +159,7 @@ function List() {
                     </nav>
                 </div>
                 <Table
-                    style={{ margin: "auto" }}
+                    style={{margin: "auto"}}
                     columns={columns}
                     dataSource={data}
                     pagination={tableParams.pagination}
@@ -166,7 +167,7 @@ function List() {
                     onChange={handleTableChange}
                 />
             </main>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

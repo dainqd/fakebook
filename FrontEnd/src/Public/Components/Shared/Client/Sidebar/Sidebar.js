@@ -25,17 +25,17 @@ function Sidebar() {
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" to="#">
-                            <i className="bi bi-gem" /><span>Comments</span><i className="bi bi-chevron-down ms-auto" />
+                            <i className="bi bi-gem" /><span>Marketing</span><i className="bi bi-chevron-down ms-auto" />
                         </Link>
                         <ul id="icons-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
                                 <a href="icons-bootstrap.html">
-                                    <i className="bi bi-circle" /><span>List Comments</span>
+                                    <i className="bi bi-circle" /><span>List Marketing</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="icons-remix.html">
-                                    <i className="bi bi-circle" /><span>Create Comments</span>
+                                    <i className="bi bi-circle" /><span>Create Marketing</span>
                                 </a>
                             </li>
                         </ul>

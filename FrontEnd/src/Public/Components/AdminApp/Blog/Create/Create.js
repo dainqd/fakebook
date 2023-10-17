@@ -108,7 +108,7 @@ function BlogCreate() {
                                         className="row">
 
                                         <div className="col-md-6">
-                                            <label htmlFor="validationDefault04" className="form-label">Status</label>
+                                            <label htmlFor="status" className="form-label">Status</label>
                                             <select className="form-select" id="status">
                                                 {
                                                     StatusAccount.map((status, index) => (
@@ -119,10 +119,14 @@ function BlogCreate() {
                                                 }
                                             </select>
                                         </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="thumnail" className="form-label">Thumbnail</label>
+                                            <input id="thumnail" type="file" multiple className="form-control"/>
+                                        </div>
 
                                         <div className="col-md-12">
-                                            <label htmlFor="validationDefault02" className="form-label">LastName</label>
-                                            <textarea id="content" name="validationDefault02"
+                                            <label htmlFor="content" className="form-label">Content</label>
+                                            <textarea id="content" name="content"
                                                       className="form-control"></textarea>
                                         </div>
 

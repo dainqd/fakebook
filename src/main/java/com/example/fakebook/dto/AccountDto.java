@@ -38,6 +38,7 @@ public class AccountDto {
     private String password;
     private Set<Roles> roles = new HashSet<>();
     private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
+    private Enums.TypeUser type = Enums.TypeUser.NORMAL;
 
     public AccountDto(Accounts accounts) {
         BeanUtils.copyProperties(accounts, this);
