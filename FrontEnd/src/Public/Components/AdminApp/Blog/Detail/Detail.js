@@ -21,9 +21,6 @@ function uploadImageMain(idInput) {
         fetch(urlUpload, {
             method: 'POST',
             body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
         })
             .then(response => response.json())
             .then(data => {
@@ -75,19 +72,31 @@ function Detail() {
     }, [form, id])
 
 
+    // const handleUpload = async (e) => {
+    //     e.preventDefault();
+    //     const inputFile = document.getElementById('inputFile');
+    //     const formData = new FormData();
+    //     formData.append('thumbnail', inputFile.files[0]);
+    //
+    //     try {
+    //         const response = await axios.post('http://127.0.0.1:8000/upload-image', formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         });
+    //         console.log('Response:', response.data);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+
+
     const handleUpload = async (e) => {
         e.preventDefault();
-        const inputFile = document.getElementById('inputFile');
-        const formData = new FormData();
-        formData.append('thumbnail', inputFile.files[0]);
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/upload-image', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log('Response:', response.data);
+            const response = await uploadImageMain('inputFile');
+            console.log('Response:', response);
         } catch (error) {
             console.error('Error:', error);
         }

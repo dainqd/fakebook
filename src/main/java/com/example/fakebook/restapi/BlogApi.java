@@ -34,6 +34,14 @@ public class BlogApi {
         return blogService.findAllByStatus(Enums.BlogStatus.ACTIVE, pageable).map(BlogDto::new);
     }
 
+    @GetMapping("/user/{id}")
+    public Page<BlogDto> getAllByUser(@PathVariable(name = "id") Long id,
+                                      @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                      @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return blogService.findAllByUserId(id, pageable).map(BlogDto::new);
+    }
+
     @GetMapping("{id}")
     public BlogDto getDetail(@PathVariable(name = "id") Long id) {
         Optional<Blog> optionalBlog;
@@ -67,7 +75,7 @@ public class BlogApi {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("account.not.found"));
         }
-        blogService.deleteById(id, optionalBlog.get().getUser_id().getId());
+        blogService.deleteById(id, optionalBlog.get().getUser().getId());
         return new ResponseEntity<>(messageResourceService.getMessage("delete.success"), HttpStatus.OK);
     }
 
@@ -76,6 +84,7 @@ public class BlogApi {
         Blog blog = blogService.likeBlog(id, check);
         return new BlogDto(blog);
     }
+
     @PostMapping("view/{id}")
     public BlogDto viewBlog(@PathVariable(name = "id") Long id) {
         Blog blog = blogService.viewBlog(id);

@@ -18,4 +18,7 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     Optional<Blog> findById(Long id);
 
     Optional<Blog> findByIdAndStatus(Long id, Enums.BlogStatus status);
+
+    Page<Blog> findAllByUser_id(Long id, Pageable pageable);
+
 }

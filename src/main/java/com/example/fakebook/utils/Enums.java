@@ -40,4 +40,8 @@ public class Enums {
     public static enum GroupMembersStatus {
         ACTIVE, DELETED, INACTIVE
     }
+
+    public static enum MarketingStatus {
+        ACTIVE, DELETED, INACTIVE
+    }
 }
