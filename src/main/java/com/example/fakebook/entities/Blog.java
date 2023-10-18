@@ -25,7 +25,7 @@ public class Blog extends BaseEntity {
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts user_id;
+    private Accounts user;
     private String thumbnail;
     @Lob
     private String content;
@@ -41,7 +41,7 @@ public class Blog extends BaseEntity {
     }
 
     public Blog(Accounts user_id, String thumbnail, String content, int likes, int views, int comments, int shares, Enums.BlogStatus status) {
-        this.user_id = user_id;
+        this.user = user_id;
         this.thumbnail = thumbnail;
         this.content = content;
         this.likes = likes;

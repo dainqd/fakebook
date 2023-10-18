@@ -12,6 +12,8 @@ import Detail from './Components/AdminApp/User/Detail/Detail'
 import List from './Components/AdminApp/User/List/List'
 
 import BlogCreate from './Components/AdminApp/Blog/Create/Create'
+import BlogList from './Components/AdminApp/Blog/List/List'
+import BlogDetail from './Components/AdminApp/Blog/Detail/Detail'
 
 function Public() {
     return (
@@ -29,7 +31,9 @@ function Public() {
                 <Route path='/profile' element={<Profile />} />
                 {/*blog*/}
                 {/*<Route path='/admin/blog/list' element={<BlogCreate />} />*/}
+                <Route path='/admin/blog/list' element={<BlogList />} />
                 <Route path='/admin/blog/create' element={<BlogCreate />} />
+                <Route path='/admin/blog/:id' element={<BlogDetail />} />
             </Routes>
         </div>
     )

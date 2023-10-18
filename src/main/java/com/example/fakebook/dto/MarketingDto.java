@@ -1,6 +1,7 @@
 package com.example.fakebook.dto;
 
 import com.example.fakebook.entities.Accounts;
+import com.example.fakebook.entities.Marketing;
 import com.example.fakebook.entities.Message;
 import com.example.fakebook.utils.Enums;
 import lombok.AllArgsConstructor;
@@ -9,22 +10,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
-import javax.persistence.*;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDto {
-    private Long id;
+public class MarketingDto {
+    private long id;
+    private Accounts user_id;
+    private String thumbnail;
     private String content;
-    private String sender;
-    private Long senderId;
-    private Long receiverId;
-    private String type;
-    private Enums.MessageStatus status = Enums.MessageStatus.UNSEEN;
+    private Enums.MarketingStatus status = Enums.MarketingStatus.INACTIVE;
 
-    public MessageDto(Message message) {
-        BeanUtils.copyProperties(message, this);
+    public MarketingDto(Marketing marketing) {
+        BeanUtils.copyProperties(marketing, this);
     }
 }

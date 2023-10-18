@@ -152,7 +152,7 @@
                             </div><!-- sidebar -->
                             <div class="col-lg-6">
                                 <div class="central-meta">
-                                    <div class="messages">
+                                    <div id="chat-container" class="messages">
                                         <h5 class="f-title">All Messages</h5>
                                         <div class="message-box">
                                             <ul class="peoples" id="listFriend">
@@ -164,16 +164,43 @@
 
                                                 </div>
 
-                                                <ul class="chatting-area" id="chatContainer">
-
+                                                <div id="connecting">Connecting...</div>
+                                                <ul id="messageArea" style="overflow-y: scroll">
                                                 </ul>
 
-                                                <div class="message-text-container d-none" id="mainFormChat">
-
-                                                </div>
+                                                <form id="messageForm" name="messageForm">
+                                                    <div class="input-message">
+                                                        <input type="text" id="message" autocomplete="off"
+                                                               placeholder="Type a message..."/>
+                                                        <button type="submit">Send</button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
+                                    <span class="d-none" id="room">9</span>
+                                    <!--                                    <div class="messages">-->
+                                    <!--                                        <h5 class="f-title">All Messages</h5>-->
+                                    <!--                                        <div class="message-box">-->
+                                    <!--                                            <ul class="peoples" id="listFriend">-->
+
+                                    <!--                                            </ul>-->
+
+                                    <!--                                            <div class="peoples-mesg-box">-->
+                                    <!--                                                <div class="conversation-head" id="chatUserCurrent">-->
+
+                                    <!--                                                </div>-->
+
+                                    <!--                                                <ul class="chatting-area" id="chatContainer">-->
+
+                                    <!--                                                </ul>-->
+
+                                    <!--                                                <div class="message-text-container d-none" id="mainFormChat">-->
+
+                                    <!--                                                </div>-->
+                                    <!--                                            </div>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
                                 </div>
                             </div><!-- centerl meta -->
                             <div class="col-lg-3">
@@ -202,7 +229,41 @@
                                     <div class="widget stick-widget">
                                         <h4 class="widget-title">Who's follownig</h4>
                                         <ul class="followers" id="listFollower">
-
+                                            <li>
+                                                <figure><img src="images/resources/friend-avatar2.jpg" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <figure><img src="images/resources/friend-avatar4.jpg" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Issabel</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <figure><img src="images/resources/friend-avatar6.jpg" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Andrew</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <figure><img src="images/resources/friend-avatar8.jpg" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Sophia</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <figure><img src="images/resources/friend-avatar3.jpg" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Allen</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div><!-- who's following -->
                                 </aside>
@@ -353,10 +414,9 @@
     }
 
 </script>
-<script th:src="@{/main/js/message.js}"></script>
+<script th:src="@{/main/js/test.js}"></script>
+<!--<script th:src="@{/main/js/message.js}"></script>-->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
 
-    });
 </script>
 </html>

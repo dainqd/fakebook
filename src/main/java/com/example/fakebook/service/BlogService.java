@@ -103,7 +103,7 @@ public class BlogService {
         }
 
         Blog blog = blogOptional.get();
-        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser_id().getId());
+        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser().getId());
 
         if (!optionalAccounts.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -131,7 +131,7 @@ public class BlogService {
         }
         Blog blog = blogOptional.get();
 
-        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser_id().getId());
+        Optional<Accounts> optionalAccounts = userService.findById(blog.getUser().getId());
         if (!optionalAccounts.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("account.not.found"));
@@ -143,5 +143,10 @@ public class BlogService {
         userService.save(accounts);
         blogRepository.save(blog);
         return blog;
+    }
+
+
+    public Page<Blog> findAllByUserId(Long id, Pageable pageable) {
+        return blogRepository.findAllByUser_id(id, pageable);
     }
 }

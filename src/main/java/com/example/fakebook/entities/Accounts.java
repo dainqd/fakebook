@@ -56,6 +56,8 @@ public class Accounts extends BaseEntity {
     private Set<Roles> roles = new HashSet<>();
     @Enumerated(EnumType.STRING)
     private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
+    @Enumerated(EnumType.STRING)
+    private Enums.TypeUser type = Enums.TypeUser.NORMAL;
 
     public Accounts(String avt, String username, String email) {
         this.avt = avt;

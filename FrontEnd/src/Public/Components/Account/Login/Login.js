@@ -50,7 +50,7 @@ function Login() {
 
                             <div className="d-flex justify-content-center py-4">
                                 <Link to="/" className="logo d-flex align-items-center w-auto">
-                                    <img src="assets/img/logo.png" alt=""></img>
+                                    <img src="assets/img/logo2.png" alt=""></img>
                                     <span className="d-none d-lg-block">FaceBook</span>
                                 </Link>
                             </div>

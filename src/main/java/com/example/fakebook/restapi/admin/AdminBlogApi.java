@@ -39,14 +39,10 @@ public class AdminBlogApi {
         return blogService.findAll(pageable).map(BlogDto::new);
     }
 
-    @GetMapping("{id}/{status}")
-    public BlogDto getDetail(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Enums.BlogStatus status) {
+    @GetMapping("{id}")
+    public BlogDto getDetail(@PathVariable(name = "id") Long id) {
         Optional<Blog> optionalBlog;
-        if (status != null) {
-            optionalBlog = blogService.findByIdAndStatus(id, status);
-        } else {
-            optionalBlog = blogService.findById(id);
-        }
+        optionalBlog = blogService.findById(id);
         if (!optionalBlog.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     messageResourceService.getMessage("id.not.found"));

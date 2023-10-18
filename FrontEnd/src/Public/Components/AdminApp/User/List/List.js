@@ -1,37 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
-import { Button, Form, message, Table } from 'antd';
+import {Button, Form, message, Table} from 'antd';
 import accountService from '../../../Service/AccountService';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Footer from "../../../Shared/Admin/Footer/Footer";
-
-// Modal Component
-function DeleteAccountModal({ id, handleDelete }) {
-    return (
-        <div className="modal fade" id={`deleteAccount-${id}`} tabIndex="-1" role="dialog" aria-labelledby={`editModalLabel-${id}`} aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id={`exampleModalLabel-${id}`}>Delete Account</h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div className="modal-body">
-                        <h5 className="text-center">Are you sure you want to delete this account?</h5>
-                        <Form id={`delete-account-form-${id}`}>
-                            <div className="d-flex justify-content-around">
-                                <button type="submit" className="btn w-25 btn-danger" onClick={() => handleDelete(id)}>Delete</button>
-                                <button type="button" className="btn w-25 btn-secondary" data-dismiss="modal">Back</button>
-                            </div>
-                        </Form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+import Modal from "react-bootstrap/Modal";
 
 function List() {
     const [data, setData] = useState([]);
@@ -42,6 +16,11 @@ function List() {
             pageSize: 10,
         },
     });
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const getListAccount = async () => {
         setLoading(true);
@@ -60,11 +39,26 @@ function List() {
         }
     }
 
+    const checkIsDelete = async () => {
+        let id = sessionStorage.getItem('id');
+        let listBtnDelete = document.getElementsByClassName('btnDelete');
+        console.log(listBtnDelete.length)
+        for (let i = 0; i < listBtnDelete.length; i++) {
+            let item = listBtnDelete[i];
+            let value = item.getAttribute('data-id');
+            if (value == id) {
+                item.disabled = true;
+            }
+        }
+    };
+
     const handleDelete = async (id) => {
         try {
-            await accountService.adminDeleteAccount(id);
-            setData(prevData => prevData.filter(item => item.id !== id));
-            message.success(`Deleted account: ${id}`);
+            if (window.confirm("Delete the user?")) {
+                await accountService.adminDeleteAccount(id);
+                setData(prevData => prevData.filter(item => item.id !== id));
+                message.success(`Deleted account: ${id}`);
+            }
         } catch (error) {
             console.error(error);
             message.error('Error deleting account');
@@ -73,6 +67,7 @@ function List() {
 
     useEffect(() => {
         getListAccount();
+        checkIsDelete();
     }, []);
 
     const columns = [
@@ -126,8 +121,7 @@ function List() {
             key: 'x',
             render: (id) => (
                 <>
-                    {/*<Button className="" data-toggle="modal" data-target={`#deleteAccount-${id}`}>*/}
-                    <Button onClick={() => handleDelete(id)}>
+                    <Button className="btnDelete" data-id={id} onClick={() => handleDelete(id)}>
                         Delete
                     </Button>
                     <Button>
@@ -135,7 +129,6 @@ function List() {
                             Details
                         </Link>
                     </Button>
-                    {/*<DeleteAccountModal id={id} handleDelete={handleDelete} />*/}
                 </>
             ),
         },
@@ -151,10 +144,10 @@ function List() {
 
     return (
         <div>
-            <Header />
-            <Sidebar />
+            <Header/>
+            <Sidebar/>
 
-            <main id="main" className="main" style={{ backgroundColor: "#f6f9ff" }}>
+            <main id="main" className="main" style={{backgroundColor: "#f6f9ff"}}>
                 <div className="pagetitle">
                     <h1>List Account</h1>
                     <nav>
@@ -166,7 +159,7 @@ function List() {
                     </nav>
                 </div>
                 <Table
-                    style={{ margin: "auto" }}
+                    style={{margin: "auto"}}
                     columns={columns}
                     dataSource={data}
                     pagination={tableParams.pagination}
@@ -174,7 +167,7 @@ function List() {
                     onChange={handleTableChange}
                 />
             </main>
-            <Footer />
+            <Footer/>
         </div>
     );
 }
