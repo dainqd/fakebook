@@ -1,5 +1,6 @@
 let userID = getCookieValue('userId');
 let tokenUser = getCookieValue('accessToken')
+
 $(document).ready(function () {
     loadUserFriend();
     loadUserFollower();
@@ -55,7 +56,9 @@ async function appendListFriend(res) {
             } else {
                 state = `<span class="status off-online"></span> `
             }
-            html = html + `<li><figure><img src="${item.sender.avt}" alt="">` +
+            let userItem = JSON.stringify(item.sender);
+            userItem = "!!!" + userItem + "!!!";
+            html = html + `<li onclick="renderMessage(${userItem})"><figure><img src="${item.sender.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
@@ -68,7 +71,9 @@ async function appendListFriend(res) {
             } else {
                 state = `<span class="status off-online"></span> `
             }
-            html = html + `<li><figure><img src="${item.receiver.avt}" alt="">` +
+            let userItem = JSON.stringify(item.receiver);
+            userItem = "!!!" + userItem + "!!!";
+            html = html + `<li onclick="renderMessage(${userItem})"><figure><img src="${item.receiver.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
@@ -145,7 +150,7 @@ async function addFriends(receiverID) {
         }
     }
 
-    fetch(url, {
+    await fetch(url, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -178,24 +183,7 @@ async function applyFriends(senderID) {
         }
     }
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ` + `${tokenUser}`
-        },
-        body: JSON.stringify(formData),
-
-    })
-        .then(response => {
-            if (response.status == 200) {
-                loadUserFriend();
-                loadUserFollower();
-            } else {
-                alert("Error! Please try again");
-            }
-        })
-        .catch(error => console.log(error));
+    await fetchUrl(url, formData)
 }
 
 async function removeFriends(senderID) {
@@ -214,14 +202,17 @@ async function removeFriends(senderID) {
         id: senderID
     }
 
+    await fetchUrl(url, formData)
+}
 
-    fetch(url, {
+async function fetchUrl(url, data) {
+    await fetch(url, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
             'Authorization': `Bearer ` + `${tokenUser}`
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
 
     })
         .then(response => {
@@ -233,4 +224,19 @@ async function removeFriends(senderID) {
             }
         })
         .catch(error => console.log(error));
+}
+
+function renderMessage(user) {
+    let html = ``;
+    let state = ``;
+    let sender = JSON.parse(user);
+    if (sender.state && sender.state == 'ONLINE') {
+        state = `<i>online</i>`
+    } else {
+        state = `<i>offline</i> `
+    }
+    html = ` <figure><img src="${sender.avt}" alt="">
+                                                    </figure>
+                                                    <span>${sender.username} ${state} </span>`;
+    $('#chatUserCurrent').empty().append(html);
 }
