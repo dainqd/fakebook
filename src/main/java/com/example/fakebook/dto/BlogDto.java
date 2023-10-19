@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BlogDto {
     private long id;
-    private Accounts user_id;
+    private Accounts user;
     private LocalDateTime createdAt;
     private String content;
     private int likes;

@@ -56,31 +56,28 @@ public class WebSocketController {
 //        return followers;
 //    }
 //
-    @MessageMapping("/chat.sendMessage/{id}")
-    @SendTo("/topic/publicChatRoom/{id}")
-    public List<MessageDto> sendMessage(@DestinationVariable("id") Long id, @Payload MessageDto chat) {
+    @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/publicChatRoom")
+    public MessageDto sendMessage(@Payload MessageDto chat) {
         Message message = new Message(chat);
         Message savedMessage = messageService.save(message);
+        return new MessageDto(savedMessage);
+    }
+
+    @MessageMapping("/chat.loadMessageHistory")
+    @SendTo("/topic/publicChatRoom")
+    public List<MessageDto> loadMessageHistory(@Payload MessageDto chat) {
         List<MessageDto> messageDtos = messageService.getFriendshipsByReceiverId(chat.getSenderId(), chat.getReceiverId());
         return messageDtos;
     }
 
-//    @MessageMapping("/chat.sendMessage/{id}")
-//    @SendTo("/topic/publicChatRoom/{id}")
-//    public MessageDto sendMessage(@DestinationVariable("id") Long id, @Payload MessageDto chat) {
-//        Message message = new Message(chat);
-//        Message savedMessage = messageService.save(message);
-//        return chat;
-//    }
-
-    @MessageMapping("/chat.addUser/{id}")
-    @SendTo("/topic/publicChatRoom/{id}")
-    public MessageDto addUser(@DestinationVariable("id") Long id, @Payload MessageDto chat, SimpMessageHeaderAccessor headerAccessor) {
+    @MessageMapping("/chat.addUser")
+    @SendTo("/topic/publicChatRoom")
+    public MessageDto addUser(@Payload MessageDto chat, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chat.getSender());
         headerAccessor.getSessionAttributes().put("sender", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("receiver", chat.getSenderId());
-        headerAccessor.getSessionAttributes().put("room", id);
         return chat;
     }
 }

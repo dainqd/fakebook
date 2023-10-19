@@ -6,19 +6,20 @@ import com.example.fakebook.service.FriendShipService;
 import com.example.fakebook.utils.Enums;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/friendships")
 @RequiredArgsConstructor
 public class FriendshipApi {
     final FriendShipService friendShipService;
+
+    @GetMapping("/getFriend/{id}")
+    public List<FriendshipDto> getFriends(@PathVariable(name = "id") Long id) {
+        return friendShipService.getFriendshipsByReceiverId(id);
+    }
 
     @PostMapping("/addFriends")
     public FriendshipDto addFriend(@RequestBody FriendshipDto friendshipDto) {

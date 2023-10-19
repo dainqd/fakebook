@@ -36,6 +36,8 @@ public class AccountDto {
     private int likes;
     private int views;
     private String password;
+    private String token = "";
+    private Enums.AccountState state = Enums.AccountState.OFFLINE;
     private Set<Roles> roles = new HashSet<>();
     private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
     private Enums.TypeUser type = Enums.TypeUser.NORMAL;

@@ -7,6 +7,7 @@ import com.example.fakebook.entities.Roles;
 import com.example.fakebook.service.*;
 import com.example.fakebook.utils.Enums;
 import com.example.fakebook.utils.JwtUtils;
+import com.example.fakebook.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -110,6 +111,10 @@ public class AuthController {
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
                     .collect(Collectors.toList());
+            Accounts accounts = optionalUser.get();
+            accounts.setToken(Utils.generatorRandomString(10));
+            accounts.setState(Enums.AccountState.ONLINE);
+            userDetailsService.save(accounts);
             userDetailsService.saveAccessCookie(response, jwt);
             Cookie username = new Cookie("username", loginRequest.getUsername());
             response.addCookie(username);
