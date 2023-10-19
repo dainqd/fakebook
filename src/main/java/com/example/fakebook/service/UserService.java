@@ -1,9 +1,11 @@
 package com.example.fakebook.service;
 
 import com.example.fakebook.dto.AccountDto;
+import com.example.fakebook.dto.FriendshipDto;
 import com.example.fakebook.dto.request.RegisterRequest;
 import com.example.fakebook.dto.request.UpdateInfoRequest;
 import com.example.fakebook.entities.Accounts;
+import com.example.fakebook.entities.Friendships;
 import com.example.fakebook.entities.Roles;
 import com.example.fakebook.repositories.AccountRepository;
 import com.example.fakebook.repositories.RoleRepository;
@@ -20,9 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 
 @Service
@@ -30,6 +31,7 @@ import javax.servlet.http.Cookie;
 public class UserService {
     final AccountRepository accountRepository;
     final RoleRepository roleRepository;
+    final FriendShipService friendShipService;
     final MessageResourceService messageResourceService;
     final RoleService roleService;
     final PasswordEncoder encoder;
@@ -238,4 +240,18 @@ public class UserService {
         }
         return accountsOptional.get();
     }
+
+    public List<AccountDto> getAllAccountByReceiverId(Long receiverId) {
+        List<FriendshipDto> friendships = friendShipService.getFriendships(receiverId);
+        List<Long> listID = friendships.stream()
+                .map(FriendshipDto::getId)
+                .collect(Collectors.toList());
+        listID.add(receiverId);
+
+        List<Accounts> accountsList = accountRepository.findByIdNotIn(listID);
+        return accountsList.stream()
+                .map(AccountDto::new)
+                .collect(Collectors.toList());
+    }
+
 }

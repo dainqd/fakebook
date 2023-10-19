@@ -82,16 +82,15 @@
                                     <button id="btnSaveAvt" class="d-none btn btn-success">Save</button>
                                 </li>
                                 <li class="admin-name">
-                                    <h5 class="fullName">Janice Griffith</h5>
-                                    <span class="username">Group Admin</span>
+                                    <h5 class="fullName"></h5>
+                                    <span class="username"></span>
                                 </li>
                                 <li>
-                                    <a class="active" href="time-line.html" title="" data-ripple="">time line</a>
+                                    <a class="active" href="time-line.html" title="" data-ripple="">Message</a>
+                                    <a class="" href="timeline-videos.html" title="" data-ripple="">Blogs</a>
                                     <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
-                                    <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
                                     <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
                                     <a class="" href="groups.html" title="" data-ripple="">Groups</a>
-                                    <a class="" href="about.html" title="" data-ripple="">about</a>
                                     <a class="" href="#" title="" data-ripple="">more</a>
                                 </li>
                             </ul>
@@ -102,7 +101,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="mainSection">
         <div class="gap gray-bg">
             <div class="container-fluid">
                 <div class="row">
@@ -120,42 +119,8 @@
                                     </div>
                                     <div class="widget stick-widget">
                                         <h4 class="widget-title">Who's online</h4>
-                                        <ul class="followers" id="listUser">
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar2.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar4.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Issabel</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar6.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Andrew</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar8.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Sophia</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar3.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Allen</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
+                                        <ul class="followers" id="listUserNoFriend">
+
                                         </ul>
                                     </div>
                                 </aside>
@@ -228,41 +193,7 @@
                                     <div class="widget stick-widget">
                                         <h4 class="widget-title">Who's follownig</h4>
                                         <ul class="followers" id="listFollower">
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar2.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar4.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Issabel</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar6.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Andrew</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar8.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Sophia</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <figure><img src="images/resources/friend-avatar3.jpg" alt=""></figure>
-                                                <div class="friend-meta">
-                                                    <h4><a href="time-line.html" title="">Allen</a></h4>
-                                                    <a href="#" title="" class="underline">Add Friend</a>
-                                                </div>
-                                            </li>
+
                                         </ul>
                                     </div><!-- who's following -->
                                 </aside>
@@ -326,71 +257,10 @@
 <div th:insert="fragments/main.html :: script-main"></div>
 <script th:src="@{/main/js/master.js}"></script>
 <script th:src="@{/main/js/message-private.js}"></script>
-<script th:src="@{/main/js/demo.js}"></script>
+<script th:src="@{/main/js/message-friends.js}"></script>
 <!--<script th:src="@{/main/js/test.js}"></script>-->
 <!--<script th:src="@{/main/js/message.js}"></script>-->
 <script>
-    $(document).ready(function () {
-        loadUserFriend();
 
-        async function loadUserFriend() {
-            let id = getCookieValue('userId');
-            let token = getCookieValue('accessToken')
-            let url = `api/v1/friendships/getFriend/` + id;
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ` + `${token}`
-                },
-            })
-                .done(function (response) {
-                    appendListFriend(response);
-                })
-                .fail(function (_, textStatus) {
-                    console.log(textStatus)
-                });
-        }
-
-        async function appendListFriend(res) {
-            let html = ``;
-            let id = getCookieValue('userId');
-            for (let i = 0; i < res.length; i++) {
-                let item = res[i];
-                let state = null;
-                if (item.receiver.id == id) {
-                    if (item.sender.state && item.sender.state == 'ONLINE'){
-                        state = `<span class="status f-online"></span> `
-                    } else {
-                        state = `<span class="status off-online"></span> `
-                    }
-                    html = html + `<li><figure><img src="${item.sender.avt}" alt="">` +
-                        state +
-                        `</figure>
-                                                    <div class="people-name">
-                                                        <span>${item.sender.username}</span>
-                                                    </div>
-                                                </li>`;
-                } else {
-                    if (item.receiver.state && item.receiver.state == 'ONLINE'){
-                        state = `<span class="status f-online"></span> `
-                    } else {
-                        state = `<span class="status off-online"></span> `
-                    }
-                    html = html + `<li><figure><img src="${item.receiver.avt}" alt="">` +
-                        state +
-                        `</figure>
-                                                    <div class="people-name">
-                                                        <span>${item.receiver.username}</span>
-                                                    </div>
-                                                </li>`;
-                }
-
-            }
-            $('#listFriends').empty().append(html);
-        }
-    })
 </script>
 </html>

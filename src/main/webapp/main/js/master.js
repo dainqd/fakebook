@@ -103,19 +103,9 @@ async function findUserId() {
             $(".viewUser").text(response.views);
             $('.imgUserThumbnail').attr("src", response.thumbnail);
             $('.imgUserAvatar').attr("src", response.avt);
-            let name;
-            if (!response.firstName) {
-                name = 'Default';
-            } else {
-                name = response.firstName;
-            }
-            if (!response.lastName) {
-                name = name + ' ' + 'Default';
-            } else {
-                name = name + ' ' + response.lastName;
-            }
-            $('.fullName').text(name);
-            $('.username').text(response.username);
+
+            $('.fullName').text(username);
+            $('.username').text(response.email);
 
         })
         .catch(error => console.log(error));
