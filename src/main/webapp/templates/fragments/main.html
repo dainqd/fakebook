@@ -203,6 +203,61 @@
     </div>
 </div>
 
+<div th:fragment="sectionUser">
+    <section>
+        <div class="feature-photo">
+            <figure><img src="" class="imgUserThumbnail" id="imgUserThumbnail" alt=""></figure>
+            <div class="add-btn">
+                <a title="" id="btnEditCoverPhoto" data-toggle="modal" class="cursor"
+                   data-target="#modalUploadThumbnail">Edit Cover Photo</a>
+                <a title="" class="cursor d-none" id="btnSaveCoverPhoto">Save Cover Photo</a>
+            </div>
+            <div class="container-fluid">
+                <div class="row merged">
+                    <div class="col-lg-2 col-sm-3">
+                        <div class="user-avatar" style="cursor: pointer">
+                            <figure>
+                                <img class="imgUserAvatar" alt="">
+                                <div class="imageDemo d-none">
+                                    <img class="imgUserAvatarDemo" alt="">
+                                    <button class="top-right btn btn-warning">Review Image</button>
+                                </div>
+                                <form class="edit-phto" data-toggle="modal"
+                                      data-target="#modalUploadAvt">
+                                    <i class="fa fa-camera-retro"></i>
+                                    <label class="fileContainer">
+                                        Edit Display Photo
+                                    </label>
+                                </form>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col-lg-10 col-sm-9">
+                        <div class="timeline-info">
+                            <ul>
+                                <li>
+                                    <button id="btnSaveAvt" class="d-none btn btn-success">Save</button>
+                                </li>
+                                <li class="admin-name">
+                                    <h5 class="fullName"></h5>
+                                    <span class="username"></span>
+                                </li>
+                                <li>
+                                    <a class="navbarUser navbarUserMessage" th:href="|/message|" title="" data-ripple="">Message</a>
+                                    <a class="navbarUser navbarUserBlog" th:href="|/blog|" title="" data-ripple="">Blogs</a>
+                                    <a class="navbarUser" th:href="|/photos|" title="" data-ripple="">Photos</a>
+                                    <a class="navbarUser" th:href="|/friends|" title="" data-ripple="">Friends</a>
+                                    <a class="navbarUser" th:href="|/groups|" title="" data-ripple="">Groups</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
 <div th:fragment="footerMain">
     <footer>
         <div class="container">

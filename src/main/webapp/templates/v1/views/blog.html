@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:insert="fragments/main.html :: header-main(Blog)"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<style>
+    .imgUserThumbnail {
+        width: 100%;
+        height: 400px !important;
+    }
+
+    .imgUserAvatar {
+        width: 200px;
+        height: 200px !important;
+    }
+
+    .top-right {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+    }
+
+    .imageDemo {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .chat-message {
+        margin-bottom: 10px;
+        clear: both;
+    }
+
+    .chat-message-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        float: left;
+    }
+
+    .cursor {
+        cursor: pointer !important;
+    }
+
+    .menu {
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        list-style-type: none;
+        padding: 0;
+    }
+
+</style>
+<body>
+<div class="theme-layout">
+    <div class="" th:insert="fragments/main.html :: headerMain"></div>
+
+    <div th:insert="fragments/main.html :: sectionUser">
+    </div>
+
+    <section id="mainSection">
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="page-contents">
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="advertisment-box">
+                                        <h4 class="">advertisment</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    th:src="@{/main/images/resources/ad-widget.jpg}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                </aside>
+                            </div><!-- sidebar -->
+                            <div class="col-lg-6">
+                                <div class="central-meta">
+                                    <div class="new-postbox">
+                                        <figure>
+                                            <img class="avtCurrentUser" th:src="@{/main/images/resources/admin2.jpg}"
+                                                 alt="">
+                                        </figure>
+                                        <div class="newpst-input">
+                                            <form>
+                                                <textarea id="contentBlog" required rows="2"
+                                                          placeholder="write something"></textarea>
+                                                <div class="attachments">
+                                                    <img class="imgDemoUpload d-none" id="imgDemoUpload"
+                                                         src=""
+                                                         alt="">
+                                                    <ul>
+                                                        <li class="mr-3">
+                                                            <i id="uploadImageBlog" data-toggle="modal"
+                                                               data-target="#myModalItem" class="fa fa-image"></i>
+                                                            <label class="fileContainer d-none">
+                                                                <input id="inputThumbnail" name="thumbnail" type="text">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <button id="btnCreateBlog" type="button">Post</button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div><!-- add post new box -->
+                                <div class="loadMore" id="loadBlog">
+                                    <div class="central-meta item" th:each="item : ${blogDtos}">
+                                        <div class="user-post user-blog-item">
+                                            <div class="friend-info">
+                                                <figure>
+                                                    <img th:src="${item.user.avt}" alt="">
+                                                </figure>
+                                                <div class="friend-name">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="friend-name">
+                                                            <ins><a href="#"
+                                                                    title="">[[${item.user.username}]]</a></ins>
+                                                            <span>published: [[${item.createdAt}]]</span>
+                                                        </div>
+                                                        <div class="" style="cursor: pointer">
+                                                            <div title="Detail" data-ripple="" class="showEditBlog"
+                                                                 th:data-id="|${item.id}|">
+                                                                <i class="fa fa-ellipsis-h"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div th:class="|float-right border d-none btnEditBlog btnEditBlog_${item.id}|">
+                                                        <ul class="drops-menu">
+                                                            <li>
+                                                                <a href="">swedvwevx</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="">wefwefwe</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="">hahsas</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="post-meta">
+                                                    <img th:src="${item.thumbnail}" alt="">
+                                                    <div class="we-video-info">
+                                                        <ul>
+                                                            <li>
+															<span class="views" data-toggle="tooltip" title="views">
+																<i class="fa fa-eye"></i>
+																<ins th:class="|viewQty-${item.id}|">[[${item.views}]]</ins>
+															</span>
+                                                            </li>
+                                                            <li>
+															<span class="comment commentShow" data-toggle="tooltip"
+                                                                  title="Comments"
+                                                                  th:data-id="|${item.id}|">
+																<i class="fa fa-comments-o"></i>
+																<ins th:class="|commentQty-${item.id}|">[[${item.comments}]]</ins>
+															</span>
+                                                            </li>
+                                                            <li>
+
+															<span class="likeBlog like" data-toggle="tooltip"
+                                                                  th:id="|like-${item.id}|"
+                                                                  title="like" th:data-id="${item.id}"
+                                                                  data-value="1">
+																<i class="ti-heart"></i>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
+															</span>
+
+                                                                <span class="likeBlog dislike d-none"
+                                                                      th:id="|dislike-${item.id}|"
+                                                                      data-toggle="tooltip" th:data-id="${item.id}"
+                                                                      data-value="0"
+                                                                      title="dislike">
+																<i class="ti-heart-broken"></i>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
+															</span>
+
+                                                            </li>
+                                                            <li>
+															<span class="dislike" data-toggle="tooltip" title="share">
+																<i class="fa fa-share-alt"></i>
+																<ins>[[${item.shares}]]</ins>
+															</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="description">
+                                                        [[${item.content}]]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="coment-area mt-5" th:id="|listComment-${item.id}|"
+                                                 th:data-id="${item.id}">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- centerl meta -->
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="advertisment-box">
+                                        <h4 class="">advertisment</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    th:src="@{/main/images/resources/ad-widget.jpg}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                </aside>
+                            </div><!-- sidebar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Modal -->
+    <div class="modal" id="modalUploadAvt">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnail" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUpload" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalUploadThumbnail">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadImage" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUploadThumbnail" data-dismiss="modal">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="text" class="d-none" id="inputAvtUploaded">
+    <input type="text" class="d-none" id="inputThumbnailUploaded">
+
+    <div class="" th:insert="fragments/main.html :: footerMain"></div>
+</div>
+</body>
+<div th:insert="fragments/main.html :: script-main"></div>
+<script th:src="@{/main/js/master.js}"></script>
+<script th:src="@{/main/js/message-private.js}"></script>
+<script th:src="@{/main/js/blog-comments.js}"></script>
+<script>
+    $(document).ready(function () {
+
+        // $('.showEditBlog').on('click', function () {
+        //     let data = $(this).data('id');
+        //     $('.btnEditBlog_' + data).removeClass('d-none');
+        // })
+
+        var specificElement = $('.showEditBlog');
+        var listElement = $('.btnEditBlog');
+
+        $(document).click(function(event) {
+            if (!specificElement.is(event.target) && !specificElement.has(event.target).length) {
+                listElement.addClass('d-none');
+            } else {
+                let data = specificElement.data('id');
+                $('.btnEditBlog_' + data).removeClass('d-none');
+                // let item = $('.btnEditBlog_' + data);
+                // if (!item.is(event.target) && !item.has(event.target).length) {
+                //     item.addClass('d-none');
+                // } else {
+                //     item.removeClass('d-none');
+                // }
+            }
+        });
+    })
+</script>
+</html>

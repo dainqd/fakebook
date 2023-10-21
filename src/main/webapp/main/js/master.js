@@ -11,19 +11,41 @@ function getCookieValue(cookieName) {
     return null;
 }
 
-function setCookie(name,value,days) {
+function setCookie(name, value, days) {
     var expires = "";
     if (days) {
         var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
 var token = getCookieValue('accessToken');
 var username = getCookieValue('username');
 var userIdLogined = 0;
+
+$(document).ready(function () {
+    let currentUrl = $(location).attr('href');
+    let array = null;
+    array = currentUrl.split('/');
+    let item = array[array.length - 1];
+
+    let navbarUser = $('.navbarUser');
+
+    switch (item) {
+        case 'message':
+            navbarUser.removeClass('active');
+            $('.navbarUserMessage').addClass('active');
+            break;
+        case 'blog':
+            navbarUser.removeClass('active');
+            $('.navbarUserBlog').addClass('active');
+            break;
+        default:
+            navbarUser.removeClass('active');
+    }
+})
 
 function checkLogin() {
     if (!token || !username) {
@@ -74,7 +96,7 @@ async function checkAdmin() {
             $(".avtCurrentUser").attr("src", response.avt);
             userIdLogined = response.id;
             setCookie(`userId`, response.id, 7),
-            localStorage.setItem('user_id', response.id)
+                localStorage.setItem('user_id', response.id)
             $(".likeUser").text(response.likes);
             $(".viewUser").text(response.views);
             adminOpen();

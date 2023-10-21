@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +23,7 @@ public class BlogDto {
     private String content;
     private int likes;
     private String thumbnail;
+    private List<String> listImages;
     private int views;
     private int comments;
     private int shares;
