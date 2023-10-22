@@ -131,16 +131,20 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div th:class="|float-right border d-none btnEditBlog btnEditBlog_${item.id}|">
+                                                    <div th:class="|float-right dropdown border d-none btnEditBlog btnEditBlog_${item.id}|">
                                                         <ul class="drops-menu">
                                                             <li>
-                                                                <a href="">swedvwevx</a>
+                                                                <a href="#">Share Blog</a>
                                                             </li>
                                                             <li>
-                                                                <a href="">wefwefwe</a>
+                                                                <a href="#" data-toggle="modal"
+                                                                   th:data-target="|#modalShowUpdateBlog_${item.id}|">Update
+                                                                    Blog</a>
                                                             </li>
                                                             <li>
-                                                                <a href="">hahsas</a>
+                                                                <a href="#" data-toggle="modal"
+                                                                   th:data-target="|#modalShowDeleteBlog_${item.id}|">Delete
+                                                                    Blog</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -198,7 +202,87 @@
                                             </div>
                                             <div class="coment-area mt-5" th:id="|listComment-${item.id}|"
                                                  th:data-id="${item.id}">
+                                            </div>
 
+                                            <div class="modal fade" th:id="|modalShowUpdateBlog_${item.id}|"
+                                                 tabindex="-1"
+                                                 th:aria-labelledby="|modalShowUpdateBlogLabel_${item.id}|"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                th:id="|modalShowUpdateBlogLabel_${item.id}|">Update
+                                                                Blog</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form class="">
+                                                                <div class="form-group">
+                                                                    <img th:id="|modalImageShow_${item.id}|"
+                                                                         th:src="${item.thumbnail}" alt="">
+                                                                    <input type="file" multiple
+                                                                           class="form-control inputThumbnailBlog"
+                                                                           th:data-id="${item.id}"
+                                                                           th:id="|inputThumbnailBlog_${item.id}|">
+                                                                    <input type="text" class="d-none"
+                                                                           th:id="|mainThumbnailBlog_${item.id}|"
+                                                                           th:value="${item.thumbnail}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label th:for="|inputContentBlog_${item.id}|">Content:</label>
+                                                                    <textarea rows="5" th:data-id="${item.id}"
+                                                                              class="form-control inputContentBlog"
+                                                                              th:id="|inputContentBlog_${item.id}|">
+                                                                        [[${item.content}]]
+                                                                    </textarea>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="button"
+                                                                    class="btn btn-primary btnUpdateBlogModal"
+                                                                    th:data-id="${item.id}">Save
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" th:id="|modalShowDeleteBlog_${item.id}|"
+                                                 tabindex="-1"
+                                                 th:aria-labelledby="|modalShowDeleteBlogLabel_${item.id}|"
+                                                 aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                th:id="|modalShowDeleteBlogLabel_${item.id}|">Delete
+                                                                Blog</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete this blog?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close
+                                                            </button>
+                                                            <button type="button"
+                                                                    class="btn btn-danger btnDeleteBlogModal"
+                                                                    th:data-id="${item.id}">Delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -278,29 +362,125 @@
 <script th:src="@{/main/js/blog-comments.js}"></script>
 <script>
     $(document).ready(function () {
+        $('.showEditBlog').click(function () {
+            var dropdown = $(this).next('.btnEditBlog');
+            $('.btnEditBlog').not(dropdown).hide();
+            dropdown.toggle();
+        });
 
-        // $('.showEditBlog').on('click', function () {
-        //     let data = $(this).data('id');
-        //     $('.btnEditBlog_' + data).removeClass('d-none');
-        // })
+        $(document).click(function (event) {
+            if (!$(event.target).hasClass('showEditBlog')) {
+                $('.btnEditBlog').hide();
+            }
+        });
 
-        var specificElement = $('.showEditBlog');
-        var listElement = $('.btnEditBlog');
+        $('.btnEditBlog').click(function (event) {
+            event.stopPropagation();
+        });
 
-        $(document).click(function(event) {
+        $('.inputThumbnailBlog').on('change', function () {
+            let item = $(this).data('id');
+            uploadImageUpdateBlog(item);
+        });
+
+        $('.btnUpdateBlogModal').on('click', function () {
+            let item = $(this).data('id');
+            editBlog(item);
+        });
+
+        $('.btnDeleteBlogModal').on('click', function () {
+            let item = $(this).data('id');
+            deleteBlog(item);
+        })
+    })
+
+    function clickShow(id) {
+        $(document).click(function (event) {
+            let specificElement = $('.showEditBlog');
+            let listElement = $('.btnEditBlog');
             if (!specificElement.is(event.target) && !specificElement.has(event.target).length) {
                 listElement.addClass('d-none');
             } else {
-                let data = specificElement.data('id');
-                $('.btnEditBlog_' + data).removeClass('d-none');
-                // let item = $('.btnEditBlog_' + data);
-                // if (!item.is(event.target) && !item.has(event.target).length) {
-                //     item.addClass('d-none');
-                // } else {
-                //     item.removeClass('d-none');
-                // }
+                console.log(id)
+                $('.btnEditBlog_' + id).removeClass('d-none');
             }
         });
-    })
+    }
+
+    async function editBlog(id) {
+        let thumbnail = $('#mainThumbnailBlog_' + id).val();
+        let content = $('#inputContentBlog_' + id).val();
+
+        try {
+            let updateBlog = `/api/v1/blogs`;
+
+            let user = {
+                id: localStorage.getItem('user_id')
+            };
+
+            let requestData = {
+                id: id,
+                content: content,
+                thumbnail: thumbnail,
+                user: user
+            };
+
+            if (content) {
+                await fetch(updateBlog, {
+                    method: 'PUT',
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ` + `${myToken}`
+                    },
+                    body: JSON.stringify(requestData),
+
+                })
+                    .then(response => {
+                        if (response.status == 200) {
+                            window.location.reload();
+                        } else {
+                            alert("Error! Please try again");
+                        }
+                    })
+                    .catch(error => console.log(error));
+
+            } else {
+                alert('Please enter the content of blog!')
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
+
+    async function deleteBlog(id) {
+        let deleteBlog = `/api/v1/blogs/${id}`;
+
+        await fetch(deleteBlog, {
+            method: 'DELETE',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ` + `${myToken}`
+            }
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    window.location.reload();
+                } else {
+                    alert("Error! Please try again");
+                }
+            })
+            .catch(error => console.log(error));
+    }
+
+    async function uploadImageUpdateBlog(id) {
+        await uploadImageMain('inputThumbnailBlog_' + id).then(function (response) {
+            $('#modalImageShow_' + id).attr("src", response);
+            $('#mainThumbnailBlog_' + id).val(response);
+        }).catch(function (error) {
+            console.error('Error:', error);
+        });
+    }
 </script>
 </html>

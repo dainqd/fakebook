@@ -46,7 +46,7 @@ public class BlogController {
                     String value = cookie.getValue();
                     long id = Long.parseLong(value);
                     Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-                    Page<BlogDto> blogDtos = blogService.findAllByUserId(id, pageable).map(BlogDto::new);
+                    Page<BlogDto> blogDtos = blogService.findAllByUserIdAndStatus(id, pageable).map(BlogDto::new);
                     model.addAttribute("blogDtos", blogDtos);
                     return "v1/views/blog";
                 }
