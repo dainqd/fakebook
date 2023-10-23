@@ -180,11 +180,7 @@ public class BlogService {
         StringBuilder allImages = new StringBuilder();
 
         for (Blog blog : blogList) {
-            allImages.append(blog.getThumbnail()).append(", ");
-        }
-
-        if (allImages.length() > 2) {
-            allImages.setLength(allImages.length() - 2);
+            allImages.append(blog.getThumbnail()).append(",");
         }
 
         return allImages.toString();

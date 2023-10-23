@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("")
@@ -32,5 +35,12 @@ public class HomeController {
         model.addAttribute("blogDtos", blogDtos);
 
         return "v1/views/index";
+    }
+
+    @GetMapping("photos")
+    public String getPhotoByUser(Model model,
+                                 HttpServletRequest request) {
+
+        return "v1/views/photos";
     }
 }

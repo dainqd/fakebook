@@ -56,6 +56,11 @@ public class BlogApi {
         return new BlogDto(blog);
     }
 
+    @GetMapping("/photo/{id}")
+    public String getPhotosByUser(@PathVariable(name = "id") Long id) {
+        return blogService.getAllImageUpload(id);
+    }
+
     @PostMapping("")
     public BlogDto create(@RequestBody BlogDto blogDto) {
         return new BlogDto(blogService.create(blogDto, blogDto.getUser().getId()));

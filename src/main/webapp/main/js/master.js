@@ -42,6 +42,10 @@ $(document).ready(function () {
             navbarUser.removeClass('active');
             $('.navbarUserBlog').addClass('active');
             break;
+        case 'photos':
+            navbarUser.removeClass('active');
+            $('.navbarUserPhoto').addClass('active');
+            break;
         default:
             navbarUser.removeClass('active');
     }

@@ -16,9 +16,9 @@ $(document).ready(function () {
         likeBlog(id, check);
     })
 
-    $('#submitUpload').on('click', function (e) {
+    $('#submitUploadBlog').on('click', function (e) {
         e.preventDefault();
-        uploadImageMain('uploadThumbnail').then(function (response) {
+        uploadImageMain('uploadThumbnailBlog').then(function (response) {
             console.log(response)
             $('#imgDemoUpload').removeClass('d-none')
             $('#imgDemoUpload').attr("src", response);

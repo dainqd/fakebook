@@ -124,30 +124,23 @@
                                                                     title="">[[${item.user.username}]]</a></ins>
                                                             <span>published: [[${item.createdAt}]]</span>
                                                         </div>
-                                                        <div class="" style="cursor: pointer">
-                                                            <div title="Detail" data-ripple="" class="showEditBlog"
-                                                                 th:data-id="|${item.id}|">
+
+                                                        <div th:class="|float-right dropdown btnEditBlog btnEditBlog_${item.id}|" style="cursor: pointer">
+                                                            <div  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 <i class="fa fa-ellipsis-h"></i>
+                                                            </div>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item" href="#">Share Blog</a>
+                                                                <a href="#" data-toggle="modal" class="dropdown-item"
+                                                                   th:data-target="|#modalShowUpdateBlog_${item.id}|">Update
+                                                                    Blog</a>
+                                                                <a href="#" data-toggle="modal" class="dropdown-item"
+                                                                   th:data-target="|#modalShowDeleteBlog_${item.id}|">Delete
+                                                                    Blog</a>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div th:class="|float-right dropdown border d-none btnEditBlog btnEditBlog_${item.id}|">
-                                                        <ul class="drops-menu">
-                                                            <li>
-                                                                <a href="#">Share Blog</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" data-toggle="modal"
-                                                                   th:data-target="|#modalShowUpdateBlog_${item.id}|">Update
-                                                                    Blog</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" data-toggle="modal"
-                                                                   th:data-target="|#modalShowDeleteBlog_${item.id}|">Delete
-                                                                    Blog</a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+
                                                 </div>
                                                 <div class="post-meta">
                                                     <img th:src="${item.thumbnail}" alt="">
@@ -308,6 +301,27 @@
     </section>
 
     <!-- The Modal -->
+    <div class="modal" id="myModalItem">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnailBlog" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUploadBlog" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Modal -->
     <div class="modal" id="modalUploadAvt">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -362,22 +376,6 @@
 <script th:src="@{/main/js/blog-comments.js}"></script>
 <script>
     $(document).ready(function () {
-        $('.showEditBlog').click(function () {
-            var dropdown = $(this).next('.btnEditBlog');
-            $('.btnEditBlog').not(dropdown).hide();
-            dropdown.toggle();
-        });
-
-        $(document).click(function (event) {
-            if (!$(event.target).hasClass('showEditBlog')) {
-                $('.btnEditBlog').hide();
-            }
-        });
-
-        $('.btnEditBlog').click(function (event) {
-            event.stopPropagation();
-        });
-
         $('.inputThumbnailBlog').on('change', function () {
             let item = $(this).data('id');
             uploadImageUpdateBlog(item);
@@ -393,19 +391,6 @@
             deleteBlog(item);
         })
     })
-
-    function clickShow(id) {
-        $(document).click(function (event) {
-            let specificElement = $('.showEditBlog');
-            let listElement = $('.btnEditBlog');
-            if (!specificElement.is(event.target) && !specificElement.has(event.target).length) {
-                listElement.addClass('d-none');
-            } else {
-                console.log(id)
-                $('.btnEditBlog_' + id).removeClass('d-none');
-            }
-        });
-    }
 
     async function editBlog(id) {
         let thumbnail = $('#mainThumbnailBlog_' + id).val();
