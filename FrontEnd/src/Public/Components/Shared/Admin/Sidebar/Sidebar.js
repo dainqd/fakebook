@@ -52,12 +52,12 @@ function Sidebar() {
                         </Link>
                         <ul id="icons-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="icons-bootstrap.html">
+                                <a href="/marketing/list">
                                     <i className="bi bi-circle" /><span>List Marketing</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="icons-remix.html">
+                                <a href="/marketing/create">
                                     <i className="bi bi-circle" /><span>Create Marketing</span>
                                 </a>
                             </li>

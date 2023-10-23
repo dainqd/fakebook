@@ -15,6 +15,10 @@ import BlogCreate from './Components/AdminApp/Blog/Create/Create'
 import BlogList from './Components/AdminApp/Blog/List/List'
 import BlogDetail from './Components/AdminApp/Blog/Detail/Detail'
 
+import ClientBlogCreate from './Components/Blog/Create/Create'
+import ClientBlogList from './Components/Blog/List/List'
+import ClientBlogDetail from './Components/Blog/Detail/Detail'
+
 function Public() {
     return (
         <div>
@@ -30,6 +34,9 @@ function Public() {
                 <Route path='/*' element={<Error404 />} />
                 <Route path='/profile' element={<Profile />} />
                 {/*blog*/}
+                <Route path='/blog/list' element={<ClientBlogList />} />
+                <Route path='/blog/create' element={<ClientBlogCreate />} />
+                <Route path='/blog/:id' element={<ClientBlogDetail />} />
                 {/*<Route path='/admin/blog/list' element={<BlogCreate />} />*/}
                 <Route path='/admin/blog/list' element={<BlogList />} />
                 <Route path='/admin/blog/create' element={<BlogCreate />} />

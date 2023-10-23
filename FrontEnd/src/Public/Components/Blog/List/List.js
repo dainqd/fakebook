@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import Header from '../../../Shared/Admin/Header/Header';
-import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
+import Header from '../../Shared/Admin/Header/Header';
+import Sidebar from '../../Shared/Client/Sidebar/Sidebar';
 import {Button, Form, message, Table} from 'antd';
-import blogService from '../../../Service/BlogService';
+import blogService from '../../Service/BlogService';
 import {Link} from 'react-router-dom';
-import Footer from "../../../Shared/Admin/Footer/Footer";
+import Footer from "../../Shared/Admin/Footer/Footer";
 
 function List() {
     const [data, setData] = useState([]);
@@ -23,8 +23,9 @@ function List() {
             size: 100,
             status: ''
         }
+
         try {
-            const res = await blogService.adminListStatusBlog(data);
+            const res = await blogService.listBlogByUser(sessionStorage.getItem('id'), data);
             if (res.status === 200) {
                 setData(res.data.content);
             } else {
@@ -40,8 +41,8 @@ function List() {
 
     const handleDelete = async (id) => {
         try {
-            if (window.confirm("Delete the user?")) {
-                await blogService.detailBlog(id);
+            if (window.confirm("Delete the blog?")) {
+                await blogService.deleteBlog(id);
                 setData(prevData => prevData.filter(item => item.id !== id));
                 message.success(`Deleted blog: ${id}`);
             }
@@ -81,7 +82,7 @@ function List() {
                         Delete
                     </Button>
                     <Button>
-                        <Link to={`/admin/blog/${id}`}>
+                        <Link to={`/blog/${id}`}>
                             Details
                         </Link>
                     </Button>
