@@ -339,12 +339,8 @@ function Profile() {
                                                 </div>
                                             </Form>
                                         </div>
-                                        <div className="tab-pane fade pt-3 w-50" id="profile-upgrade-member">
+                                        <div className="tab-pane fade pt-3 w-25" id="profile-upgrade-member">
                                             <div className="d-flex justify-content-between align-content-center">
-                                                <button className="btn btn-primary upgrateMember"
-                                                        // onClick={upgradeMember}
-                                                        data-value="NORMAL">Upgrade: NORMAL
-                                                </button>
                                                 <button className="btn btn-primary upgrateMember"
                                                         // onClick={upgradeMember}
                                                         data-value="VIP">Upgrade: VIP
