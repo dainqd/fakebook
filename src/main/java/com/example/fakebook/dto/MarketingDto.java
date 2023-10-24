@@ -16,9 +16,12 @@ import org.springframework.beans.BeanUtils;
 @AllArgsConstructor
 public class MarketingDto {
     private long id;
-    private Accounts user_id;
+    private Accounts user;
     private String thumbnail;
     private String content;
+    private int duration;
+    private String startDate;
+    private String endDate;
     private Enums.MarketingStatus status = Enums.MarketingStatus.INACTIVE;
 
     public MarketingDto(Marketing marketing) {
