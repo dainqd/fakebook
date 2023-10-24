@@ -2,9 +2,12 @@ package com.example.fakebook.controller;
 
 import com.example.fakebook.dto.FriendshipDto;
 import com.example.fakebook.dto.MessageDto;
+import com.example.fakebook.dto.NotificationDto;
 import com.example.fakebook.entities.Message;
+import com.example.fakebook.entities.Notifications;
 import com.example.fakebook.service.FriendShipService;
 import com.example.fakebook.service.MessageService;
+import com.example.fakebook.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,9 +28,11 @@ public class WebSocketController {
     private MessageService messageService;
     @Autowired
     private FriendShipService friendShipService;
+    @Autowired
+    private NotificationService notificationService;
 
 
-//    @MessageMapping("/chat")
+    //    @MessageMapping("/chat")
 //    @SendTo("/topic/messages")
 //    public void sendMessage(MessageDto messageDto) {
 //        Message message = new Message(messageDto);
@@ -48,8 +53,8 @@ public class WebSocketController {
         List<FriendshipDto> friendships = friendShipService.getFriendshipsByReceiverId(receiverId);
         return friendships;
     }
-//
-//    @MessageMapping("/getFollower/{receiverId}")
+
+    //    @MessageMapping("/getFollower/{receiverId}")
 //    @SendTo("/topic/follower/{receiverId}")
 //    public List<FriendshipDto> getgetFollowers(@DestinationVariable Long receiverId) {
 //        List<FriendshipDto> followers = friendShipService.getFollowerByReceiverId(receiverId);
@@ -79,6 +84,21 @@ public class WebSocketController {
         headerAccessor.getSessionAttributes().put("sender", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("receiver", chat.getSenderId());
         return chat;
+    }
+
+    @MessageMapping("/notify.sendNotification")
+    @SendTo("/topic/publicNotification")
+    public NotificationDto sendNotification(@Payload NotificationDto notificationDto) {
+        Notifications notification = new Notifications(notificationDto);
+        Notifications saveNotifications = notificationService.save(notification);
+        return new NotificationDto(saveNotifications);
+    }
+
+    @MessageMapping("/notify.getAllNotification")
+    @SendTo("/topic/publicNotification")
+    public List<NotificationDto> getNotifications(@Payload NotificationDto notificationDto) {
+        List<NotificationDto> notificationsList = notificationService.findAllByUser_IdAndNoDeleted(notificationDto.getUser().getId());
+        return notificationsList;
     }
 }
 
