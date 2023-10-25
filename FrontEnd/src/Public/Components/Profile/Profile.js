@@ -8,6 +8,7 @@ import {Form, message} from "antd";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import $ from 'jquery';
+import uploadImageMain from "../../Main/Main";
 
 function Profile() {
     const navigate = useNavigate();
@@ -30,6 +31,19 @@ function Profile() {
         }
     }
 
+    const changeAvt = async () => {
+        // $('#inputUploadAvt').trigger("click");
+        await $('#inputUploadAvt').trigger("click").on('change', function () {
+            uploadImageMain('inputUploadAvt').then(function (response) {
+                $('#imageDefaultProfile').attr("src", response);
+                $('#mainInputUploadAvt').val(response);
+            }).catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+    }
+
+
     const isUser = async () => {
         await accountService.findUserByUsername(AuthName)
             .then((res) => {
@@ -45,7 +59,7 @@ function Profile() {
         let id = sessionStorage.getItem('id');
 
         var firstName = document.getElementById("firstName").value;
-        var avt = document.getElementById("inputThumbnailUploaded").value;
+        var avt = document.getElementById("mainInputUploadAvt").value;
         var lastName = document.getElementById("lastName").value;
         var phoneNumber = document.getElementById("phone").value;
         var birthday = document.getElementById("birthday").value;
@@ -53,7 +67,7 @@ function Profile() {
         var address = document.getElementById("address").value;
 
         let data = {
-            avatar: "",
+            avt: avt,
             firstName: firstName,
             lastName: lastName,
             phoneNumber: phoneNumber,
@@ -66,6 +80,7 @@ function Profile() {
             .then((res) => {
                 console.log("update", res.data)
                 alert("Update information success!")
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err)
@@ -77,42 +92,6 @@ function Profile() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    function uploadImageMain(idInput) {
-        return new Promise(function (resolve, reject) {
-            const urlUpload = 'http://127.0.0.1:8000/upload-image';
-            const formData = new FormData();
-            const photo = $('#' + idInput)[0].files[0];
-
-            formData.append('thumbnail', photo);
-
-            $.ajax({
-                url: urlUpload,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function (response) {
-                    resolve(response); // Trả về response khi thành công
-                },
-                error: function (error) {
-                    reject(error); // Trả về error khi có lỗi
-                }
-            });
-        });
-    }
-
-    const saveImg = async () => {
-        // $('#btnUploadImg').on('click', function (e) {
-        uploadImageMain('uploadImage').then(function (response) {
-            $('.imgProfile').attr("src", response);
-            $('#inputThumbnailUploaded').val(response);
-        }).catch(function (error) {
-            console.error('Error:', error);
-        });
-        // })
-    };
 
     const changePass = async (values) => {
         let id = sessionStorage.getItem('id');
@@ -130,6 +109,7 @@ function Profile() {
             .then((res) => {
                 console.log("changepass", res.data)
                 alert("Change password success!")
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err)
@@ -190,6 +170,11 @@ function Profile() {
                                                     data-bs-target="#profile-change-password">Change Password
                                             </button>
                                         </li>
+                                        <li className="nav-item">
+                                            <button className="nav-link" data-bs-toggle="tab"
+                                                    data-bs-target="#profile-upgrade-member">Upgrade Member
+                                            </button>
+                                        </li>
                                     </ul>
                                     <div className="tab-content pt-2">
                                         <div className="tab-pane fade show active profile-overview"
@@ -233,36 +218,23 @@ function Profile() {
                                                            className="col-md-4 col-lg-3 col-form-label">Avatar: </label>
                                                     <div className="col-md-8 col-lg-9">
                                                         <img style={{borderRadius: "50%"}} src={data.avt}
-                                                             alt="Profile" className="imgProfile"/>
+                                                             alt="Profile" className="imgProfile"
+                                                             id="imageDefaultProfile"/>
                                                         <div className="pt-2">
-                                                            <div className="btn btn-primary btn-sm"
-                                                                 onClick={handleShow}>
+                                                            <div className="btn btn-primary btn-sm" id="btnFakeClick"
+                                                                 onClick={changeAvt}>
                                                                 <label className="upload position-relative">
                                                                     <p className="mb-0"><i
                                                                         className="bi bi-cloud-arrow-up text-white fs-6"></i>
                                                                     </p>
                                                                 </label>
                                                             </div>
+                                                            <input type="file" className="d-none" id="inputUploadAvt"/>
+                                                            <input type="text" className="d-none"
+                                                                   id="mainInputUploadAvt" value={data.avt}/>
                                                             {/*<Link to="#" className="btn btn-danger btn-sm"*/}
                                                             {/*      title="Remove my profile image"><i*/}
                                                             {/*    className="bi bi-trash"></i></Link>*/}
-                                                            <Modal show={show} onHide={handleClose}>
-                                                                <Modal.Header closeButton>
-                                                                    <Modal.Title>Upload Avatar</Modal.Title>
-                                                                </Modal.Header>
-                                                                <Modal.Body>
-                                                                    <input type="file" name="thumbnail" id="uploadImage"
-                                                                           required accept="image/*"/>
-                                                                </Modal.Body>
-                                                                <Modal.Footer>
-                                                                    <Button variant="secondary" onClick={handleClose}>
-                                                                        Close
-                                                                    </Button>
-                                                                    <Button variant="primary" onClick={saveImg}>
-                                                                        Save Changes
-                                                                    </Button>
-                                                                </Modal.Footer>
-                                                            </Modal>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -366,6 +338,18 @@ function Profile() {
                                                     </button>
                                                 </div>
                                             </Form>
+                                        </div>
+                                        <div className="tab-pane fade pt-3 w-25" id="profile-upgrade-member">
+                                            <div className="d-flex justify-content-between align-content-center">
+                                                <button className="btn btn-primary upgrateMember"
+                                                        // onClick={upgradeMember}
+                                                        data-value="VIP">Upgrade: VIP
+                                                </button>
+                                                <button className="btn btn-primary upgrateMember"
+                                                        // onClick={upgradeMember}
+                                                        data-value="SUPER_VIP">Upgrade: SUPER VIP
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

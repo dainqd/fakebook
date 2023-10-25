@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head th:insert="fragments/main.html :: header-main(Fakebook)"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <style>
 
 </style>
@@ -142,11 +144,11 @@
                                         <div class="user-post user-blog-item">
                                             <div class="friend-info">
                                                 <figure>
-                                                    <img th:src="${item.user_id.avt}" alt="">
+                                                    <img th:src="${item.user.avt}" alt="">
                                                 </figure>
                                                 <div class="friend-name">
                                                     <ins><a href="time-line.html"
-                                                            title="">[[${item.user_id.username}]]</a></ins>
+                                                            title="">[[${item.user.username}]]</a></ins>
                                                     <span>published: [[${item.createdAt}]]</span>
                                                 </div>
                                                 <div class="post-meta">
@@ -215,8 +217,8 @@
                                         <div class="your-page">
                                             <figure>
                                                 <a href="#" title=""><img class="imgUserAvatar"
-                                                        th:src="@{/main/images/resources/friend-avatar9.jpg}"
-                                                        alt=""></a>
+                                                                          th:src="@{/main/images/resources/friend-avatar9.jpg}"
+                                                                          alt=""></a>
                                             </figure>
                                             <div class="page-meta">
                                                 <a href="#" title="" class="underline">My page</a>
@@ -290,80 +292,6 @@
                                                 </div>
                                             </li>
                                         </ul>
-<!--                                        <div class="chat-box">-->
-<!--                                            <div class="chat-head">-->
-<!--                                                <span class="status f-online"></span>-->
-<!--                                                <h6>Bucky Barnes</h6>-->
-<!--                                                <div class="more">-->
-<!--                                                    <span><i class="ti-more-alt"></i></span>-->
-<!--                                                    <span class="close-mesage"><i class="ti-close"></i></span>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="chat-list">-->
-<!--                                                <ul>-->
-<!--                                                    <li class="me">-->
-<!--                                                        <div class="chat-thumb"><img-->
-<!--                                                                th:src="@{/main/images/resources/chatlist1.jpg}" alt="">-->
-<!--                                                        </div>-->
-<!--                                                        <div class="notification-event">-->
-<!--															<span class="chat-message-item">-->
-<!--																Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks-->
-<!--															</span>-->
-<!--                                                            <span class="notification-date"><time-->
-<!--                                                                    datetime="2004-07-24T18:18"-->
-<!--                                                                    class="entry-date updated">Yesterday at 8:10pm</time></span>-->
-<!--                                                        </div>-->
-<!--                                                    </li>-->
-<!--                                                    <li class="you">-->
-<!--                                                        <div class="chat-thumb"><img-->
-<!--                                                                th:src="@{/main/images/resources/chatlist2.jpg}" alt="">-->
-<!--                                                        </div>-->
-<!--                                                        <div class="notification-event">-->
-<!--															<span class="chat-message-item">-->
-<!--																Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks-->
-<!--															</span>-->
-<!--                                                            <span class="notification-date"><time-->
-<!--                                                                    datetime="2004-07-24T18:18"-->
-<!--                                                                    class="entry-date updated">Yesterday at 8:10pm</time></span>-->
-<!--                                                        </div>-->
-<!--                                                    </li>-->
-<!--                                                    <li class="me">-->
-<!--                                                        <div class="chat-thumb"><img-->
-<!--                                                                th:src="@{/main/images/resources/chatlist1.jpg}" alt="">-->
-<!--                                                        </div>-->
-<!--                                                        <div class="notification-event">-->
-<!--															<span class="chat-message-item">-->
-<!--																Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks-->
-<!--															</span>-->
-<!--                                                            <span class="notification-date"><time-->
-<!--                                                                    datetime="2004-07-24T18:18"-->
-<!--                                                                    class="entry-date updated">Yesterday at 8:10pm</time></span>-->
-<!--                                                        </div>-->
-<!--                                                    </li>-->
-<!--                                                </ul>-->
-<!--                                                <form class="text-box">-->
-<!--                                                    <textarea placeholder="Post enter to post..."></textarea>-->
-<!--                                                    <div class="add-smiles">-->
-<!--                                                        <span title="add icon" class="em em-expressionless"></span>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="smiles-bunch">-->
-<!--                                                        <i class="em em-&#45;&#45;1"></i>-->
-<!--                                                        <i class="em em-smiley"></i>-->
-<!--                                                        <i class="em em-anguished"></i>-->
-<!--                                                        <i class="em em-laughing"></i>-->
-<!--                                                        <i class="em em-angry"></i>-->
-<!--                                                        <i class="em em-astonished"></i>-->
-<!--                                                        <i class="em em-blush"></i>-->
-<!--                                                        <i class="em em-disappointed"></i>-->
-<!--                                                        <i class="em em-worried"></i>-->
-<!--                                                        <i class="em em-kissing_heart"></i>-->
-<!--                                                        <i class="em em-rage"></i>-->
-<!--                                                        <i class="em em-stuck_out_tongue"></i>-->
-<!--                                                    </div>-->
-<!--                                                    <button type="submit"></button>-->
-<!--                                                </form>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
                                     </div><!-- friends list sidebar -->
                                 </aside>
                             </div><!-- sidebar -->
@@ -384,12 +312,12 @@
                 </div>
 
                 <div class="modal-body">
-                    <input type="file" name="thumbnail" id="uploadThumbnail" required accept="image/*">
+                    <input type="file" name="thumbnail" id="uploadThumbnailBlog" required accept="image/*">
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" id="submitUpload" data-dismiss="modal">Submit</button>
+                    <button type="button" class="btn btn-success" id="submitUploadBlog" data-dismiss="modal">Submit</button>
                 </div>
             </div>
         </div>
@@ -400,279 +328,10 @@
 </body>
 <div th:insert="fragments/main.html :: script-main"></div>
 <script th:src="@{/main/js/master.js}"></script>
+<script th:src="@{/main/js/blog-comments.js}"></script>
+<script th:src="@{/main/js/notification.js}"></script>
 <script>
-    $(document).ready(function () {
-        $('.commentShow').on('click', function () {
-            let id = $(this).data('id');
-            let element = $('#listComment-' + id);
-            loadComment(element, id);
-            viewBlog(id);
-        })
 
-        $('#btnCreateBlog').on('click', function () {
-            postBlog();
-        })
-
-        $('.likeBlog').on('click', function () {
-            let id = $(this).data('id');
-            let check = $(this).data('value');
-            likeBlog(id, check);
-        })
-
-        $('#submitUpload').on('click', function (e) {
-            e.preventDefault();
-            uploadImageMain('uploadThumbnail').then(function (response) {
-                console.log(response)
-                $('#imgDemoUpload').removeClass('d-none')
-                $('#imgDemoUpload').attr("src", response);
-                $('#inputThumbnail').val(response);
-            }).catch(function (error) {
-                console.error('Error:', error);
-            });
-        });
-    })
-
-    function processCreateComment(id) {
-        createComment(id);
-    }
-
-    function loadComment(element, id) {
-        renderBlog(element, id);
-    }
-
-    async function renderBlog(element, id) {
-        let url = `/api/v1/comments/list/` + id;
-
-        $.ajax({
-            url: url,
-            method: 'GET',
-        })
-            .done(function (response) {
-                let commentList = response.content;
-                let comments = '';
-                for (let i = 0; i < commentList.length; i++) {
-                    let commentChilds = commentList[i].commentsChild;
-                    let item = ``;
-                    for (let j = 0; j < commentChilds.length; j++) {
-                        item = item + `<li>
-                                                                <div class="comet-avatar">
-                                                                    <img src="${commentChilds[j].userId.avt}" alt="">
-                                                                </div>
-                                                                <div class="we-comment">
-                                                                    <div class="coment-head">
-                                                                        <h5><a href="time-line.html" title="">${commentChilds[j].userId.username}</a></h5>
-                                                                        <span>${commentChilds[j].createdAt}</span>
-                                                                        <a class="we-reply" href="#" title="Reply"><i
-                                                                                class="fa fa-reply"></i></a>
-                                                                    </div>
-                                                                    <p>${commentChilds[j].content}</p>
-                                                                </div>
-                                                            </li>`
-                    }
-                    comments = comments + `<li>
-                                                        <div class="comet-avatar">
-                                                            <img src="${commentList[i].userId.avt}" alt="">
-                                                        </div>
-                                                        <div class="we-comment">
-                                                            <div class="coment-head">
-                                                                <h5><a href="time-line.html" title="">${commentList[i].userId.username}</a>
-                                                                </h5>
-                                                                <span>${commentList[i].createdAt}</span>
-                                                                <a class="we-reply" href="#" title="Reply"><i
-                                                                        class="fa fa-reply"></i></a>
-                                                            </div>
-                                                            <p>${commentList[i].content}</p>
-                                                        </div>
-                                                        <ul>
-                                                         ${item}
-                                                        </ul>
-                                                    </li>`;
-                }
-                let mainComment = `<ul class="we-comet">
-                                                    ${comments}
-                                                    <li class="post-comment">
-                                                        <div class="comet-avatar">
-                                                            <img th:src="@{/main/images/resources/comet-1.jpg}" alt="">
-                                                        </div>
-                                                        <div class="post-comt-box">
-                                                            <form>
-                                                                <textarea id="contentComment-${id}" placeholder="Post your comment"></textarea>
-                                                                <button class="btn btn-success text-black btnCreateComment" onclick="processCreateComment(${id});" type="button" data-id="${id}">Comment</button>
-                                                            </form>
-                                                        </div>
-                                                    </li>
-                        </ul> `
-                element.empty().append(mainComment);
-            })
-            .fail(function (_, textStatus) {
-                console.log(textStatus)
-            });
-    }
-
-    let myToken = getCookieValue('accessToken');
-
-    async function postBlog() {
-        try {
-            let createBlog = `/api/v1/blogs`;
-
-            let content = $('#contentBlog').val();
-            let inputThumbnail = $('#inputThumbnail').val();
-            console.log(inputThumbnail);
-            if (!inputThumbnail) {
-                inputThumbnail = `https://www.techsmith.com/blog/wp-content/uploads/2021/02/video-thumbnails-social.png`;
-            }
-
-
-            let user = {
-                id: localStorage.getItem('user_id')
-            };
-
-            let requestData = {
-                comments: 0,
-                content: content,
-                likes: 0,
-                shares: 0,
-                status: `ACTIVE`,
-                thumbnail: inputThumbnail,
-                user_id: user,
-                views: 0,
-            };
-
-            if (content) {
-                fetch(createBlog, {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ` + `${myToken}`
-                    },
-                    body: JSON.stringify(requestData),
-
-                })
-                    .then(response => {
-                        if (response.status == 200) {
-                            alert('Success')
-                            window.location.reload();
-                        } else {
-                            alert("Error! Please try again");
-                        }
-                    })
-                    .catch(error => console.log(error));
-
-            } else {
-                alert('Please enter the content of blog!')
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    async function createComment(id) {
-        try {
-            let createComment = `/api/v1/comments`;
-
-            let content = $('#contentComment-' + id).val();
-
-            let user = {
-                id: localStorage.getItem('user_id')
-            };
-
-            let requestData = {
-                blogId: id,
-                content: content,
-                likes: 0,
-                status: `ACTIVE`,
-                userId: user,
-            };
-
-            if (content) {
-                fetch(createComment, {
-                    method: 'POST',
-                    headers: {
-                        'content-type': 'application/json',
-                        'Authorization': `Bearer ` + `${myToken}`
-                    },
-                    body: JSON.stringify(requestData),
-
-                })
-                    .then(response => {
-                        if (response.status == 200) {
-                            alert('Success')
-                            let element = $('#listComment-' + id);
-                            loadComment(element, id);
-                        } else {
-                            alert("Error! Please try again");
-                        }
-                    })
-                    .catch(error => console.log(error));
-
-            } else {
-                alert('Please enter the content of blog!')
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    async function likeBlog(id, check) {
-        let likeUrl = `/api/v1/blogs/` + id + `?check=` + check;
-        fetch(likeUrl, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ` + `${myToken}`
-            },
-        })
-            .then(response => {
-                if (response.status == 200) {
-                    return response.json();
-                }
-            })
-            .then(response => {
-                if (check == 1) {
-                    $('#like-' + id).addClass('d-none');
-                    $('#dislike-' + id).removeClass('d-none');
-                } else {
-                    $('#like-' + id).removeClass('d-none');
-                    $('#dislike-' + id).addClass('d-none');
-                }
-                let user = response.user_id.id;
-                findUserId(user);
-                $('.likeQty-' + id).text(response.likes);
-            })
-            .catch(error => console.log(error));
-    }
-
-    async function viewBlog(id) {
-        let likeUrl = `/api/v1/blogs/view/` + id;
-        fetch(likeUrl, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': `Bearer ` + `${myToken}`
-            },
-        })
-            .then(response => {
-                if (response.status == 200) {
-                    return response.json();
-                }
-            })
-            .then(response => {
-                let user = response.user_id.id;
-                findUserId(user);
-                $('.viewQty-' + id).text(response.views);
-            })
-            .catch(error => console.log(error));
-    }
-
-    function isElementVisible(element) {
-        var top = element.offset().top;
-        var bottom = top + element.outerHeight();
-
-        var viewportTop = $(window).scrollTop();
-        var viewportBottom = viewportTop + $(window).height();
-
-        return (bottom > viewportTop && top < viewportBottom);
-    }
 </script>
+
 </html>

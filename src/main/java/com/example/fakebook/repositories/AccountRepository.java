@@ -1,12 +1,14 @@
 package com.example.fakebook.repositories;
 
 import com.example.fakebook.entities.Accounts;
+import com.example.fakebook.entities.Friendships;
 import com.example.fakebook.utils.Enums;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,4 +32,6 @@ public interface AccountRepository extends JpaRepository<Accounts, Long> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+    List<Accounts> findByIdNotIn(List<Long> listId);
 }

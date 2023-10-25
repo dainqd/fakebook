@@ -22,6 +22,7 @@ public class CommentDto {
     private Accounts userId;
     private LocalDateTime createdAt;
     private long blogId;
+    private Blog blog;
     private String content;
     private int likes;
     private long commentParent;

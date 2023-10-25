@@ -11,19 +11,45 @@ function getCookieValue(cookieName) {
     return null;
 }
 
-function setCookie(name,value,days) {
+function setCookie(name, value, days) {
     var expires = "";
     if (days) {
         var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
 var token = getCookieValue('accessToken');
 var username = getCookieValue('username');
 var userIdLogined = 0;
+
+$(document).ready(function () {
+    let currentUrl = $(location).attr('href');
+    let array = null;
+    array = currentUrl.split('/');
+    let item = array[array.length - 1];
+
+    let navbarUser = $('.navbarUser');
+
+    switch (item) {
+        case 'message':
+            navbarUser.removeClass('active');
+            $('.navbarUserMessage').addClass('active');
+            break;
+        case 'blog':
+            navbarUser.removeClass('active');
+            $('.navbarUserBlog').addClass('active');
+            break;
+        case 'photos':
+            navbarUser.removeClass('active');
+            $('.navbarUserPhoto').addClass('active');
+            break;
+        default:
+            navbarUser.removeClass('active');
+    }
+})
 
 function checkLogin() {
     if (!token || !username) {
@@ -74,7 +100,7 @@ async function checkAdmin() {
             $(".avtCurrentUser").attr("src", response.avt);
             userIdLogined = response.id;
             setCookie(`userId`, response.id, 7),
-            localStorage.setItem('user_id', response.id)
+                localStorage.setItem('user_id', response.id)
             $(".likeUser").text(response.likes);
             $(".viewUser").text(response.views);
             adminOpen();
@@ -103,19 +129,9 @@ async function findUserId() {
             $(".viewUser").text(response.views);
             $('.imgUserThumbnail').attr("src", response.thumbnail);
             $('.imgUserAvatar').attr("src", response.avt);
-            let name;
-            if (!response.firstName) {
-                name = 'Default';
-            } else {
-                name = response.firstName;
-            }
-            if (!response.lastName) {
-                name = name + ' ' + 'Default';
-            } else {
-                name = name + ' ' + response.lastName;
-            }
-            $('.fullName').text(name);
-            $('.username').text(response.username);
+
+            $('.fullName').text(username);
+            $('.username').text(response.email);
 
         })
         .catch(error => console.log(error));
@@ -163,7 +179,7 @@ function uploadImageMain(idInput) {
     });
 }
 
-function getUserDetail(id) {
+async function getUserDetail(id) {
     return fetch('/api/v1/user/' + id, {
         method: 'GET',
         headers: {
@@ -183,3 +199,65 @@ function getUserDetail(id) {
             throw error;
         });
 }
+
+//advertisment-box
+async function getMarketing() {
+    return fetch('/api/v1/marketing', {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Error fetching user detail');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
+
+async function generateMarketing() {
+    await getMarketing()
+        .then(response => {
+            let marketingArray = response.content;
+            let count = marketingArray.length;
+            let number = getRandomInt(count);
+            let marketing = marketingArray[number];
+            let number2 = getRandomInt(count);
+            let marketing2 = marketingArray[number2];
+            showMarketing(marketing, marketing2);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+generateMarketing();
+
+function showMarketing(marketing, marketing2) {
+    let html = `<h4 class="">${marketing.content}</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    src="${marketing.thumbnail}"
+                                                    alt=""></a>
+                                        </figure>`;
+    let html2 = `<h4 class="">${marketing2.content}</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    src="${marketing2.thumbnail}"
+                                                    alt=""></a>
+                                        </figure>`;
+    document.querySelectorAll('.marketing-item')[0].innerHTML = html;
+    document.querySelectorAll('.marketing-item')[1].innerHTML = html2;
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+

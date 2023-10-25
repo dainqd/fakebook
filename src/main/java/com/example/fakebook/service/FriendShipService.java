@@ -50,6 +50,10 @@ public class FriendShipService {
         }
     }
 
+    public Optional<Friendships> findBySenderIdAndReceiverID(FriendshipDto friendshipDto) {
+        return friendShipRepository.findBySenderIdAndReceiverId(friendshipDto.getSender().getId(), friendshipDto.getReceiver().getId());
+    }
+
     public Friendships changeFriend(Friendships friendships) {
         return friendShipRepository.save(friendships);
     }
@@ -87,6 +91,10 @@ public class FriendShipService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     messageResourceService.getMessage("cancel.error"));
         }
+    }
+
+    public void deleteFriend(long id) {
+        friendShipRepository.deleteById(id);
     }
 
     public Page<Friendships> findAllByStatus(Enums.FriendshipStatus status, Pageable pageable) {
@@ -132,6 +140,11 @@ public class FriendShipService {
 
     public List<FriendshipDto> getFollowerByReceiverId(Long receiverId) {
         List<Friendships> friendships = friendShipRepository.findByReceiverIdAndStatus(receiverId, Enums.FriendshipStatus.PENDING);
+        return friendships.stream().map(FriendshipDto::new).collect(Collectors.toList());
+    }
+
+    public List<FriendshipDto> getFriendships(Long receiverId) {
+        List<Friendships> friendships = friendShipRepository.findByReceiverIdOrderBy(receiverId);
         return friendships.stream().map(FriendshipDto::new).collect(Collectors.toList());
     }
 }

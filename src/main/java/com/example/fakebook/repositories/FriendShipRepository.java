@@ -35,5 +35,8 @@ public interface FriendShipRepository extends JpaRepository<Friendships, Long> {
     @Query("SELECT e FROM Friendships e WHERE (e.receiver.id = :receiverId AND e.status = :status) OR (e.sender.id = :receiverId AND e.status = :status) ORDER BY e.id")
     List<Friendships> findByReceiverIdAndStatusOrderBy(@Param("receiverId") Long receiverId, @Param("status") Enums.FriendshipStatus status);
 
+    @Query("SELECT e FROM Friendships e WHERE (e.receiver.id = :receiverId) OR (e.sender.id = :receiverId) ORDER BY e.id")
+    List<Friendships> findByReceiverIdOrderBy(@Param("receiverId") Long receiverId);
+
 //    List<Friendships> findAllByReceiverIdOrSenderIdAndStatus(Long receiverId, Enums.FriendshipStatus status);
 }

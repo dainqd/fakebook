@@ -56,14 +56,19 @@ public class BlogApi {
         return new BlogDto(blog);
     }
 
+    @GetMapping("/photo/{id}")
+    public String getPhotosByUser(@PathVariable(name = "id") Long id) {
+        return blogService.getAllImageUpload(id);
+    }
+
     @PostMapping("")
     public BlogDto create(@RequestBody BlogDto blogDto) {
-        return new BlogDto(blogService.create(blogDto, blogDto.getUser_id().getId()));
+        return new BlogDto(blogService.create(blogDto, blogDto.getUser().getId()));
     }
 
     @PutMapping("")
     public String update(@RequestBody BlogDto request) {
-        blogService.update(request, request.getUser_id().getId());
+        blogService.update(request, request.getUser().getId());
         return messageResourceService.getMessage("update.success");
     }
 

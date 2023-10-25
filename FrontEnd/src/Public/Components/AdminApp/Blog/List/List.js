@@ -5,6 +5,7 @@ import {Button, Form, message, Table} from 'antd';
 import blogService from '../../../Service/BlogService';
 import {Link} from 'react-router-dom';
 import Footer from "../../../Shared/Admin/Footer/Footer";
+import $ from "jquery";
 
 function List() {
     const [data, setData] = useState([]);
@@ -18,8 +19,13 @@ function List() {
 
     const getListBlog = async () => {
         setLoading(true);
+        let data = {
+            page: 0,
+            size: 100,
+            status: ''
+        }
         try {
-            const res = await blogService.adminListBlog();
+            const res = await blogService.adminListStatusBlog(data);
             if (res.status === 200) {
                 setData(res.data.content);
             } else {
@@ -33,10 +39,21 @@ function List() {
         }
     }
 
+    const searchBlog = async () => {
+        $(document).ready(function () {
+            $("#inputSearchBlog").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".ant-table-content table tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    }
+
     const handleDelete = async (id) => {
         try {
             if (window.confirm("Delete the user?")) {
-                await blogService.adminDeleteBlog(id);
+                await blogService.detailBlog(id);
                 setData(prevData => prevData.filter(item => item.id !== id));
                 message.success(`Deleted blog: ${id}`);
             }
@@ -48,6 +65,7 @@ function List() {
 
     useEffect(() => {
         getListBlog();
+        searchBlog();
     }, []);
 
     const columns = [
@@ -109,14 +127,21 @@ function List() {
                         </ol>
                     </nav>
                 </div>
-                <Table
-                    style={{margin: "auto"}}
-                    columns={columns}
-                    dataSource={data}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    onChange={handleTableChange}
-                />
+                <div className="row">
+                    <div className="mb-3 col-md-3">
+                        <h5>Search Blog</h5>
+                        <input className="form-control" id="inputSearchBlog" type="text" placeholder="Search.."/>
+                        <br/>
+                    </div>
+                    <Table
+                        style={{margin: "auto"}}
+                        columns={columns}
+                        dataSource={data}
+                        pagination={tableParams.pagination}
+                        loading={loading}
+                        onChange={handleTableChange}
+                    />
+                </div>
             </main>
             <Footer/>
         </div>

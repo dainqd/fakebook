@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -99,5 +100,10 @@ public class AccountApi {
     public String changeThumbnail(@PathVariable(name = "id") Long id, @RequestBody String thumbnail) {
         userService.changeThumbnail(id, thumbnail);
         return messageResourceService.getMessage("update.success");
+    }
+
+    @GetMapping("/getUser/{id}")
+    public List<AccountDto> getAllUserNoFriends(@PathVariable(name = "id") Long id) {
+        return userService.getAllAccountByReceiverId(id);
     }
 }

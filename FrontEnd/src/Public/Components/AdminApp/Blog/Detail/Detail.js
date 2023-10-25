@@ -8,29 +8,8 @@ import Footer from "../../../Shared/Admin/Footer/Footer";
 import TextArea from "antd/lib/input/TextArea";
 import $ from 'jquery';
 import Modal from "react-bootstrap/Modal";
+import uploadImageMain from "../../../../Main/Main";
 import axios from "axios";
-
-function uploadImageMain(idInput) {
-    return new Promise(function (resolve, reject) {
-        const urlUpload = 'http://127.0.0.1:8000/upload-image';
-        const formData = new FormData();
-        const photo = document.getElementById(idInput).files[0];
-
-        formData.append('thumbnail', photo);
-
-        fetch(urlUpload, {
-            method: 'POST',
-            body: formData,
-        })
-            .then(response => response.json())
-            .then(data => {
-                resolve(data);
-            })
-            .catch(error => {
-                reject(error);
-            });
-    });
-}
 
 
 function Detail() {
@@ -39,16 +18,23 @@ function Detail() {
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
+    var blog = null;
+
     const detailsBlog = async () => {
         await blogService.adminDetailBlog(id)
             .then((res) => {
                 console.log("details blog", res.data);
-                form.setFieldsValue({id: res.data.id})
                 form.setFieldsValue({content: res.data.content})
-                form.setFieldsValue({thumbnail: res.data.thumbnail});
-                form.setFieldsValue({status: res.data.status});
-
+                blog = res.data;
                 let imgUrl = res.data.thumbnail;
+                if(blog.status == 'ACTIVE'){
+                    $('#updateStatusBlog').empty().append(`<option value="ACTIVE">ACTIVE</option>
+                                                        <option value="INACTIVE">INACTIVE</option>`);
+                } else {
+                    $('#updateStatusBlog').empty().append(`<option value="INACTIVE">INACTIVE</option>
+                                                        <option value="ACTIVE">ACTIVE</option>`);
+                }
+                $('#thumbnailCreateBlogMain').val(imgUrl);
                 $('#uploadImg').attr("src", imgUrl).css('width', '80px').css('height', '80px');
             })
             .catch((err) => {
@@ -61,35 +47,16 @@ function Detail() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const setImg = async () => {
-        let imgUrl = $('#thumbnail').val();
-        console.log(imgUrl);
-    };
-
-    useEffect(() => {
-        detailsBlog();
-        setImg();
-    }, [form, id])
-
-
-    // const handleUpload = async (e) => {
-    //     e.preventDefault();
-    //     const inputFile = document.getElementById('inputFile');
-    //     const formData = new FormData();
-    //     formData.append('thumbnail', inputFile.files[0]);
-    //
-    //     try {
-    //         const response = await axios.post('http://127.0.0.1:8000/upload-image', formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             }
-    //         });
-    //         console.log('Response:', response.data);
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-
+    const uploadImage = async () => {
+        await $('#thumbnailCreateBlog').on('change', function () {
+            uploadImageMain('thumbnailCreateBlog').then(function (response) {
+                $('#uploadImg').attr("src", response);
+                $('#thumbnailCreateBlogMain').val(response);
+            }).catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+    }
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -103,11 +70,14 @@ function Detail() {
     };
 
     const onFinish = async (values) => {
-        let updateData = {
-            content: values.content,
-            thumbnail: values.thumbnail,
-            status: values.status,
-        }
+        let thumbnail = $('#thumbnailCreateBlogMain').val();
+        let status = $('#updateStatusBlog').val();
+
+        blog.content = values.content;
+        blog.thumbnail = thumbnail;
+        blog.status = status;
+
+        let updateData = blog;
         await blogService.adminUpdateBlog(updateData)
             .then((res) => {
                 console.log("data", res.data)
@@ -119,6 +89,11 @@ function Detail() {
                 message.error("Update error")
             })
     };
+
+    useEffect(() => {
+        detailsBlog();
+        uploadImage();
+    }, [form, id])
 
     return (
         <>
@@ -156,7 +131,7 @@ function Detail() {
                                           onFinish={onFinish}
                                           autoComplete="off"
                                     >
-                                        <div className="col-md-6">
+                                        <div className="col-md-8">
                                             <label>
                                                 CONTENT
                                             </label>
@@ -177,37 +152,19 @@ function Detail() {
                                             <label>
                                                 THUMBNAIL
                                             </label>
-                                            <Form.Item
-                                                name="thumbnail"
-                                                id="thumbnail"
-                                                rules={[
-                                                    {
-                                                        required: true,
-                                                        message: 'Please input your thumbnail!',
-                                                    },
-                                                ]}>
-                                                <Input disabled/>
-                                            </Form.Item>
+                                            <input id="thumbnailCreateBlog" type="file" multiple
+                                                   className="form-control"/>
+                                            <input id="thumbnailCreateBlogMain" type="text" className="d-none"/>
                                             <img src="" alt="" id="uploadImg" className="uploadImg"/>
                                         </div>
 
                                         <div className="col-md-2">
-                                            <Button className="mt-4 btn btn-outline-success" type="button"
-                                                    htmlType="button"
-                                                    onClick={handleShow}>
-                                                Upload
-                                            </Button>
+                                            <label htmlFor="status">Status</label>
+                                            <select className="form-select" id="updateStatusBlog">
+
+                                            </select>
                                         </div>
 
-                                        <div className="col-md-2">
-                                            <label>
-                                                STATUS
-                                            </label>
-                                            <Form.Item
-                                                name="status">
-                                                <Input/>
-                                            </Form.Item>
-                                        </div>
                                         <Form.Item
                                             wrapperCol={{
                                                 offset: 8,
@@ -226,20 +183,20 @@ function Detail() {
                     </div>
                 </section>
                 <Modal show={show} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Upload Image</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <input className="form-control" type="file" id="inputFile"/>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Close
-                            </Button>
-                            <Button className="btn btn-primary" onClick={handleUpload}>
-                                Upload
-                            </Button>
-                        </Modal.Footer>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Upload Image</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <input className="form-control" type="file" id="inputFile"/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button className="btn btn-primary" onClick={handleUpload}>
+                            Upload
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             </main>
             <Footer/>

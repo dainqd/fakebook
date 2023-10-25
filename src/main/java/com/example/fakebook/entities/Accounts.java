@@ -44,6 +44,9 @@ public class Accounts extends BaseEntity {
     private String address;
     private String verifyCode = "";
     private String referralCode = "";
+    private String token = "";
+    @Enumerated(EnumType.STRING)
+    private Enums.AccountState state = Enums.AccountState.OFFLINE;
     private boolean verified = false;
     private int likes = 0;
     private int views = 0;

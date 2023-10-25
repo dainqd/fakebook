@@ -37,9 +37,12 @@ public class CommentService {
     }
 
     public Comments create(CommentDto commentDto, long adminId) {
-        try {
-            Comments comments = new Comments();
-            BeanUtils.copyProperties(commentDto, comments);
+//        try {
+        Comments comments = new Comments();
+        BeanUtils.copyProperties(commentDto, comments);
+        long blogId = commentDto.getBlogId();
+        long commentParentId = commentDto.getCommentParent();
+        if (blogId > 0) {
             Optional<Blog> optionalBlog = blogService.findById(commentDto.getBlogId());
             if (!optionalBlog.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -50,16 +53,36 @@ public class CommentService {
             blog.setViews(blog.getViews() + 1);
             blogService.save(blog);
             comments.setBlog(blog);
-            comments.setCreatedAt(LocalDateTime.now());
-            comments.setCreatedBy(adminId);
-            comments.setStatus(Enums.CommentStatus.ACTIVE);
+        } else if (commentParentId > 0) {
+            Optional<Comments> optionalComments = commentRepository.findById(commentDto.getCommentParent());
+            if (!optionalComments.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        messageResourceService.getMessage("id.not.found"));
+            }
 
-            return commentRepository.save(comments);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    messageResourceService.getMessage("create.error"));
+            Comments commentParent = optionalComments.get();
+            comments.setParent(commentParent);
 
+            if (commentParent.getBlog() != null) {
+                Optional<Blog> optional = blogService.findById(commentParent.getBlog().getId());
+                if (!optional.isPresent()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            messageResourceService.getMessage("id.not.found"));
+                }
+                Blog blog = optional.get();
+                blog.setComments(blog.getComments() + 1);
+                blog.setViews(blog.getViews() + 1);
+                blogService.save(blog);
+            }
         }
+        comments.setCreatedAt(LocalDateTime.now());
+        comments.setCreatedBy(adminId);
+        comments.setStatus(Enums.CommentStatus.ACTIVE);
+        return commentRepository.save(comments);
+//        } catch (Exception exception) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                    messageResourceService.getMessage("create.error"));
+//        }
     }
 
     public Comments update(CommentDto commentDto, long adminID) {

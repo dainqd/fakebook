@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import Header from '../../../Shared/Admin/Header/Header'
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar'
-import {Button, Form, Input, message} from 'antd'
-import {DatePicker, Space} from 'antd';
+import {Button, Form, message} from 'antd'
 import {Link, useNavigate} from 'react-router-dom'
 import blogService from '../../../Service/BlogService';
 import Footer from "../../../Shared/Admin/Footer/Footer";
 import accountService from "../../../Service/AccountService";
+import $ from "jquery";
+import uploadImageMain from "../../../../Main/Main";
 
 function BlogCreate() {
     const navigate = useNavigate();
@@ -24,11 +25,23 @@ function BlogCreate() {
         return userCreate;
     }
 
+    const uploadImage = async () => {
+        await $('#thumbnailCreateBlog').on('change', function () {
+            uploadImageMain('thumbnailCreateBlog').then(function (response) {
+                $('#modalImageShow').attr("src", response).removeClass('d-none').height(150).width(150);
+                console.log(response);
+                $('#thumbnailCreateBlogMain').val(response);
+            }).catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+    }
 
 
     const onFinish = async (values) => {
         var content = document.getElementById("content").value;
         var status = document.getElementById("status").value;
+        var thumbnail = document.getElementById("thumbnailCreateBlogMain").value;
 
         let item = await getUser();
 
@@ -37,18 +50,17 @@ function BlogCreate() {
         };
 
         let data = {
-            user_id: user,
+            user: user,
             content: content,
+            thumbnail: thumbnail,
             status: status
         }
-
-        console.log(data)
 
         await blogService.adminCreateBlog(data)
             .then((res) => {
                 console.log("create blog", res.data)
                 message.success("Create blog success")
-                navigate("/blog/list")
+                navigate("/admin/blog/list")
             })
             .catch((err) => {
                 console.log(err)
@@ -70,6 +82,9 @@ function BlogCreate() {
         console.log(date, dateString);
     };
 
+    useEffect(() => {
+        uploadImage();
+    }, []);
 
     return (
         <>
@@ -120,8 +135,10 @@ function BlogCreate() {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="thumnail" className="form-label">Thumbnail</label>
-                                            <input id="thumnail" type="file" multiple className="form-control"/>
+                                            <label htmlFor="thumbnailCreateBlog" className="form-label">Thumbnail</label>
+                                            <input id="thumbnailCreateBlog" type="file" multiple className="form-control"/>
+                                            <input id="thumbnailCreateBlogMain" type="text" className="d-none"/>
+                                            <img src="" alt="" id="modalImageShow" className="d-none"/>
                                         </div>
 
                                         <div className="col-md-12">

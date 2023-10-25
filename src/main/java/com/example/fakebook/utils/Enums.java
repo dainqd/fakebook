@@ -9,6 +9,10 @@ public class Enums {
         ACTIVE, DELETED, INACTIVE, BLOCKED
     }
 
+    public static enum AccountState {
+        ONLINE, OFFLINE
+    }
+
     public static enum TypeUser {
         NORMAL, VIP, SUPER_VIP
     }

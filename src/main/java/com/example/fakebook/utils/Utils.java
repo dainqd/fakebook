@@ -85,7 +85,7 @@ public class Utils {
         return token.toString();
     }
 
-    public static String generatorRandomToken(int length) {
+    public static String generatorRandomString(int length) {
         String CHARS = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ1234567890";
         Random random = new Random();
         StringBuilder token = new StringBuilder(length);

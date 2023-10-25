@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,6 +62,26 @@ public class BlogService {
             Blog blog = blogOptional.get();
 
             BeanUtils.copyProperties(blogDto, blog);
+            blog.setUpdatedAt(LocalDateTime.now());
+            blog.setUpdatedBy(adminID);
+            return blogRepository.save(blog);
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("update.error"));
+        }
+    }
+
+    public Blog updateBlog(BlogDto blogDto, long adminID) {
+        try {
+            Optional<Blog> blogOptional = blogRepository.findById(blogDto.getId());
+            if (!blogOptional.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        messageResourceService.getMessage("id.not.found"));
+            }
+            Blog blog = blogOptional.get();
+
+            blog.setContent(blogDto.getContent());
+            blog.setThumbnail(blogDto.getThumbnail());
             blog.setUpdatedAt(LocalDateTime.now());
             blog.setUpdatedBy(adminID);
             return blogRepository.save(blog);
@@ -148,5 +169,20 @@ public class BlogService {
 
     public Page<Blog> findAllByUserId(Long id, Pageable pageable) {
         return blogRepository.findAllByUser_id(id, pageable);
+    }
+
+    public Page<Blog> findAllByUserIdAndStatus(Long id, Pageable pageable) {
+        return blogRepository.findAllByUser_idAndStatus(id, Enums.BlogStatus.ACTIVE, pageable);
+    }
+
+    public String getAllImageUpload(Long id) {
+        List<Blog> blogList = blogRepository.findAllByUser_id(id);
+        StringBuilder allImages = new StringBuilder();
+
+        for (Blog blog : blogList) {
+            allImages.append(blog.getThumbnail()).append(",");
+        }
+
+        return allImages.toString();
     }
 }

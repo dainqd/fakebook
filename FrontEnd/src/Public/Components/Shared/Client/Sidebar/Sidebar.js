@@ -12,12 +12,12 @@ function Sidebar() {
                         </Link>
                         <ul id="charts-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="charts-chartjs.html">
+                                <a href="/blog/list">
                                     <i className="bi bi-circle" /><span>List Blog</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="charts-apexcharts.html">
+                                <a href="/blog/create">
                                     <i className="bi bi-circle" /><span>Create Blog</span>
                                 </a>
                             </li>
@@ -29,12 +29,12 @@ function Sidebar() {
                         </Link>
                         <ul id="icons-nav" className="nav-content collapse " data-bs-parent="#sidebar-nav">
                             <li>
-                                <a href="icons-bootstrap.html">
+                                <a href="/marketing/list">
                                     <i className="bi bi-circle" /><span>List Marketing</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="icons-remix.html">
+                                <a href="/marketing/create">
                                     <i className="bi bi-circle" /><span>Create Marketing</span>
                                 </a>
                             </li>

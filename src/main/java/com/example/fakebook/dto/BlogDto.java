@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,11 +18,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BlogDto {
     private long id;
-    private Accounts user_id;
+    private Accounts user;
     private LocalDateTime createdAt;
     private String content;
     private int likes;
     private String thumbnail;
+    private List<String> listImages;
     private int views;
     private int comments;
     private int shares;

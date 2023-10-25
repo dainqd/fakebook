@@ -11,6 +11,7 @@ import com.example.fakebook.service.UserDetailsIpmpl;
 import com.example.fakebook.service.UserDetailsServiceImpl;
 import com.example.fakebook.utils.Enums;
 import com.example.fakebook.utils.JwtUtils;
+import com.example.fakebook.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,10 @@ public class AuthApi {
                         , loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
+        Accounts accounts = optionalUser.get();
+        accounts.setToken(Utils.generatorRandomString(10));
+        accounts.setState(Enums.AccountState.ONLINE);
+        userDetailsService.save(accounts);
         UserDetailsIpmpl userDetails = (UserDetailsIpmpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
@@ -104,6 +109,7 @@ public class AuthApi {
         }
         registerRequest.setPassword(encoder.encode(registerRequest.getPassword()));
         Accounts accounts = new Accounts(registerRequest);
+        accounts.setAvt("https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg");
         accounts.setVerified(true);
         Set<Roles> roles = new HashSet<>();
         Roles userRole = roleService.findByName(Enums.Roles.USER)

@@ -23,10 +23,13 @@ public class Marketing extends BaseEntity {
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Accounts user_id;
+    private Accounts user;
     private String thumbnail;
     @Lob
     private String content;
+    private int duration;
+    private String startDate;
+    private String endDate;
     @Enumerated(EnumType.STRING)
     private Enums.MarketingStatus status = Enums.MarketingStatus.INACTIVE;
 

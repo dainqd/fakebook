@@ -56,7 +56,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/app/**",
             //main url
             "/api/v1/comments/list/**",
+            "/api/v1/marketing/**",
             "/message/**",
+            "/blog/**",
+            "/photos/**"
     };
 
     private static final String[] USER_PATHS = {
