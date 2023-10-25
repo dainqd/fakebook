@@ -1,5 +1,7 @@
+import 'package:demo_app/utils/utils.dart';
+import 'package:demo_app/widgets/home.dart';
 import 'package:flutter/material.dart';
-import './widgets/home.dart';
+import './widgets/auth/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,22 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: FutureBuilder<bool>(
+        future: checkToken(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            if (snapshot.data == true) {
+              return HomeScreen();
+            } else {
+              return LoginScreen();
+            }
+          }
+        },
+      ),
     );
   }
 }
