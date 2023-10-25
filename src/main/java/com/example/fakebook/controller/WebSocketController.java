@@ -66,10 +66,17 @@ public class WebSocketController {
 //
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/publicChatRoom")
-    public MessageDto sendMessage(@Payload MessageDto chat) {
+    public List<MessageDto> sendMessage(@Payload MessageDto chat) {
         Message message = new Message(chat);
         Message savedMessage = messageService.save(message);
-        return new MessageDto(savedMessage);
+        List<MessageDto> messageDtos = messageService.getFriendshipsByReceiverId(savedMessage.getSenderId(), savedMessage.getReceiverId());
+        if (messageDtos.isEmpty()) {
+            List<MessageDto> fallbackList = new ArrayList<>();
+            fallbackList.add(chat);
+            return fallbackList;
+        }
+        System.out.println(messageDtos);
+        return messageDtos;
     }
 
     @MessageMapping("/chat.loadMessageHistory")
