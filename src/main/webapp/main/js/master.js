@@ -179,7 +179,7 @@ function uploadImageMain(idInput) {
     });
 }
 
-function getUserDetail(id) {
+async function getUserDetail(id) {
     return fetch('/api/v1/user/' + id, {
         method: 'GET',
         headers: {
@@ -199,3 +199,73 @@ function getUserDetail(id) {
             throw error;
         });
 }
+
+//advertisment-box
+async function getMarketing() {
+    return fetch('/api/v1/marketing', {
+        method: 'GET',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Error fetching user detail');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            throw error;
+        });
+}
+
+async function generateMarketing() {
+    await getMarketing()
+        .then(response => {
+            let marketingArray = response.content;
+            let count = marketingArray.length;
+            let number = getRandomInt(count);
+            let marketing = marketingArray[number];
+            let number2 = getRandomInt(count);
+            let marketing2 = marketingArray[number2];
+            showMarketing(marketing, marketing2);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+generateMarketing();
+
+function showMarketing(marketing, marketing2) {
+    let html = ` <aside class="sidebar static">
+                                    <div class="advertisment-box">
+                                        <h4 class="">${marketing.content}</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    src="${marketing.thumbnail}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                </aside>`;
+    let html2 = ` <aside class="sidebar static">
+                                    <div class="advertisment-box">
+                                        <h4 class="">${marketing2.content}</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    src="${marketing2.thumbnail}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                </aside>`;
+    document.querySelectorAll('.marketing-item')[0].innerHTML = html;
+    document.querySelectorAll('.marketing-item')[1].innerHTML = html2;
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
