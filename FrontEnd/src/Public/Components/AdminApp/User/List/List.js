@@ -171,7 +171,7 @@ function List() {
                     </nav>
                 </div>
                 <div className="row">
-                    <div className="mb-3">
+                    <div className="mb-3 col-md-3">
                         <h5>Search User</h5>
                         <input className="form-control" id="inputSearchUser" type="text" placeholder="Search.."/>
                         <br/>

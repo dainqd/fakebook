@@ -5,6 +5,7 @@ import {Button, Form, message, Table} from 'antd';
 import marketingService from '../../../Service/MarketingService';
 import {Link} from 'react-router-dom';
 import Footer from "../../../Shared/Admin/Footer/Footer";
+import $ from "jquery";
 
 function List() {
     const [data, setData] = useState([]);
@@ -39,6 +40,17 @@ function List() {
         }
     }
 
+    const searchMarketing = async () => {
+        $(document).ready(function () {
+            $("#inputSearchMarketing").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".ant-table-content table tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    }
+
     const handleDelete = async (id) => {
         try {
             if (window.confirm("Delete the marketing?")) {
@@ -54,6 +66,7 @@ function List() {
 
     useEffect(() => {
         getListMarketing();
+        searchMarketing();
     }, []);
 
     const columns = [
@@ -130,14 +143,21 @@ function List() {
                         </ol>
                     </nav>
                 </div>
-                <Table
-                    style={{margin: "auto"}}
-                    columns={columns}
-                    dataSource={data}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    onChange={handleTableChange}
-                />
+                <div className="row">
+                    <div className="mb-3 col-md-3">
+                        <h5>Search Marketing</h5>
+                        <input className="form-control" id="inputSearchMarketing" type="text" placeholder="Search.."/>
+                        <br/>
+                    </div>
+                    <Table
+                        style={{margin: "auto"}}
+                        columns={columns}
+                        dataSource={data}
+                        pagination={tableParams.pagination}
+                        loading={loading}
+                        onChange={handleTableChange}
+                    />
+                </div>
             </main>
             <Footer/>
         </div>
