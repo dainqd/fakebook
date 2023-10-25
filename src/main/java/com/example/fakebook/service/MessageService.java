@@ -116,6 +116,11 @@ public class MessageService {
         return messageRepository.findAllBySenderIdAndReceiverId(senderID, receiverID, pageable);
     }
 
+    public List<MessageDto> findAllBySenderIdAndReceiverId(Long senderId, Long receiverId) {
+        List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(senderId, receiverId);
+        return messages.stream().map(MessageDto::new).collect(Collectors.toList());
+    }
+
     public List<MessageDto> getFriendshipsByReceiverId(Long senderId, Long receiverId) {
         List<Message> messages = messageRepository.findAllBySenderIdAndReceiverIdOrderBy(senderId, receiverId);
         return messages.stream().map(MessageDto::new).collect(Collectors.toList());

@@ -241,26 +241,18 @@ async function generateMarketing() {
 generateMarketing();
 
 function showMarketing(marketing, marketing2) {
-    let html = ` <aside class="sidebar static">
-                                    <div class="advertisment-box">
-                                        <h4 class="">${marketing.content}</h4>
+    let html = `<h4 class="">${marketing.content}</h4>
                                         <figure>
                                             <a href="#" title="Advertisment"><img
                                                     src="${marketing.thumbnail}"
                                                     alt=""></a>
-                                        </figure>
-                                    </div>
-                                </aside>`;
-    let html2 = ` <aside class="sidebar static">
-                                    <div class="advertisment-box">
-                                        <h4 class="">${marketing2.content}</h4>
+                                        </figure>`;
+    let html2 = `<h4 class="">${marketing2.content}</h4>
                                         <figure>
                                             <a href="#" title="Advertisment"><img
                                                     src="${marketing2.thumbnail}"
                                                     alt=""></a>
-                                        </figure>
-                                    </div>
-                                </aside>`;
+                                        </figure>`;
     document.querySelectorAll('.marketing-item')[0].innerHTML = html;
     document.querySelectorAll('.marketing-item')[1].innerHTML = html2;
 }

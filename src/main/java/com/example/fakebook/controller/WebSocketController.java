@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,13 +27,15 @@ public class WebSocketController {
 
     @Autowired
     private MessageService messageService;
+
     @Autowired
     private FriendShipService friendShipService;
+
     @Autowired
     private NotificationService notificationService;
 
 
-    //    @MessageMapping("/chat")
+//    @MessageMapping("/chat")
 //    @SendTo("/topic/messages")
 //    public void sendMessage(MessageDto messageDto) {
 //        Message message = new Message(messageDto);
@@ -47,12 +50,12 @@ public class WebSocketController {
 //        return messageDtos;
 //    }
 //
-    @MessageMapping("/getFriends/{receiverId}")
-    @SendTo("/topic/friends/{receiverId}")
-    public List<FriendshipDto> getFriendships(@DestinationVariable Long receiverId) {
-        List<FriendshipDto> friendships = friendShipService.getFriendshipsByReceiverId(receiverId);
-        return friendships;
-    }
+//    @MessageMapping("/getFriends/{receiverId}")
+//    @SendTo("/topic/friends/{receiverId}")
+//    public List<FriendshipDto> getFriendships(@DestinationVariable Long receiverId) {
+//        List<FriendshipDto> friendships = friendShipService.getFriendshipsByReceiverId(receiverId);
+//        return friendships;
+//    }
 
     //    @MessageMapping("/getFollower/{receiverId}")
 //    @SendTo("/topic/follower/{receiverId}")
@@ -73,6 +76,12 @@ public class WebSocketController {
     @SendTo("/topic/publicChatRoom")
     public List<MessageDto> loadMessageHistory(@Payload MessageDto chat) {
         List<MessageDto> messageDtos = messageService.getFriendshipsByReceiverId(chat.getSenderId(), chat.getReceiverId());
+        if (messageDtos.isEmpty()) {
+            List<MessageDto> fallbackList = new ArrayList<>();
+            fallbackList.add(chat);
+            return fallbackList;
+        }
+        System.out.println(messageDtos);
         return messageDtos;
     }
 

@@ -58,7 +58,7 @@ async function appendListFriend(res) {
             }
             let userItem = JSON.stringify(item.sender);
             userItem = "!!!" + userItem + "!!!";
-            html = html + `<li onclick="renderMessage(${userItem})"><figure><img src="${item.sender.avt}" alt="">` +
+            html = html + `<li class="userConnected"  data-id="${item.sender.id}"><figure><img src="${item.sender.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
@@ -73,7 +73,7 @@ async function appendListFriend(res) {
             }
             let userItem = JSON.stringify(item.receiver);
             userItem = "!!!" + userItem + "!!!";
-            html = html + `<li onclick="renderMessage(${userItem})"><figure><img src="${item.receiver.avt}" alt="">` +
+            html = html + `<li class="userConnected" data-id="${item.receiver.id}"><figure><img src="${item.receiver.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
