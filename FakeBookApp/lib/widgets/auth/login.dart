@@ -50,10 +50,44 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
-        print('Đăng nhập thất bại. Mã lỗi: ${response.statusCode}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Fail'),
+              content: Text('Login fail, Please try again!'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Closs'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Đóng cửa sổ cảnh báo
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        ;
       }
     } catch (e) {
-      print('Đã xảy ra lỗi: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Error, Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Closs'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng cửa sổ cảnh báo
+                },
+              ),
+            ],
+          );
+        },
+      );
+      ;
     }
   }
 
@@ -117,23 +151,36 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: Text('Login'),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterScreen()),
-                        );
-                      },
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                          color: Colors.blue, // Màu của liên kết
-                          decoration:
-                              TextDecoration.underline, // Gạch chân liên kết
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                                fontSize: 18, color: Color(0xF3FFCB21)),
+                          ),
                         ),
-                      ),
-                    )
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterScreen()),
+                            );
+                          },
+                          child: Text(
+                            'Register now',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 18,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),

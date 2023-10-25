@@ -36,15 +36,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
       if (response.statusCode == 200) {
+        print("Register success");
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       } else {
-        print('Đăng ký thất bại. Mã lỗi: ${response.statusCode}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Fail'),
+              content: Text('Regsiter fail, Please try again!'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Closs'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Đóng cửa sổ cảnh báo
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        ;
       }
     } catch (e) {
-      print('Đã xảy ra lỗi: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Error, Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Closs'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng cửa sổ cảnh báo
+                },
+              ),
+            ],
+          );
+        },
+      );
+      ;
     }
   }
 
@@ -52,58 +87,119 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Register'),
       ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextField(
-                controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                ),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                ),
-              ),
-              SizedBox(height: 16.0),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                ),
-              ),
-              SizedBox(height: 24.0),
-              TextField(
-                controller: passwordConfirmController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password Confirm',
-                ),
-              ),
-              SizedBox(height: 24.0),
-              ElevatedButton(
-                onPressed: () async {
-                  String username = usernameController.text;
-                  String email = emailController.text;
-                  String password = passwordController.text;
-                  String passwordConfirm = passwordConfirmController.text;
-                  await registerUser(
-                      username, email, password, passwordConfirm);
-                },
-                child: Text('Login'),
-              ),
-            ],
+      body: Stack(
+        children: <Widget>[
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              child: Image.network('https://i.ibb.co/Qf7jrWN/logo.png',
+                  height: 100, width: 100),
+            ),
           ),
-        ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextField(
+                    controller: usernameController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your username',
+                      prefixIcon: Icon(Icons.person),
+                      labelText: 'Username',
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your email',
+                      prefixIcon: Icon(Icons.mail),
+                      labelText: 'Email',
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your username',
+                      prefixIcon: Icon(Icons.key),
+                      labelText: 'Password',
+                    ),
+                  ),
+                  SizedBox(height: 24.0),
+                  TextField(
+                    controller: passwordConfirmController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your username',
+                      prefixIcon: Icon(Icons.password),
+                      labelText: 'Password Confirm',
+                    ),
+                  ),
+                  SizedBox(height: 24.0),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                      textStyle: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () async {
+                      String username = usernameController.text;
+                      String email = emailController.text;
+                      String password = passwordController.text;
+                      String passwordConfirm = passwordConfirmController.text;
+                      await registerUser(
+                          username, email, password, passwordConfirm);
+                    },
+                    child: Text('Register'),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "Already have an account?",
+                          style:
+                              TextStyle(fontSize: 18, color: Color(0xF3FFCB21)),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
+                        child: Text(
+                          'Login now',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 18,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
