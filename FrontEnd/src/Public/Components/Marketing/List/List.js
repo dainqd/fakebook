@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Header from '../../Shared/Admin/Header/Header';
 import Sidebar from '../../Shared/Client/Sidebar/Sidebar';
 import {Button, Form, message, Table} from 'antd';
-import blogService from '../../Service/BlogService';
+import marketingService from '../../Service/MarketingService';
 import {Link} from 'react-router-dom';
 import Footer from "../../Shared/Admin/Footer/Footer";
 
@@ -16,7 +16,7 @@ function List() {
         },
     });
 
-    const getListBlog = async () => {
+    const getListMarketing = async () => {
         setLoading(true);
         let data = {
             page: 0,
@@ -25,7 +25,7 @@ function List() {
         }
 
         try {
-            const res = await blogService.listBlogByUser(sessionStorage.getItem('id'), data);
+            const res = await marketingService.listMarketingByUser(sessionStorage.getItem('id'), data);
             if (res.status === 200) {
                 setData(res.data.content);
             } else {
@@ -41,25 +41,40 @@ function List() {
 
     const handleDelete = async (id) => {
         try {
-            if (window.confirm("Delete the blog?")) {
-                await blogService.deleteBlog(id);
+            if (window.confirm("Delete the marketing?")) {
+                await marketingService.deleteMarketing(id);
                 setData(prevData => prevData.filter(item => item.id !== id));
-                message.success(`Deleted blog: ${id}`);
+                message.success(`Deleted marketing: ${id}`);
             }
         } catch (error) {
             console.error(error);
-            message.error('Error deleting account');
+            message.error('Error deleting marketing');
         }
     };
 
     useEffect(() => {
-        getListBlog();
+        getListMarketing();
     }, []);
 
     const columns = [
         {
             title: 'id',
             dataIndex: 'id',
+            width: '10%',
+        },
+        {
+            title: 'StartDate',
+            dataIndex: 'startDate',
+            width: '10%',
+        },
+        {
+            title: 'EndDate',
+            dataIndex: 'endDate',
+            width: '10%',
+        },
+        {
+            title: 'Duration',
+            dataIndex: 'duration',
             width: '10%',
         },
         {
@@ -82,7 +97,7 @@ function List() {
                         Delete
                     </Button>
                     <Button>
-                        <Link to={`/blog/${id}`}>
+                        <Link to={`/marketing/${id}`}>
                             Details
                         </Link>
                     </Button>
@@ -106,12 +121,12 @@ function List() {
 
             <main id="main" className="main" style={{backgroundColor: "#f6f9ff"}}>
                 <div className="pagetitle">
-                    <h1>List Blog</h1>
+                    <h1>List Marketing</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
-                            <li className="breadcrumb-item">Blog</li>
-                            <li className="breadcrumb-item active">List Blog</li>
+                            <li className="breadcrumb-item">Marketing</li>
+                            <li className="breadcrumb-item active">List Marketing</li>
                         </ol>
                     </nav>
                 </div>

@@ -34,7 +34,7 @@ function Sidebar() {
                                 </a>
                             </li>
                             <li>
-                                <a href="/marketing/list">
+                                <a href="/marketing/create">
                                     <i className="bi bi-circle" /><span>Create Marketing</span>
                                 </a>
                             </li>

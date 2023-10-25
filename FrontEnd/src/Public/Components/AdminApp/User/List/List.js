@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Header from '../../../Shared/Admin/Header/Header';
 import Sidebar from '../../../Shared/Admin/Sidebar/Sidebar';
-import {Button, Form, message, Table} from 'antd';
+import {Button, message, Table} from 'antd';
 import accountService from '../../../Service/AccountService';
 import {Link} from 'react-router-dom';
 import Footer from "../../../Shared/Admin/Footer/Footer";
-import Modal from "react-bootstrap/Modal";
+import $ from 'jquery';
 
 function List() {
     const [data, setData] = useState([]);
@@ -39,6 +39,17 @@ function List() {
         }
     }
 
+    const searchUser = async () => {
+        $(document).ready(function () {
+            $("#inputSearchUser").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".ant-table-content table tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    }
+
     const checkIsDelete = async () => {
         let id = sessionStorage.getItem('id');
         let listBtnDelete = document.getElementsByClassName('btnDelete');
@@ -68,6 +79,7 @@ function List() {
     useEffect(() => {
         getListAccount();
         checkIsDelete();
+        searchUser();
     }, []);
 
     const columns = [
@@ -158,14 +170,22 @@ function List() {
                         </ol>
                     </nav>
                 </div>
-                <Table
-                    style={{margin: "auto"}}
-                    columns={columns}
-                    dataSource={data}
-                    pagination={tableParams.pagination}
-                    loading={loading}
-                    onChange={handleTableChange}
-                />
+                <div className="row">
+                    <div className="mb-3">
+                        <h5>Search User</h5>
+                        <input className="form-control" id="inputSearchUser" type="text" placeholder="Search.."/>
+                        <br/>
+                    </div>
+                    <Table
+                        id="tableUser"
+                        style={{margin: "auto"}}
+                        columns={columns}
+                        dataSource={data}
+                        pagination={tableParams.pagination}
+                        loading={loading}
+                        onChange={handleTableChange}
+                    />
+                </div>
             </main>
             <Footer/>
         </div>

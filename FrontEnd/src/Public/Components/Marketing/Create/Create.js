@@ -3,13 +3,13 @@ import Header from '../../Shared/Admin/Header/Header'
 import Sidebar from '../../Shared/Client/Sidebar/Sidebar'
 import {Button, Form, message} from 'antd'
 import {Link, useNavigate} from 'react-router-dom'
-import blogService from '../../Service/BlogService';
+import marketingService from '../../Service/MarketingService';
 import Footer from "../../Shared/Admin/Footer/Footer";
 import accountService from "../../Service/AccountService";
 import $ from "jquery";
 import uploadImageMain from "../../../Main/Main";
 
-function BlogCreate() {
+function MarketingCreate() {
     const navigate = useNavigate();
     const AuthName = sessionStorage.getItem("username");
 
@@ -26,11 +26,11 @@ function BlogCreate() {
     }
 
     const uploadImage = async () => {
-        await $('#thumbnailCreateBlog').on('change', function () {
-            uploadImageMain('thumbnailCreateBlog').then(function (response) {
+        await $('#thumbnailCreateMarketing').on('change', function () {
+            uploadImageMain('thumbnailCreateMarketing').then(function (response) {
                 $('#modalImageShow').attr("src", response).removeClass('d-none').height(150).width(150);
                 console.log(response);
-                $('#thumbnailCreateBlogMain').val(response);
+                $('#thumbnailCreateMarketingMain').val(response);
             }).catch(function (error) {
                 console.error('Error:', error);
             });
@@ -41,7 +41,11 @@ function BlogCreate() {
     const onFinish = async (values) => {
         var content = document.getElementById("content").value;
         var status = document.getElementById("status").value;
-        var thumbnail = document.getElementById("thumbnailCreateBlogMain").value;
+        var thumbnail = document.getElementById("thumbnailCreateMarketingMain").value;
+
+        var duration = document.getElementById("duration").value;
+        var endDate = document.getElementById("endDate").value;
+        var startDate = document.getElementById("startDate").value;
 
         let item = await getUser();
 
@@ -52,15 +56,18 @@ function BlogCreate() {
         let data = {
             user: user,
             content: content,
+            duration: duration,
+            endDate: endDate,
+            startDate: startDate,
             thumbnail: thumbnail,
             status: status
         }
 
-        await blogService.createBlog(data)
+        await marketingService.createMarketing(data)
             .then((res) => {
-                console.log("create blog", res.data)
-                message.success("Create blog success")
-                navigate("/blog/list")
+                console.log("create marketing", res.data)
+                message.success("Create marketing success")
+                navigate("/marketing/list")
             })
             .catch((err) => {
                 console.log(err)
@@ -92,12 +99,12 @@ function BlogCreate() {
             <Sidebar/>
             <main id="main" className="main" style={{backgroundColor: "#f6f9ff"}}>
                 <div className="pagetitle">
-                    <h1>Create Blog</h1>
+                    <h1>Create Marketing</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
-                            <li className="breadcrumb-item">Blog</li>
-                            <li className="breadcrumb-item active">Create Blog</li>
+                            <li className="breadcrumb-item">Marketing</li>
+                            <li className="breadcrumb-item active">Create Marketing</li>
                         </ol>
                     </nav>
                 </div>
@@ -106,7 +113,7 @@ function BlogCreate() {
                         <div className="col-lg-12">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Create Blog</h5>
+                                    <h5 className="card-title">Create Marketing</h5>
                                     <Form
                                         name="basic"
                                         labelCol={{
@@ -122,6 +129,19 @@ function BlogCreate() {
                                         autoComplete="off"
                                         className="row">
 
+                                        <div className="col-md-4">
+                                            <label htmlFor="startDate" className="form-label">Start Date</label>
+                                            <input type="datetime-local" className="form-control" id="startDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="endDate" className="form-label">End Date</label>
+                                            <input type="datetime-local" className="form-control" id="endDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="duration" className="form-label">Duration(Hours)</label>
+                                            <input type="number" className="form-control" id="duration" min="0"/>
+                                        </div>
+
                                         <div className="col-md-6">
                                             <label htmlFor="status" className="form-label">Status</label>
                                             <select className="form-select" id="status">
@@ -135,9 +155,9 @@ function BlogCreate() {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="thumbnailCreateBlog" className="form-label">Thumbnail</label>
-                                            <input id="thumbnailCreateBlog" type="file" multiple className="form-control"/>
-                                            <input id="thumbnailCreateBlogMain" type="text" className="d-none"/>
+                                            <label htmlFor="thumbnailCreateMarketing" className="form-label">Thumbnail</label>
+                                            <input id="thumbnailCreateMarketing" type="file" multiple className="form-control"/>
+                                            <input id="thumbnailCreateMarketingMain" type="text" className="d-none"/>
                                             <img src="" alt="" id="modalImageShow" className="d-none"/>
                                         </div>
 
@@ -164,4 +184,4 @@ function BlogCreate() {
     )
 }
 
-export default BlogCreate
+export default MarketingCreate

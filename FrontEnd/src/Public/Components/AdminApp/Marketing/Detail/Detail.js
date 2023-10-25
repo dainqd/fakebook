@@ -23,16 +23,19 @@ function Detail() {
             .then((res) => {
                 console.log("details marketing", res.data);
                 form.setFieldsValue({content: res.data.content})
+                $('#startDate').val(res.data.startDate);
+                $('#endDate').val(res.data.endDate);
+                $('#duration').val(res.data.duration);
                 marketing = res.data;
                 let imgUrl = res.data.thumbnail;
                 if (marketing.status == 'ACTIVE') {
-                    $('#updateStatusBlog').empty().append(`<option value="ACTIVE">ACTIVE</option>
+                    $('#updateStatusMarketing').empty().append(`<option value="ACTIVE">ACTIVE</option>
                                                         <option value="INACTIVE">INACTIVE</option>`);
                 } else {
-                    $('#updateStatusBlog').empty().append(`<option value="INACTIVE">INACTIVE</option>
+                    $('#updateStatusMarketing').empty().append(`<option value="INACTIVE">INACTIVE</option>
                                                         <option value="ACTIVE">ACTIVE</option>`);
                 }
-                $('#thumbnailCreateBlogMain').val(imgUrl);
+                $('#thumbnailCreateMarketingMain').val(imgUrl);
                 $('#uploadImg').attr("src", imgUrl).css('width', '80px').css('height', '80px');
             })
             .catch((err) => {
@@ -71,9 +74,16 @@ function Detail() {
         let thumbnail = $('#thumbnailCreateMarketingMain').val();
         let status = $('#updateStatusMarketing').val();
 
+        let startDate = $('#startDate').val();
+        let endDate = $('#endDate').val();
+        let duration = $('#duration').val();
+
         marketing.content = values.content;
         marketing.thumbnail = thumbnail;
         marketing.status = status;
+        marketing.startDate = startDate;
+        marketing.endDate = endDate;
+        marketing.duration = duration;
 
         let updateData = marketing;
         await marketingService.adminUpdateMarketing(updateData)
@@ -129,6 +139,19 @@ function Detail() {
                                           onFinish={onFinish}
                                           autoComplete="off"
                                     >
+                                        <div className="col-md-4">
+                                            <label htmlFor="startDate" className="form-label">Start Date</label>
+                                            <input type="datetime-local" className="form-control" id="startDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="endDate" className="form-label">End Date</label>
+                                            <input type="datetime-local" className="form-control" id="endDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="duration" className="form-label">Duration(Hours)</label>
+                                            <input type="number" className="form-control" id="duration" min="0"/>
+                                        </div>
+
                                         <div className="col-md-8">
                                             <label>
                                                 CONTENT

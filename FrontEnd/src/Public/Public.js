@@ -42,13 +42,13 @@ function Public() {
                 <Route path='/*' element={<Error404/>}/>
                 <Route path='/profile' element={<Profile/>}/>
                 {/*blog*/}
-                <Route path='/blog/list' element={<ClientMarketingList/>}/>
-                <Route path='/blog/create' element={<ClientMarketingCreate/>}/>
-                <Route path='/blog/:id' element={<ClientMarketingDetail/>}/>
+                <Route path='/marketing/list' element={<ClientMarketingList/>}/>
+                <Route path='/marketing/create' element={<ClientMarketingCreate/>}/>
+                <Route path='/marketing/:id' element={<ClientMarketingDetail/>}/>
                 {/*blog*/}
-                <Route path='/marketing/list' element={<ClientBlogList/>}/>
-                <Route path='/marketing/create' element={<ClientBlogCreate/>}/>
-                <Route path='/marketing/:id' element={<ClientBlogDetail/>}/>
+                <Route path='/blog/list' element={<ClientBlogList/>}/>
+                <Route path='/blog/create' element={<ClientBlogCreate/>}/>
+                <Route path='/blog/:id' element={<ClientBlogDetail/>}/>
                 {/*<Route path='/admin/blog/list' element={<BlogCreate />} />*/}
                 <Route path='/admin/blog/list' element={<BlogList/>}/>
                 <Route path='/admin/blog/create' element={<BlogCreate/>}/>

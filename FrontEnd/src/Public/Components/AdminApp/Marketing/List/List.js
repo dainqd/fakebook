@@ -63,6 +63,21 @@ function List() {
             width: '10%',
         },
         {
+            title: 'StartDate',
+            dataIndex: 'startDate',
+            width: '10%',
+        },
+        {
+            title: 'EndDate',
+            dataIndex: 'endDate',
+            width: '10%',
+        },
+        {
+            title: 'Duration',
+            dataIndex: 'duration',
+            width: '10%',
+        },
+        {
             title: 'Content',
             dataIndex: 'content',
             width: '50%',
@@ -82,7 +97,7 @@ function List() {
                         Delete
                     </Button>
                     <Button>
-                        <Link to={`/admin/marketing/${id}`}>
+                        <Link to={`/marketing/${id}`}>
                             Details
                         </Link>
                     </Button>

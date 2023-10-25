@@ -1,7 +1,7 @@
 import {Button, Form, Input, message} from 'antd';
 import React, {useEffect, useState} from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
-import blogService from '../../Service/BlogService';
+import marketingService from '../../Service/MarketingService';
 import Header from '../../Shared/Admin/Header/Header';
 import Sidebar from '../../Shared/Client/Sidebar/Sidebar'
 import Footer from "../../Shared/Admin/Footer/Footer";
@@ -16,23 +16,23 @@ function Detail() {
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
-    var blog = null;
+    var marketing = null;
 
-    const detailsBlog = async () => {
-        await blogService.detailBlog(id)
+    const detailsMarketing = async () => {
+        await marketingService.detailMarketing(id)
             .then((res) => {
-                console.log("details blog", res.data);
+                console.log("details marketing", res.data);
                 form.setFieldsValue({content: res.data.content})
-                blog = res.data;
+                marketing = res.data;
                 let imgUrl = res.data.thumbnail;
-                if(blog.status == 'ACTIVE'){
-                    $('#updateStatusBlog').empty().append(`<option value="ACTIVE">ACTIVE</option>
+                if(marketing.status == 'ACTIVE'){
+                    $('#updateStatusMarketing').empty().append(`<option value="ACTIVE">ACTIVE</option>
                                                         <option value="INACTIVE">INACTIVE</option>`);
                 } else {
-                    $('#updateStatusBlog').empty().append(`<option value="INACTIVE">INACTIVE</option>
+                    $('#updateStatusMarketing').empty().append(`<option value="INACTIVE">INACTIVE</option>
                                                         <option value="ACTIVE">ACTIVE</option>`);
                 }
-                $('#thumbnailCreateBlogMain').val(imgUrl);
+                $('#thumbnailCreateMarketingMain').val(imgUrl);
                 $('#uploadImg').attr("src", imgUrl).css('width', '80px').css('height', '80px');
             })
             .catch((err) => {
@@ -46,10 +46,10 @@ function Detail() {
     const handleShow = () => setShow(true);
 
     const uploadImage = async () => {
-        await $('#thumbnailCreateBlog').on('change', function () {
-            uploadImageMain('thumbnailCreateBlog').then(function (response) {
+        await $('#thumbnailCreateMarketing').on('change', function () {
+            uploadImageMain('thumbnailCreateMarketing').then(function (response) {
                 $('#uploadImg').attr("src", response);
-                $('#thumbnailCreateBlogMain').val(response);
+                $('#thumbnailCreateMarketingMain').val(response);
             }).catch(function (error) {
                 console.error('Error:', error);
             });
@@ -68,19 +68,26 @@ function Detail() {
     };
 
     const onFinish = async (values) => {
-        let thumbnail = $('#thumbnailCreateBlogMain').val();
-        let status = $('#updateStatusBlog').val();
+        let thumbnail = $('#thumbnailCreateMarketingMain').val();
+        let status = $('#updateStatusMarketing').val();
 
-        blog.content = values.content;
-        blog.thumbnail = thumbnail;
-        blog.status = status;
+        let startDate = $('#startDate').val();
+        let endDate = $('#endDate').val();
+        let duration = $('#duration').val();
 
-        let updateData = blog;
-        await blogService.updateBlog(updateData)
+        marketing.content = values.content;
+        marketing.thumbnail = thumbnail;
+        marketing.status = status;
+        marketing.startDate = startDate;
+        marketing.endDate = endDate;
+        marketing.duration = duration;
+
+        let updateData = marketing;
+        await marketingService.updateMarketing(updateData)
             .then((res) => {
                 console.log("data", res.data)
                 message.success("Update success")
-                navigate("/blog/list")
+                navigate("/marketing/list")
             })
             .catch((err) => {
                 console.log(err)
@@ -89,7 +96,7 @@ function Detail() {
     };
 
     useEffect(() => {
-        detailsBlog();
+        detailsMarketing();
         uploadImage();
     }, [form, id])
 
@@ -99,12 +106,12 @@ function Detail() {
             <Sidebar/>
             <main id="main" className="main" style={{backgroundColor: "#f6f9ff"}}>
                 <div className="pagetitle">
-                    <h1>Detail Blog</h1>
+                    <h1>Detail Marketing</h1>
                     <nav>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/dashboard">Dashboard</Link></li>
-                            <li className="breadcrumb-item">Blog</li>
-                            <li className="breadcrumb-item active">Detail Blog</li>
+                            <li className="breadcrumb-item">Marketing</li>
+                            <li className="breadcrumb-item active">Detail Marketing</li>
                         </ol>
                     </nav>
                 </div>
@@ -129,6 +136,20 @@ function Detail() {
                                           onFinish={onFinish}
                                           autoComplete="off"
                                     >
+
+                                        <div className="col-md-4">
+                                            <label htmlFor="startDate" className="form-label">Start Date</label>
+                                            <input type="datetime-local" className="form-control" id="startDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="endDate" className="form-label">End Date</label>
+                                            <input type="datetime-local" className="form-control" id="endDate"/>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="duration" className="form-label">Duration(Hours)</label>
+                                            <input type="number" className="form-control" id="duration" min="0"/>
+                                        </div>
+
                                         <div className="col-md-8">
                                             <label>
                                                 CONTENT
@@ -150,15 +171,15 @@ function Detail() {
                                             <label>
                                                 THUMBNAIL
                                             </label>
-                                            <input id="thumbnailCreateBlog" type="file" multiple
+                                            <input id="thumbnailCreateMarketing" type="file" multiple
                                                    className="form-control"/>
-                                            <input id="thumbnailCreateBlogMain" type="text" className="d-none"/>
+                                            <input id="thumbnailCreateMarketingMain" type="text" className="d-none"/>
                                             <img src="" alt="" id="uploadImg" className="uploadImg"/>
                                         </div>
 
                                         <div className="col-md-2">
                                             <label htmlFor="status">Status</label>
-                                            <select className="form-select" id="updateStatusBlog">
+                                            <select className="form-select" id="updateStatusMarketing">
 
                                             </select>
                                         </div>
