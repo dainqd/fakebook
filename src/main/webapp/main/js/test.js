@@ -21,13 +21,29 @@ function connect() {
     stompClient.connect({}, onConnected, onError);
 }
 
-// Connect to WebSocket Server.
-const id = document.getElementById('room').innerText;
-console.log(id);
+function chatConnect(id) {
+    var socket = new SockJS('/websocket');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, ()=>{
+        connectRoomChat(id)
+    }, onError);
+}
 
 connect();
 
 function onConnected() {
+    stompClient.subscribe(`/topic/friends/${userID}`, function (response) {
+        const friends = JSON.parse(response.body);
+        load_unconnected_user(friends);
+    });
+
+    stompClient.send(`/app/getFriends/${userID}`);
+
+    connectingElement.classList.add('d-none');
+}
+
+function connectRoomChat(id) {
     // Subscribe to the Public Topic
     stompClient.subscribe(`/topic/publicChatRoom/${id}`, onMessageReceived);
 
@@ -36,12 +52,6 @@ function onConnected() {
         {},
         JSON.stringify({sender: username, senderId: localStorage.getItem('user_id'), receiverId: id, type: 'JOIN'})
     )
-
-    stompClient.subscribe(`/topic/friends/${userID}`, load_unconnected_user);
-
-    stompClient.send(`/app/getFriends/${userID}`);
-
-    connectingElement.classList.add('d-none');
 }
 
 
@@ -51,7 +61,9 @@ function onError(error) {
 }
 
 
-function sendMessage(event) {
+function sendMessage(id) {
+    console.log("aaaaaa")
+    var messageInput = document.querySelector('#messageForm #message');
     var messageContent = messageInput.value.trim();
     if (messageContent && stompClient) {
         var chatMessage = {
@@ -64,7 +76,6 @@ function sendMessage(event) {
         stompClient.send(`/app/chat.sendMessage/${id}`, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
-    event.preventDefault();
 }
 
 function onMessageReceived(payload) {
@@ -80,31 +91,32 @@ function onMessageReceived(payload) {
                 <span>${message.content}</span>
                 </li>`;
 
-        // if (message.type === 'JOIN') {
-        //     messageElement.classList.add('event-message');
-        //     message.content = message.sender + ' joined!';
-        // } else if (message.type === 'LEAVE') {
-        //     messageElement.classList.add('event-message');
-        //     message.content = message.sender + ' left!';
-        // } else {
-        //     messageElement.classList.add('chat-message');
-        //     var usernameElement = document.createElement('strong');
-        //     usernameElement.classList.add('nickname');
-        //     var usernameText = document.createTextNode(message.sender);
-        //     // var usernameText = document.createTextNode(message.sender);
-        //     usernameElement.appendChild(usernameText);
-        //     messageElement.appendChild(usernameElement);
-        // }
-        //
-        // var textElement = document.createElement('span');
-        // var messageText = document.createTextNode(message.content);
-        // textElement.appendChild(messageText);
-        //
-        // messageElement.appendChild(textElement);
+        if (message.type === 'JOIN') {
+            messageElement.classList.add('event-message');
+            message.content = message.sender + ' joined!';
+        } else if (message.type === 'LEAVE') {
+            messageElement.classList.add('event-message');
+            message.content = message.sender + ' left!';
+        } else {
+            messageElement.classList.add('chat-message');
+            var usernameElement = document.createElement('strong');
+            usernameElement.classList.add('nickname');
+            var usernameText = document.createTextNode(message.sender);
+            // var usernameText = document.createTextNode(message.sender);
+            usernameElement.appendChild(usernameText);
+            messageElement.appendChild(usernameElement);
+        }
+
+        var textElement = document.createElement('span');
+        var messageText = document.createTextNode(message.content);
+        textElement.appendChild(messageText);
+
+        messageElement.appendChild(textElement);
 
     }
 
-    messageArea.empty().append(item);
+    console.log("dddddd")
+    messageArea.find("#chat-history").empty().append(item);
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
@@ -447,7 +459,7 @@ function scroll_top() {
 function load_unconnected_user(friends) {
     let string = '';
     for (let i = 0; i < friends.length; i++) {
-        string = string + `<li onclick="myFriendClick(${friends[i].sender.id});"><figure><img src="${friends[i].sender.avt}" alt="">
+        string = string + `<li onclick="make_chat_area(${friends[i].sender.id}, ${friends[i].receiver.id});load_chat_data(${friends[i].sender.id}, ${friends[i].receiver.id});"><figure><img src="${friends[i].sender.avt}" alt="">
                                                         <span class="status f-online"></span>
                                                     </figure>
                                                     <div class="people-name">
@@ -509,23 +521,39 @@ function load_connected_chat_user(from_user_id) {
     stompClient.send(JSON.stringify(data));
 }
 
-function make_chat_area(user_id, to_user_name) {
+async function make_chat_area(user_id, to_user_name) {
+    await chatConnect(user_id);
+
     var html = `
-	<div id="chat_history"></div>
-	<div class="input-group mb-3">
-		<div id="message_area" class="form-control" contenteditable style="min-height:125px; border:1px solid #ccc; border-radius:5px;"></div>
-		<label class="btn btn-warning" style="line-height:125px;">
-			<i class="fas fa-upload"></i> <input type="file" id="browse_image" onchange="upload_image()" hidden />
-		</label>
-		<button type="button" class="btn btn-success" id="send_button" onclick="send_chat_message()"><i class="fas fa-paper-plane"></i></button>
-	</div>
+<!--	<div id="chat_history"></div>-->
+<!--	<div class="input-group mb-3">-->
+<!--		<div id="message_area" class="form-control" contenteditable style="min-height:125px; border:1px solid #ccc; border-radius:5px;"></div>-->
+<!--		<label class="btn btn-warning" style="line-height:125px;">-->
+<!--			<i class="fas fa-upload"></i> <input type="file" id="browse_image" onchange="upload_image()" hidden />-->
+<!--		</label>-->
+<!--		<button type="button" class="btn btn-success" id="send_button" onclick="send_chat_message()"><i class="fas fa-paper-plane"></i></button>-->
+<!--	</div>-->
+	<div class="conversation-head" id="chatUserCurrent">
+
+                                                </div>
+                                                // <span class="d-none" id="room">${user_id}</span>
+                                                <ul id="chat_history" style="overflow-y: scroll">
+                                                </ul>
+
+                                                <div id="messageForm" name="messageForm">
+                                                    <div class="input-message">
+                                                        <input type="text" id="message" autocomplete="off"
+                                                               placeholder="Type a message..."/>
+                                                        <button onclick="sendMessage(${user_id})" type="button">Send</button>
+                                                    </div>
+                                                </div>
 	`;
 
-    document.getElementById('chat_area').innerHTML = html;
+    document.getElementById('messageArea').querySelector("#chat-input").innerHTML = html;
 
-    document.getElementById('chat_header').innerHTML = 'Chat with <b>' + to_user_name + '</b>';
+    // document.getElementById('chat_header').innerHTML = 'Chat with <b>' + to_user_name + '</b>';
 
-    document.getElementById('close_chat_area').innerHTML = '<button type="button" id="close_chat" class="btn btn-danger btn-sm float-end" onclick="close_chat();"><i class="fas fa-times"></i></button>';
+    // document.getElementById('close_chat_area').innerHTML = '<button type="button" id="close_chat" class="btn btn-danger btn-sm float-end" onclick="close_chat();"><i class="fas fa-times"></i></button>';
 
     to_user_id = user_id;
 }
@@ -566,7 +594,7 @@ function load_chat_data(from_user_id, to_user_id) {
         type: 'request_chat_history'
     };
 
-    conn.send(JSON.stringify(data));
+
 }
 
 function update_message_status(chat_message_id, from_user_id, to_user_id, chat_message_status) {
@@ -639,11 +667,14 @@ function upload_image() {
 //         method: 'GET',
 //     })
 //         .done(function (response) {
-//            
+//
 //         })
 //         .fail(function (_, textStatus) {
 //             console.log(textStatus)
 //         });
 // }
 
-messageForm.addEventListener('submit', sendMessage, true);
+messageForm.addEventListener('submit', ()=>{
+    console.log("bbbbbbbbb")
+    // sendMessage
+}, true);
