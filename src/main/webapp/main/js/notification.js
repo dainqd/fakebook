@@ -70,6 +70,20 @@ function load_all_notification(res) {
     $('#tabsNotifications').empty().append(mainHtml);
 }
 
+async function sendNotification(userID) {
+    let accounts = {
+        id: userID
+    }
+    if (stompClient) {
+        let notification = {
+            accounts: accounts,
+            content: "A user just commented on your post!",
+            status: 'UNSEEN',
+        };
+        stompClient.send(`/notify.sendNotification`, {}, JSON.stringify(notification));
+    }
+}
+
 function convertDate(data) {
     const targetTime = new Date(data);
     return calculateTimeDifference(targetTime);

@@ -88,7 +88,6 @@ public class WebSocketController {
             fallbackList.add(chat);
             return fallbackList;
         }
-        System.out.println(messageDtos);
         return messageDtos;
     }
 
@@ -105,8 +104,7 @@ public class WebSocketController {
     @MessageMapping("/notify.sendNotification")
     @SendTo("/topic/publicNotification")
     public NotificationDto sendNotification(@Payload NotificationDto notificationDto) {
-        Notifications notification = new Notifications(notificationDto);
-        Notifications saveNotifications = notificationService.save(notification);
+        Notifications saveNotifications = notificationService.create(notificationDto, 1);
         return new NotificationDto(saveNotifications);
     }
 

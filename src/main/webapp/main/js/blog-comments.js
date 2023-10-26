@@ -29,15 +29,15 @@ $(document).ready(function () {
     });
 })
 
-async function processCreateComment(id) {
+async function processCreateComment(id, userBlog) {
     if (event.keyCode === 13) {
-        await createComment(id);
+        await createComment(id, userBlog);
     }
 }
 
-async function processCreateCommentChild(id, blog) {
+async function processCreateCommentChild(id, blog, userBlog) {
     if (event.keyCode === 13) {
-        await createCommentChild(id, blog);
+        await createCommentChild(id, blog, userBlog);
     }
 }
 
@@ -57,9 +57,11 @@ async function renderBlog(element, id) {
             let commentList = response.content;
             let comments = '';
             let blogId = null;
+            let userBlog = null;
             for (let i = 0; i < commentList.length; i++) {
                 let commentChilds = commentList[i].commentsChild;
                 blogId = commentList[i].blog.id;
+                userBlog = commentList[i].blog.user.id;
                 let item = ``;
                 for (let j = 0; j < commentChilds.length; j++) {
                     item = item + `<li>
@@ -97,7 +99,7 @@ async function renderBlog(element, id) {
                                                                 <div class="comet-avatar"><img src="${urlUserImg}" alt=""></div>
                                                                 <div class="post-comt-box">
                                                                     <form>
-                                                                        <textarea id="contentCommentChild_${commentList[i].id}" placeholder="Post your comment" onkeypress="processCreateCommentChild(${commentList[i].id}, ${blogId})"></textarea>
+                                                                        <textarea id="contentCommentChild_${commentList[i].id}" placeholder="Post your comment" onkeypress="processCreateCommentChild(${commentList[i].id}, ${blogId}, ${userBlog})"></textarea>
                                                                     </form>
                                                                 </div>
                                                     </li>`;
@@ -110,7 +112,7 @@ async function renderBlog(element, id) {
                                                         </div>
                                                         <div class="post-comt-box">
                                                             <form>
-                                                                <textarea id="contentComment-${id}" placeholder="Post your comment" onkeypress="processCreateComment(${id});" data-id="${id}"></textarea>
+                                                                <textarea id="contentComment-${id}" placeholder="Post your comment" onkeypress="processCreateComment(${id}, ${userBlog});" data-id="${id}"></textarea>
                                                             </form>
                                                         </div>
                                                     </li>
@@ -179,7 +181,7 @@ async function postBlog() {
     }
 }
 
-async function createComment(id) {
+async function createComment(id, userBlog) {
     try {
         let createComment = `/api/v1/comments`;
 
@@ -211,6 +213,7 @@ async function createComment(id) {
                     if (response.status == 200) {
                         let element = $('#listComment-' + id);
                         loadComment(element, id);
+                        sendNotification(userBlog);
                     } else {
                         alert("Error! Please try again");
                     }
@@ -282,7 +285,7 @@ async function showChildCommentPost(id, blogId) {
     await $('#childCommentPost_' + id).removeClass('d-none');
 }
 
-async function createCommentChild(id, blogID) {
+async function createCommentChild(id, blogID, userBlog) {
     try {
         let createComment = `/api/v1/comments`;
 
@@ -314,6 +317,7 @@ async function createCommentChild(id, blogID) {
                     if (response.status == 200) {
                         let element = $('#listComment-' + blogID);
                         loadComment(element, blogID);
+                        sendNotification(userBlog);
                     } else {
                         alert("Error! Please try again");
                     }
