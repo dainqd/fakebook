@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:demo_app/widgets/home.dart';
+import 'package:customer_app/widgets/home.dart';
 import 'package:flutter/material.dart';
 import './search.dart';
 import './favorite.dart';

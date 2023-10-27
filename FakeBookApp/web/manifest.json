@@ -1,6 +1,6 @@
 {
-    "name": "demo_app",
-    "short_name": "demo_app",
+    "name": "customer_app",
+    "short_name": "customer_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

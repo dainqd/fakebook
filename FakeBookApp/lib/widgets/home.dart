@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:demo_app/utils/.constants.example.dart';
-import 'package:demo_app/widgets/detail.dart';
-import 'package:demo_app/widgets/profile.dart';
-import 'package:demo_app/widgets/search.dart';
+import 'package:customer_app/utils/.constants.example.dart';
+import 'package:customer_app/widgets/detail.dart';
+import 'package:customer_app/widgets/profile.dart';
+import 'package:customer_app/widgets/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:demo_app/widgets/list.dart';
+import 'package:customer_app/widgets/list.dart';
 import 'package:http/http.dart' as http;
 
 import 'favorite.dart';
@@ -56,12 +56,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Khu Du Lịch Sinh Thái'),
-      ),
       body: Column(
         children: <Widget>[
           Container(
+            margin: EdgeInsets.only(top: 40),
             color: Colors.purple[50],
             padding: EdgeInsets.all(16),
             child: Column(
@@ -149,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(height: 4),
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Giá:  \$${item.price.toStringAsFixed(2)}',

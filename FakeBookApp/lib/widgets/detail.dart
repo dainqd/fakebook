@@ -1,5 +1,5 @@
-import 'package:demo_app/widgets/profile.dart';
-import 'package:demo_app/widgets/search.dart';
+import 'package:customer_app/widgets/profile.dart';
+import 'package:customer_app/widgets/search.dart';
 import 'package:flutter/material.dart';
 
 import '/utils/constants.dart';

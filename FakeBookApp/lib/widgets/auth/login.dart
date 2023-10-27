@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:demo_app/widgets/auth/register.dart';
+import 'package:customer_app/widgets/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/utils.dart';
 
 import '../../utils/constants.dart';
-import 'package:demo_app/widgets//home.dart';
+import 'package:customer_app/widgets//home.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

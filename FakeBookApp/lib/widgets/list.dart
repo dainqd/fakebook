@@ -1,4 +1,4 @@
-import 'package:demo_app/widgets/home.dart';
+import 'package:customer_app/widgets/home.dart';
 import 'package:flutter/material.dart';
 import './profile.dart';
 import './favorite.dart';

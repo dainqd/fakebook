@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/constants.dart';
-import 'package:demo_app/widgets/auth/login.dart';
+import 'package:customer_app/widgets/auth/login.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override

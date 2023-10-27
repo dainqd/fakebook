@@ -1,5 +1,5 @@
-import 'package:demo_app/utils/utils.dart';
-import 'package:demo_app/widgets/home.dart';
+import 'package:customer_app/utils/utils.dart';
+import 'package:customer_app/widgets/home.dart';
 import 'package:flutter/material.dart';
 import './widgets/auth/login.dart';
 
