@@ -24,5 +24,5 @@ public interface NotificationRepository extends JpaRepository<Notifications, Lon
 
     List<Notifications> findAllByStatusAndUser_Id(Enums.NotificationStatus status, Long userID);
 
-    List<Notifications> findAllByUser_IdAndStatusNot(Long userID, Enums.NotificationStatus status);
+    List<Notifications> findAllByUser_IdAndStatusNotOrderByIdDesc(Long userID, Enums.NotificationStatus status);
 }

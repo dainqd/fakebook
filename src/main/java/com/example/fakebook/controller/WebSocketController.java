@@ -94,24 +94,16 @@ public class WebSocketController {
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/publicChatRoom")
     public MessageDto addUser(@Payload MessageDto chat, SimpMessageHeaderAccessor headerAccessor) {
-        // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chat.getSender());
         headerAccessor.getSessionAttributes().put("sender", chat.getSenderId());
         headerAccessor.getSessionAttributes().put("receiver", chat.getSenderId());
         return chat;
     }
 
-    @MessageMapping("/notify.sendNotification")
-    @SendTo("/topic/publicNotification")
-    public NotificationDto sendNotification(@Payload NotificationDto notificationDto) {
-        Notifications saveNotifications = notificationService.create(notificationDto, 1);
-        return new NotificationDto(saveNotifications);
-    }
-
-    @MessageMapping("/notify.getAllNotification")
-    @SendTo("/topic/publicNotification")
-    public List<NotificationDto> getNotifications(@Payload NotificationDto notificationDto) {
-        List<NotificationDto> notificationsList = notificationService.findAllByUser_IdAndNoDeleted(notificationDto.getUser().getId());
+    @MessageMapping("/notify.getAllNotification/{receiverId}")
+    @SendTo("/topic/publicNotification/{receiverId}")
+    public List<NotificationDto> getNotifications(@DestinationVariable Long receiverId) {
+        List<NotificationDto> notificationsList = notificationService.findAllByUser_IdAndNoDeleted(receiverId);
         return notificationsList;
     }
 }

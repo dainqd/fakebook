@@ -213,7 +213,8 @@ async function createComment(id, userBlog) {
                     if (response.status == 200) {
                         let element = $('#listComment-' + id);
                         loadComment(element, id);
-                        sendNotification(userBlog);
+                        let data = `${content}`;
+                        sendNotification(userBlog, data);
                     } else {
                         alert("Error! Please try again");
                     }
@@ -317,7 +318,8 @@ async function createCommentChild(id, blogID, userBlog) {
                     if (response.status == 200) {
                         let element = $('#listComment-' + blogID);
                         loadComment(element, blogID);
-                        sendNotification(userBlog);
+                        let data = `${content}`;
+                        sendNotification(userBlog, data);
                     } else {
                         alert("Error! Please try again");
                     }

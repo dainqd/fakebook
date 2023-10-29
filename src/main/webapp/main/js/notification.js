@@ -15,11 +15,9 @@ function onConnected() {
         id: id
     };
 
-    stompClient.subscribe(`/topic/publicNotification`, load_all_notification);
+    stompClient.subscribe(`/topic/publicNotification/${id}`, load_all_notification);
 
-    stompClient.send(`/app/notify.getAllNotification`,
-        {},
-        JSON.stringify({user: user}));
+    stompClient.send(`/app/notify.getAllNotification/${id}`)
 }
 
 
@@ -43,7 +41,8 @@ function load_all_notification(res) {
 
         html = html + `<li><a href="#" title="">
                                             <div class="mesg-meta">
-                                                <h6>${data[i].content}</h6>
+                                                <h6>${data[i].title}</h6>
+                                                <span>${data[i].content}</span>
                                                 <i>${data[i].createdAt}</i>
                                             </div>
                                         </a>
@@ -70,19 +69,49 @@ function load_all_notification(res) {
     $('#tabsNotifications').empty().append(mainHtml);
 }
 
-async function sendNotification(userID) {
-    let accounts = {
+async function sendNotification(userID, data) {
+    let user = {
         id: userID
     }
-    if (stompClient) {
-        let notification = {
-            accounts: accounts,
-            content: "A user just commented on your post!",
-            status: 'UNSEEN',
-        };
-        stompClient.send(`/notify.sendNotification`, {}, JSON.stringify(notification));
+
+    let notification = {
+        user: user,
+        title: "A user just commented on your post!",
+        content: data,
+        status: 'UNSEEN',
+    };
+
+    await createNotification(userID, notification);
+}
+
+async function createNotification(id, user) {
+    try {
+        let createNotifications = `/api/v1/notifications`;
+
+        await fetch(createNotifications, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ` + `${myToken}`
+            },
+            body: JSON.stringify(user),
+
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    if (stompClient) {
+                        stompClient.send(`/app/notify.getAllNotification/${id}`)
+                    }
+                } else {
+                    alert("Error! Please try again");
+                }
+            })
+            .catch(error => console.log(error));
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
+
 
 function convertDate(data) {
     const targetTime = new Date(data);

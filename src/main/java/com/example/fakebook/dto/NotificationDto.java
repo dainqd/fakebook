@@ -20,6 +20,7 @@ public class NotificationDto {
     private long id;
     private Accounts user;
     private String content;
+    private String title;
     private Enums.NotificationStatus status = Enums.NotificationStatus.UNSEEN;
     private LocalDateTime createdAt;
 

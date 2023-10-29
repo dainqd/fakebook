@@ -63,6 +63,23 @@ public class NotificationService {
         }
     }
 
+    public Notifications create(NotificationDto notificationDto) {
+        try {
+            Notifications notifications = new Notifications(notificationDto);
+
+            BeanUtils.copyProperties(notificationDto, notifications);
+
+            notifications.setCreatedAt(LocalDateTime.now());
+            notifications.setCreatedBy(notificationDto.getUser().getId());
+
+            return notificationRepository.save(notifications);
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    messageResourceService.getMessage("create.error"));
+
+        }
+    }
+
     public Notifications update(NotificationDto notificationDto, long adminID) {
         try {
             Optional<Notifications> notificationsOptional = notificationRepository.findById(notificationDto.getId());
@@ -134,7 +151,7 @@ public class NotificationService {
     }
 
     public List<NotificationDto> findAllByUser_IdAndNoDeleted(long id) {
-        List<Notifications> notificationsList = notificationRepository.findAllByUser_IdAndStatusNot(id, Enums.NotificationStatus.DELETED);
+        List<Notifications> notificationsList = notificationRepository.findAllByUser_IdAndStatusNotOrderByIdDesc(id, Enums.NotificationStatus.DELETED);
         return notificationsList.stream().map(NotificationDto::new).collect(Collectors.toList());
     }
 }

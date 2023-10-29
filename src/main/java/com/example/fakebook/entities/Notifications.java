@@ -26,6 +26,7 @@ public class Notifications extends BaseEntity {
     @ToString.Exclude
     private Accounts user;
 
+    private String title;
     private String content;
 
     @Enumerated(EnumType.STRING)
