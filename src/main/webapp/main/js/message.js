@@ -23,8 +23,18 @@ function onConnected() {
                 receiverId: receiverId
             };
 
-            stompClient.subscribe(`/topic/publicChatRoom`, load_chat_history);
-            stompClient.send(`/app/chat.loadMessageHistory`, {}, JSON.stringify(data));
+            let small = false;
+            if (userID < receiverId) {
+                small = true;
+            }
+
+            if (small == true){
+                stompClient.subscribe(`/topic/publicChatRoom/${userID}/${receiverId}`, load_chat_history);
+                stompClient.send(`/app/chat.loadMessageHistory/${userID}/${receiverId}`, {}, JSON.stringify(data));
+            } else {
+                stompClient.subscribe(`/topic/publicChatRoom/${receiverId}/${userID}`, load_chat_history);
+                stompClient.send(`/app/chat.loadMessageHistory/${receiverId}/${userID}`, {}, JSON.stringify(data));
+            }
         })
 
         // $('#btnSendMessage').on('click', function () {
@@ -135,7 +145,18 @@ async function sendMessage(receiverId) {
             receiverId: receiverId,
             content: messageContent,
         };
-        stompClient.send(`/app/chat.sendMessage`, {}, JSON.stringify(chatMessage));
+
+        let small = false;
+        if (userID < receiverId) {
+            small = true;
+        }
+
+        if (small == true){
+            stompClient.send(`/app/chat.sendMessage/${userID}/${receiverId}`, {}, JSON.stringify(chatMessage));
+        } else {
+            stompClient.send(`/app/chat.sendMessage/${receiverId}/${userID}`, {}, JSON.stringify(chatMessage));
+        }
+
         messageInput.val('');
     }
     scroll_top();
