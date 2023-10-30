@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<!-- Header auth-->
+<head th:fragment="header-auth(title)">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title th:text="${title}">title</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link rel="icon" th:href="@{/assets/img/logo.png}">
+    <link rel="apple-touch-icon" th:href="@{/assets/img/logo.png}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.snow.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/remixicon/remixicon.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/quill/quill.bubble.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendor/simple-datatables/style.css}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Main CSS File -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<!--Main header-->
+<head th:fragment="header-main(title)">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <title th:text="${title}">title</title>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/main/images/fav.png}">
+
+    <link rel="stylesheet" th:href="@{/main/css/main.min.css}">
+    <link rel="stylesheet" th:href="@{/main/css/style.css}">
+    <link rel="stylesheet" th:href="@{/main/css/color.css}">
+    <link rel="stylesheet" th:href="@{/main/css/responsive.css}">
+    <link rel="stylesheet" th:href="@{/main/css/base.css}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Fancybox CSS and JavaScript -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+</head>
+<body>
+
+<div th:fragment="headerMain">
+    <div class="responsive-header">
+        <div class="mh-head first Sticky">
+			<span class="mh-btns-left">
+				<a class="" href="#menu"><i class="fa fa-align-justify"></i></a>
+			</span>
+            <span class="mh-text">
+				<a href="/" title=""><img class="imgLogo" th:src="@{/main/images/logo.png}" alt=""></a>
+			</span>
+        </div>
+        <div class="mh-head second">
+            <form class="mh-form">
+                <input placeholder="search"/>
+                <a href="#/" class="fa fa-search"></a>
+            </form>
+        </div>
+    </div>
+    <div class="topbar stick">
+        <div class="logo">
+            <a title="" href="/"><img class="imgLogo" th:src="@{/main/images/logo.png}" alt=""></a>
+        </div>
+
+        <div class="top-area">
+            <ul class="setting-area">
+                <li><a th:href="|/|" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
+                <li id="tabsNotifications">
+
+                </li>
+                <li>
+                    <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span>12</span></a>
+                    <div class="dropdowns">
+                        <span>5 New Messages</span>
+                        <ul class="drops-menu">
+                            <li>
+                                <a href="notifications.html" title="">
+                                    <img th:src="@{/main/images/resources/thumb-1.jpg}" alt="">
+                                    <div class="mesg-meta">
+                                        <h6>sarah Loren</h6>
+                                        <span>Hi, how r u dear ...?</span>
+                                        <i>2 min ago</i>
+                                    </div>
+                                </a>
+                                <span class="tag green">New</span>
+                            </li>
+                        </ul>
+                        <a href="messages.html" title="" class="more-mesg">view more</a>
+                    </div>
+                </li>
+                <li><a href="#" title="Languages" data-ripple=""><i class="fa fa-globe"></i></a>
+                    <div class="dropdowns languages">
+                        <a href="/?lang=vi" title=""><i class="ti-check"></i>VietNam</a>
+                        <a href="/?lang=en" title="">English</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="user-img">
+                <img class="avtCurrentUser" th:src="@{/main/images/resources/admin.jpg}" alt="" width="60px"
+                     height="60px">
+                <span class="status f-online"></span>
+                <div class="user-setting">
+                    <a href="#" id="myAdmin" class="d-none"><i class="ti-user"></i> admin</a>
+                    <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
+                    <a onclick="messageUrl();" title=""><i class="ti-target"></i>message</a>
+                    <a href="#" title=""><i class="ti-settings"></i>account setting</a>
+                    <a onclick="logout();" title=""><i class="ti-power-off"></i>log out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="sectionUser">
+    <section>
+        <div class="feature-photo">
+            <figure><img src="" class="imgUserThumbnail" id="imgUserThumbnail" alt=""></figure>
+            <div class="add-btn">
+                <a title="" id="btnEditCoverPhoto" data-toggle="modal" class="cursor"
+                   data-target="#modalUploadThumbnail">Edit Cover Photo</a>
+                <a title="" class="cursor d-none" id="btnSaveCoverPhoto">Save Cover Photo</a>
+            </div>
+            <div class="container-fluid">
+                <div class="row merged">
+                    <div class="col-lg-2 col-sm-3">
+                        <div class="user-avatar" style="cursor: pointer">
+                            <figure>
+                                <img class="imgUserAvatar" alt="">
+                                <div class="imageDemo d-none">
+                                    <img class="imgUserAvatarDemo" alt="">
+                                    <button class="top-right btn btn-warning">Review Image</button>
+                                </div>
+                                <form class="edit-phto" data-toggle="modal"
+                                      data-target="#modalUploadAvt">
+                                    <i class="fa fa-camera-retro"></i>
+                                    <label class="fileContainer">
+                                        Edit Display Photo
+                                    </label>
+                                </form>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col-lg-10 col-sm-9">
+                        <div class="timeline-info">
+                            <ul>
+                                <li>
+                                    <button id="btnSaveAvt" class="d-none btn btn-success">Save</button>
+                                </li>
+                                <li class="admin-name">
+                                    <h5 class="fullName"></h5>
+                                    <span class="username"></span>
+                                </li>
+                                <li>
+                                    <a class="navbarUser navbarUserMessage" th:href="|/message|" title="" data-ripple="">Message</a>
+                                    <a class="navbarUser navbarUserBlog" th:href="|/blog|" title="" data-ripple="">Blogs</a>
+                                    <a class="navbarUser navbarUserPhoto" th:href="|/photos|" title="" data-ripple="">Photos</a>
+                                    <a class="navbarUser" th:href="|/friends|" title="" data-ripple="">Friends</a>
+                                    <a class="navbarUser" th:href="|/groups|" title="" data-ripple="">Groups</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div th:fragment="footerMain">
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="widget">
+                        <div class="foot-logo">
+                            <div class="logo">
+                                <a href="#" title=""><img th:src="@{/main/images/logo.png}" alt=""></a>
+                            </div>
+                            <p>
+                                The trio took this simple idea and built it into the world’s leading carpooling
+                                platform.
+                            </p>
+                        </div>
+                        <ul class="location">
+                            <li>
+                                <i class="ti-map-alt"></i>
+                                <p>33 new montgomery st.750 san francisco, CA USA 94105.</p>
+                            </li>
+                            <li>
+                                <i class="ti-mobile"></i>
+                                <p>+1-56-346 345</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <div class="widget">
+                        <div class="widget-title"><h4>follow</h4></div>
+                        <ul class="list-style">
+                            <li><i class="fa fa-facebook-square"></i> <a href="https://web.facebook.com/shopcircut/"
+                                                                         title="">facebook</a></li>
+                            <li><i class="fa fa-twitter-square"></i><a href="https://twitter.com/login?lang=en"
+                                                                       title="">twitter</a></li>
+                            <li><i class="fa fa-instagram"></i><a href="https://www.instagram.com/?hl=en" title="">instagram</a>
+                            </li>
+                            <li><i class="fa fa-google-plus-square"></i> <a href="https://plus.google.com/discover"
+                                                                            title="">Google+</a></li>
+                            <li><i class="fa fa-pinterest-square"></i> <a href="https://www.pinterest.com/" title="">Pintrest</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <div class="widget">
+                        <div class="widget-title"><h4>Navigate</h4></div>
+                        <ul class="list-style">
+                            <li><a href="about.html" title="">about us</a></li>
+                            <li><a href="contact.html" title="">contact us</a></li>
+                            <li><a href="terms.html" title="">terms & Conditions</a></li>
+                            <li><a href="#" title="">RSS syndication</a></li>
+                            <li><a href="sitemap.html" title="">Sitemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <div class="widget">
+                        <div class="widget-title"><h4>useful links</h4></div>
+                        <ul class="list-style">
+                            <li><a href="#" title="">leasing</a></li>
+                            <li><a href="#" title="">submit route</a></li>
+                            <li><a href="#" title="">how does it work?</a></li>
+                            <li><a href="#" title="">agent listings</a></li>
+                            <li><a href="#" title="">view All</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <div class="widget">
+                        <div class="widget-title"><h4>download apps</h4></div>
+                        <ul class="colla-apps">
+                            <li><a href="https://play.google.com/store?hl=en" title=""><i class="fa fa-android"></i>android</a>
+                            </li>
+                            <li><a href="https://www.apple.com/lae/ios/app-store/" title=""><i class="ti-apple"></i>iPhone</a>
+                            </li>
+                            <li><a href="https://www.microsoft.com/store/apps" title=""><i class="fa fa-windows"></i>Windows</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="bottombar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="copyright"><a target="_blank"
+                                               href="https://www.templateshub.net">Templates Hub</a></span>
+                    <i><img th:src="@{/main/images/credit-cards.png}" alt=""></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- Footer auth-->
+<div th:fragment="script-auth">
+    <!-- Vendor JS Files -->
+    <script th:src="@{/assets/vendor/apexcharts/apexcharts.min.js}"></script>
+    <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/vendor/chart.js/chart.umd.js}"></script>
+    <script th:src="@{/assets/vendor/echarts/echarts.min.js}"></script>
+    <script th:src="@{/assets/vendor/quill/quill.min.js}"></script>
+    <script th:src="@{/assets/vendor/simple-datatables/simple-datatables.js}"></script>
+    <script th:src="@{/assets/vendor/tinymce/tinymce.min.js}"></script>
+    <script th:src="@{/assets/vendor/php-email-form/validate.js}"></script>
+
+    <!-- Template Main JS File -->
+    <script th:src="@{/assets/js/main.js}"></script>
+</div>
+<!--<script th:src="@{/main/js/master.js}"></script>-->
+<!--Main footer-->
+<div th:fragment="script-main">
+    <script th:src="@{/main/js/main.min.js}"></script>
+    <script th:src="@{/main/js/script.js}"></script>
+    <script th:src="@{/main/js/map-init.js}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+</div>
+</html>

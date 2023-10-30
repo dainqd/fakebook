@@ -2,6 +2,7 @@ package com.example.fakebook.entities;
 
 import com.example.fakebook.dto.AccountDto;
 import com.example.fakebook.dto.request.RegisterRequest;
+import com.example.fakebook.dto.request.UpdateInfoRequest;
 import com.example.fakebook.entities.basic.BaseEntity;
 import com.example.fakebook.utils.Enums;
 import lombok.*;
@@ -29,6 +30,8 @@ public class Accounts extends BaseEntity {
     private long id;
     @Lob
     private String avt;
+    @Lob
+    private String thumbnail;
     private String firstName;
     private String lastName;
     @NotNull(message = "Username cannot be left blank")
@@ -36,21 +39,28 @@ public class Accounts extends BaseEntity {
     @NotNull(message = "Incorrect email format!, Please re-enter")
     private String email;
     private String phoneNumber;
-    private Date birthday;
+    private String birthday;
     private String gender;
     private String address;
     private String verifyCode = "";
     private String referralCode = "";
+    private String token = "";
+    @Enumerated(EnumType.STRING)
+    private Enums.AccountState state = Enums.AccountState.OFFLINE;
     private boolean verified = false;
+    private int likes = 0;
+    private int views = 0;
     @NotNull(message = "Password cannot be left blank")
     @Size(min = 6, message = "password must be greater than or equal to 6")
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "accounts_roles", joinColumns = @JoinColumn(name = "account_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Roles> roles = new HashSet<>();
     @Enumerated(EnumType.STRING)
-    private Enums.AccountStatus status = Enums.AccountStatus.DEACTIVE;
+    private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
+    @Enumerated(EnumType.STRING)
+    private Enums.TypeUser type = Enums.TypeUser.NORMAL;
 
     public Accounts(String avt, String username, String email) {
         this.avt = avt;
@@ -62,7 +72,20 @@ public class Accounts extends BaseEntity {
         BeanUtils.copyProperties(accountDto, this);
     }
 
-    public Accounts(RegisterRequest registerRequest){
-        BeanUtils.copyProperties(registerRequest,this);
+    public Accounts(RegisterRequest registerRequest) {
+        BeanUtils.copyProperties(registerRequest, this);
+    }
+
+    public Accounts(UpdateInfoRequest updateInfoRequest) {
+        BeanUtils.copyProperties(updateInfoRequest, this);
+    }
+
+    public Accounts(String avt, String username, String email, String password, Enums.AccountStatus accountStatus) {
+        this.avt = avt;
+        this.thumbnail = "https://i.stack.imgur.com/l60Hf.png";
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.status = accountStatus;
     }
 }

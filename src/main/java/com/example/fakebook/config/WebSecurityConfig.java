@@ -20,7 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] IGNORE_PATHS = {
+            // env
             "/", "/css/**", "/img/**", "/favicon.ico",
+            //config swagger
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/webjars/**",
@@ -28,25 +30,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/privacy",
             "/v2/api-docs",
             "/configuration/ui",
+            // templates
             "/js/**",
             "/fonts/**",
             "/lib/**",
             "/icons/**",
             "/assets/**",
             "/auth/**",
-            "/element/**",
+            "/main/**",
             "/error/**",
             "/v1/**",
             "/views/**",
             "/layout/**",
             "/templates/**",
-            "/test/**",
-            "/api/v1/user/**",
+            "/images/**",
+            // auth api
             "/api/v1/auth/**",
+            // auth url
+            "/login",
+            "/register",
+            // websocket
+            "/websocket/**",
+            "/ws/**",
+            "/topic/**",
+            "/app/**",
+            //main url
+            "/api/v1/comments/list/**",
+            "/api/v1/marketing/**",
+            "/message/**",
+            "/blog/**",
+            "/photos/**"
     };
 
     private static final String[] USER_PATHS = {
             "/api/v1/user/**",
+            "/api/v1/comments/**",
+            "/api/v1/blogs/**",
+            "/api/v1/friendships/**",
     };
 
     private static final String[] ADMIN_PATHS = {

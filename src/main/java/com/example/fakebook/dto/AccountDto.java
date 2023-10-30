@@ -21,6 +21,7 @@ import java.util.Set;
 public class AccountDto {
     private long id;
     private String avt;
+    private String thumbnail;
     private String firstName;
     private String lastName;
     private String username;
@@ -32,15 +33,16 @@ public class AccountDto {
     private String verifyCode = "";
     private String referralCode = "";
     private boolean verified = false;
+    private int likes;
+    private int views;
     private String password;
+    private String token = "";
+    private Enums.AccountState state = Enums.AccountState.OFFLINE;
     private Set<Roles> roles = new HashSet<>();
-    private Enums.AccountStatus status = Enums.AccountStatus.DEACTIVE;
+    private Enums.AccountStatus status = Enums.AccountStatus.INACTIVE;
+    private Enums.TypeUser type = Enums.TypeUser.NORMAL;
 
     public AccountDto(Accounts accounts) {
-        String pattern = "dd/MM/yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String sDateAsString = df.format(accounts.getBirthday());
         BeanUtils.copyProperties(accounts, this);
-        this.setBirthday(sDateAsString);
     }
 }

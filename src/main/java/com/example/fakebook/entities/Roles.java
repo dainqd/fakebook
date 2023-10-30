@@ -23,4 +23,8 @@ public class Roles extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private Enums.Roles name = Enums.Roles.USER;
+
+    public Roles(Enums.Roles roles) {
+        this.name = roles;
+    }
 }

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:insert="fragments/main.html :: header-main(Messager)"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<style>
+    .imgUserThumbnail {
+        width: 100%;
+        height: 400px !important;
+    }
+
+    .imgUserAvatar {
+        width: 200px;
+        height: 200px !important;
+    }
+
+    .top-right {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+    }
+
+    .imageDemo {
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .chat-message {
+        margin-bottom: 10px;
+        clear: both;
+    }
+
+    .chat-message-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+        float: left;
+    }
+
+    .cursor {
+        cursor: pointer !important;
+    }
+</style>
+<body>
+<div class="theme-layout">
+    <div class="" th:insert="fragments/main.html :: headerMain"></div>
+
+    <div th:insert="fragments/main.html :: sectionUser">
+    </div>
+
+    <section id="mainSection">
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="page-contents">
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="advertisment-box marketing marketing-item">
+                                        <h4 class="">advertisment</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    th:src="@{/main/images/resources/ad-widget.jpg}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                    <div class="widget stick-widget">
+                                        <h4 class="widget-title">Who's online</h4>
+                                        <ul class="followers" id="listUserNoFriend">
+
+                                        </ul>
+                                    </div>
+                                </aside>
+                            </div><!-- sidebar -->
+                            <div class="col-lg-6">
+                                <div class="central-meta">
+                                    <div class="messages">
+                                        <h5 class="f-title">All Messages</h5>
+                                        <div class="message-box">
+                                            <ul class="peoples" id="listFriends">
+                                                <li>
+                                                    <figure>
+                                                        <img src="images/resources/friend-avatar2.jpg" alt="">
+                                                        <span class="status f-online"></span>
+                                                    </figure>
+                                                    <div class="people-name">
+                                                        <span>Molly cyrus</span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <div class="peoples-mesg-box">
+                                                <div class="conversation-head" id="chatUserCurrent">
+
+                                                </div>
+                                                <ul class="chatting-area" id="chatting-area">
+
+                                                </ul>
+                                                <div class="message-text-container" id="formSendMessage">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- centerl meta -->
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="advertisment-box  marketing marketing-item">
+                                        <h4 class="">advertisment</h4>
+                                        <figure>
+                                            <a href="#" title="Advertisment"><img
+                                                    th:src="@{/main/images/resources/ad-widget.jpg}"
+                                                    alt=""></a>
+                                        </figure>
+                                    </div>
+                                    <div class="widget stick-widget">
+                                        <h4 class="widget-title">Who's follownig</h4>
+                                        <ul class="followers" id="listFollower">
+
+                                        </ul>
+                                    </div><!-- who's following -->
+                                </aside>
+                            </div><!-- sidebar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Modal -->
+    <div class="modal" id="modalUploadAvt">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnail" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUpload" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalUploadThumbnail">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadImage" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUploadThumbnail" data-dismiss="modal">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="text" class="d-none" id="inputAvtUploaded">
+    <input type="text" class="d-none" id="inputThumbnailUploaded">
+
+    <div class="" th:insert="fragments/main.html :: footerMain"></div>
+</div>
+</body>
+<div th:insert="fragments/main.html :: script-main"></div>
+<script th:src="@{/main/js/master.js}"></script>
+<script th:src="@{/main/js/message-private.js}"></script>
+<script th:src="@{/main/js/message-friends.js}"></script>
+<!--<script th:src="@{/main/js/test.js}"></script>-->
+<script th:src="@{/main/js/message.js}"></script>
+<script th:src="@{/main/js/notification.js}"></script>
+
+<script>
+
+</script>
+</html>

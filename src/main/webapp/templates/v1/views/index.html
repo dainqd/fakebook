@@ -1,10 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Demo</title>
-</head>
+<head th:insert="fragments/main.html :: header-main(Fakebook)"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<style>
+
+</style>
 <body>
-<h2 class="" style="text-align: center; color: #000"> Hello World</h2>
+<div class="theme-layout">
+    <div class="" th:insert="fragments/main.html :: headerMain"></div>
+
+    <section>
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="page-contents">
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="widget">
+                                        <h4 class="widget-title">Shortcuts</h4>
+                                        <ul class="naves">
+                                            <li>
+                                                <i class="ti-clipboard"></i>
+                                                <a href="newsfeed.html" title="">News feed</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-mouse-alt"></i>
+                                                <a href="inbox.html" title="">Inbox</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-files"></i>
+                                                <a href="fav-page.html" title="">My pages</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-user"></i>
+                                                <a href="timeline-friends.html" title="">friends</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-image"></i>
+                                                <a href="timeline-photos.html" title="">images</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-video-camera"></i>
+                                                <a href="timeline-videos.html" title="">videos</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-comments-smiley"></i>
+                                                <a href="messages.html" title="">Messages</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-bell"></i>
+                                                <a href="notifications.html" title="">Notifications</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-share"></i>
+                                                <a href="people-nearby.html" title="">People Nearby</a>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-bar-chart-o"></i>
+                                                <a href="insights.html" title="">insights</a>
+                                            </li>
+                                            <li>
+                                                <i class="ti-power-off"></i>
+                                                <a href="landing.html" title="">Logout</a>
+                                            </li>
+                                        </ul>
+                                    </div><!-- Shortcuts -->
+                                    <div class="widget">
+                                        <h4 class="widget-title">Recent Activity</h4>
+                                        <ul class="activitiez">
+                                            <li>
+                                                <div class="activity-meta">
+                                                    <i>10 hours Ago</i>
+                                                    <span><a href="#" title="">Commented on Video posted </a></span>
+                                                    <h6>by <a href="time-line.html">black demon.</a></h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="activity-meta">
+                                                    <i>30 Days Ago</i>
+                                                    <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="activity-meta">
+                                                    <i>2 Years Ago</i>
+                                                    <span><a href="#" title="">Share a video on her timeline.</a></span>
+                                                    <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div><!-- recent activites -->
+                                    <div class="widget stick-widget">
+                                        <h4 class="widget-title">Who's follownig</h4>
+                                        <ul class="followers">
+                                            <li>
+                                                <figure><img th:src="@{/main/images/resources/friend-avatar2.jpg}"
+                                                             alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                                                    <a href="#" title="" class="underline">Add Friend</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div><!-- who's following -->
+                                </aside>
+                            </div><!-- sidebar -->
+                            <div class="col-lg-6">
+                                <div class="central-meta">
+                                    <div class="new-postbox">
+                                        <figure>
+                                            <img class="avtCurrentUser" th:src="@{/main/images/resources/admin2.jpg}"
+                                                 alt="">
+                                        </figure>
+                                        <div class="newpst-input">
+                                            <form>
+                                                <textarea id="contentBlog" required rows="2"
+                                                          placeholder="write something"></textarea>
+                                                <div class="attachments">
+                                                    <img class="imgDemoUpload d-none" id="imgDemoUpload"
+                                                         src=""
+                                                         alt="">
+                                                    <ul>
+                                                        <li class="mr-3">
+                                                            <i id="uploadImage" data-toggle="modal"
+                                                               data-target="#myModalItem" class="fa fa-image"></i>
+                                                            <label class="fileContainer d-none">
+                                                                <input id="inputThumbnail" name="thumbnail" type="text">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <button id="btnCreateBlog" type="button">Post</button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div><!-- add post new box -->
+                                <div class="loadMore" id="loadBlog">
+                                    <div class="central-meta item" th:each="item : ${blogDtos}">
+                                        <div class="user-post user-blog-item">
+                                            <div class="friend-info">
+                                                <figure>
+                                                    <img th:src="${item.user.avt}" alt="">
+                                                </figure>
+                                                <div class="friend-name">
+                                                    <ins><a href="time-line.html"
+                                                            title="">[[${item.user.username}]]</a></ins>
+                                                    <span>published: [[${item.createdAt}]]</span>
+                                                </div>
+                                                <div class="post-meta">
+                                                    <img th:src="${item.thumbnail}" alt="">
+                                                    <div class="we-video-info">
+                                                        <ul>
+                                                            <li>
+															<span class="views" data-toggle="tooltip" title="views">
+																<i class="fa fa-eye"></i>
+																<ins th:class="|viewQty-${item.id}|">[[${item.views}]]</ins>
+															</span>
+                                                            </li>
+                                                            <li>
+															<span class="comment commentShow" data-toggle="tooltip"
+                                                                  title="Comments"
+                                                                  th:data-id="|${item.id}|">
+																<i class="fa fa-comments-o"></i>
+																<ins th:class="|commentQty-${item.id}|">[[${item.comments}]]</ins>
+															</span>
+                                                            </li>
+                                                            <li>
+
+															<span class="likeBlog like" data-toggle="tooltip"
+                                                                  th:id="|like-${item.id}|"
+                                                                  title="like" th:data-id="${item.id}"
+                                                                  data-value="1">
+																<i class="ti-heart"></i>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
+															</span>
+
+                                                                <span class="likeBlog dislike d-none"
+                                                                      th:id="|dislike-${item.id}|"
+                                                                      data-toggle="tooltip" th:data-id="${item.id}"
+                                                                      data-value="0"
+                                                                      title="dislike">
+																<i class="ti-heart-broken"></i>
+																<ins th:class="|likeQty-${item.id}|">[[${item.likes}]]</ins>
+															</span>
+
+                                                            </li>
+                                                            <li>
+															<span class="dislike" data-toggle="tooltip" title="share">
+																<i class="fa fa-share-alt"></i>
+																<ins>[[${item.shares}]]</ins>
+															</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="description">
+                                                        [[${item.content}]]
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="coment-area mt-5" th:id="|listComment-${item.id}|"
+                                                 th:data-id="${item.id}">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- centerl meta -->
+                            <div class="col-lg-3">
+                                <aside class="sidebar static">
+                                    <div class="widget">
+                                        <h4 class="widget-title">Your page</h4>
+                                        <div class="your-page">
+                                            <figure>
+                                                <a href="#" title=""><img class="imgUserAvatar"
+                                                                          th:src="@{/main/images/resources/friend-avatar9.jpg}"
+                                                                          alt=""></a>
+                                            </figure>
+                                            <div class="page-meta">
+                                                <a href="#" title="" class="underline">My page</a>
+                                                <span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span>
+                                                <span><i class="ti-bell"></i><a href="insight.html" title="">Notifications <em>2</em></a></span>
+                                            </div>
+                                            <div class="page-likes">
+                                                <ul class="nav nav-tabs likes-btn">
+                                                    <li class="nav-item"><a class="active" href="#link1"
+                                                                            data-toggle="tab">likes</a></li>
+                                                    <li class="nav-item"><a class="" href="#link2" data-toggle="tab">views</a>
+                                                    </li>
+                                                </ul>
+                                                <!-- Tab panes -->
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active fade show " id="link1">
+                                                        <span><i class="ti-heart"></i><span
+                                                                class="likeUser">0 </span></span>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="link2">
+                                                        <span><i class="ti-eye"></i><span
+                                                                class="viewUser">0 </span></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- page like widget -->
+                                    <div class="widget">
+                                        <div class="banner medium-opacity bluesh">
+                                            <div class="bg-image"
+                                                 style="background-image: th:url(@{/main/images/resources/baner-widgetbg.jpg})"></div>
+                                            <div class="baner-top">
+                                                <span><img alt="" th:src="@{/main/images/book-icon.png}"></span>
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </div>
+                                            <div class="banermeta">
+                                                <p>
+                                                    create your own group.
+                                                </p>
+                                                <span>like them all</span>
+                                                <a data-ripple="" title="" href="#">start now!</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="widget friend-list stick-widget">
+                                        <h4 class="widget-title">Friends</h4>
+                                        <div id="searchDir"></div>
+                                        <ul id="people-list" class="friendz-list">
+                                            <li>
+                                                <figure>
+                                                    <img th:src="@{/main/images/resources/friend-avatar.jpg}" alt="">
+                                                    <span class="status f-online"></span>
+                                                </figure>
+                                                <div class="friendz-meta">
+                                                    <a href="time-line.html">bucky barnes</a>
+                                                    <i><a href="https://wpkixx.com/cdn-cgi/l/email-protection"
+                                                          class="__cf_email__"
+                                                          data-cfemail="a0d7c9ced4c5d2d3cfccc4c5d2e0c7cdc1c9cc8ec3cfcd">[email&#160;protected]</a></i>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <figure>
+                                                    <img th:src="@{/main/images/resources/friend-avatar2.jpg}" alt="">
+                                                    <span class="status f-away"></span>
+                                                </figure>
+                                                <div class="friendz-meta">
+                                                    <a href="time-line.html">Sarah Loren</a>
+                                                    <i><a href="https://wpkixx.com/cdn-cgi/l/email-protection"
+                                                          class="__cf_email__"
+                                                          data-cfemail="b4d6d5c6dad1c7f4d3d9d5ddd89ad7dbd9">[email&#160;protected]</a></i>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div><!-- friends list sidebar -->
+                                </aside>
+                            </div><!-- sidebar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModalItem">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Image</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="file" name="thumbnail" id="uploadThumbnailBlog" required accept="image/*">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="submitUploadBlog" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="" th:insert="fragments/main.html :: footerMain"></div>
+</div>
 </body>
+<script th:src="@{/main/js/notification.js}"></script>
+<div th:insert="fragments/main.html :: script-main"></div>
+<script th:src="@{/main/js/master.js}"></script>
+<script th:src="@{/main/js/blog-comments.js}"></script>
+<script>
+
+</script>
+
 </html>
