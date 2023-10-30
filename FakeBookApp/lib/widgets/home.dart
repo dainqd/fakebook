@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:customer_app/utils/.constants.example.dart';
+import 'package:customer_app/utils/utils.dart';
+import 'package:customer_app/widgets/blog/create.dart';
 import 'package:customer_app/widgets/detail.dart';
 import 'package:customer_app/widgets/profile.dart';
 import 'package:customer_app/widgets/search.dart';
@@ -11,43 +13,66 @@ import 'package:http/http.dart' as http;
 
 import 'favorite.dart';
 
-class EcoTourismSpot {
+class ListBlog {
   final int id;
+  final String user;
+  final String avt;
+  final int comments;
+  final int shares;
+  final int likes;
+  final int views;
+  final String content;
   final String thumbnail;
-  final String name;
-  final int star;
-  final String address;
-  final double price;
 
-  EcoTourismSpot({
+  ListBlog({
     required this.id,
+    required this.user,
+    required this.avt,
+    required this.comments,
+    required this.shares,
+    required this.likes,
+    required this.views,
+    required this.content,
     required this.thumbnail,
-    required this.name,
-    required this.star,
-    required this.address,
-    required this.price,
   });
 
-  factory EcoTourismSpot.fromJson(Map<String, dynamic> json) {
-    return EcoTourismSpot(
+  factory ListBlog.fromJson(Map<String, dynamic> json) {
+    return ListBlog(
       id: json['id'],
+      user: json['user']['username'],
+      avt: json['user']['avt'],
+      comments: json['comments'],
+      shares: json['shares'],
+      likes: json['likes'],
+      views: json['views'],
+      content: json['content'],
       thumbnail: json['thumbnail'],
-      name: json['name'],
-      star: json['star'],
-      address: json['address'],
-      price: json['price'],
     );
   }
 }
 
 class HomeScreen extends StatelessWidget {
-  Future<List<EcoTourismSpot>> fetchData() async {
+  Future<List<ListBlog>> fetchData() async {
     String url = LOCAL_HOST + ":" + PORT.toString();
-    final response = await http.get(Uri.http(url, "/tour"));
-
+    String? token = await storage.read(key: "accessToken");
+    int page = 0;
+    int size = 10;
+    final response = await http.get(
+      Uri.http(url, "api/v1/blogs", {'page': '$page', 'size': '$size'}),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    var responseBody = response.body;
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => EcoTourismSpot.fromJson(data)).toList();
+      var jsonResponse = json.decode(response.body);
+      List data = jsonResponse['content'];
+      List<ListBlog> blogs = [];
+      for (var item in data) {
+        ListBlog blog = ListBlog.fromJson(item);
+        blogs.add(blog);
+      }
+      print(blogs);
+      return blogs;
+      // return jsonResponse.map((data) => ListBlog.fromJson(data)).toList();
     } else {
       throw Exception('Unexpected error occured!');
     }
@@ -60,130 +85,39 @@ class HomeScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 40),
-            color: Colors.purple[50],
             padding: EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Destination!',
+                  'Your Blog',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                ),
               ],
             ),
           ),
+          NewBlogForm(),
           Expanded(
-            child: FutureBuilder<List<EcoTourismSpot>>(
+            child: FutureBuilder<List<ListBlog>>(
               future: fetchData(),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<EcoTourismSpot>> snapshot) {
+                  AsyncSnapshot<List<ListBlog>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
 
-                List<EcoTourismSpot> ecoTourismSpots = snapshot.data!;
+                List<ListBlog> listBlog = snapshot.data!;
 
                 return ListView.builder(
-                  itemCount: ecoTourismSpots.length,
+                  itemCount: listBlog.length,
                   itemBuilder: (BuildContext context, int index) {
-                    EcoTourismSpot item = ecoTourismSpots[index];
-                    return Container(
-                      padding: EdgeInsets.symmetric(vertical: 8),
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            item.thumbnail,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200,
-                          ),
-                          SizedBox(height: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.name,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Số sao: ${item.star}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Địa chỉ: ${item.address}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Giá:  \$${item.price.toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DetailScreen(id: item.id)),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.purple,
-                                      ),
-                                      child: Text(
-                                        'Chi tiết',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    ListBlog item = listBlog[index];
+                    return BlogWidget(blog: item);
                   },
                 );
               },
@@ -204,13 +138,6 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Icon(Icons.home),
-                      SizedBox(width: 8),
-                      Text(
-                        'Trang Chủ',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -243,6 +170,89 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BlogWidget extends StatelessWidget {
+  final ListBlog blog;
+
+  BlogWidget({required this.blog});
+
+  @override
+  Widget build(BuildContext context) {
+    String img = blog.thumbnail.replaceAll("127.0.0.1", LOCAL_HOST);
+    String avt = blog.avt.replaceAll("127.0.0.1", LOCAL_HOST);
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 3,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              blog.content,
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+          Image.network(
+            img,
+            fit: BoxFit.cover,
+          ),
+          SizedBox(height: 8.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30.0,
+                    backgroundImage:
+                    NetworkImage("${avt}"),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    '${blog.user}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.thumb_up, color: Colors.blue),
+                  SizedBox(width: 4.0),
+                  Text('${blog.likes}'),
+                  SizedBox(width: 8.0),
+                  Icon(Icons.chat_bubble, color: Colors.blue),
+                  SizedBox(width: 4.0),
+                  Text('${blog.comments}'),
+                  SizedBox(width: 8.0),
+                  Icon(Icons.share, color: Colors.blue),
+                  SizedBox(width: 4.0),
+                  Text('${blog.shares}'),
+                ],
+              ),
+            ],
           ),
         ],
       ),

@@ -34,16 +34,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         print('Đăng nhập thành công!');
+        print(response.body);
         print('Token: ${json.decode(response.body)['token']}');
-        String token = json.decode(response.body)['token'];
-        String username = json.decode(response.body)['token'];
-        String email = json.decode(response.body)['token'];
-        String id = json.decode(response.body)['token'];
+        var res = json.decode(response.body);
+        String token = res['token'];
+        String username = res['username'];
+        String email = res['email'];
+        int id = res['id'];
 
         await storage.write(key: 'accessToken', value: token);
         await storage.write(key: 'username', value: username);
         await storage.write(key: 'email', value: email);
-        await storage.write(key: 'user_id', value: id);
+        await storage.write(key: 'user_id', value: id.toString());
 
         Navigator.push(
           context,
@@ -70,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ;
       }
     } catch (e) {
+      print(e);
       showDialog(
         context: context,
         builder: (BuildContext context) {
