@@ -40,7 +40,7 @@ public interface AccountRepository extends JpaRepository<Accounts, Long> {
     @Query("SELECT u FROM Accounts u WHERE u.id != :userId AND u.id NOT IN (SELECT f.receiver.id FROM Friendships f WHERE f.sender.id = :userId) AND u.id NOT IN (SELECT f.sender.id FROM Friendships f WHERE f.receiver.id = :userId) AND u.status = 'ACTIVE'")
     List<Accounts> findNonFriendActiveUsers(@Param("userId") Long userId);
 
-    @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.receiver.id OR u.id = f.sender.id WHERE (f.receiver.id = :userId OR f.sender.id = :userId) AND f.status = 'APPROVED'")
+    @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.receiver.id OR u.id = f.sender.id WHERE ((f.receiver.id = :userId AND u.id <> :userId) OR (f.sender.id = :userId AND u.id <> :userId)) AND f.status = 'APPROVED'")
     List<Accounts> findApprovedFriends(@Param("userId") Long userId);
 
     @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.receiver.id OR u.id = f.sender.id WHERE (f.receiver.id = :userId OR f.sender.id = :userId) AND f.status = 'PENDING'")

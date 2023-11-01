@@ -30,6 +30,11 @@ function onConnected() {
     stompClient.send(`/app/friend.getAllUser/${id}`)
 
 
+    stompClient.subscribe(`/topic/publicFriendApproved/${id}`, supAppendFriend);
+
+    stompClient.send(`/app/friend.getAllFriendApproved/${id}`)
+
+
     stompClient.subscribe(`/topic/publicFriendPending/${id}`, appendListFollower);
 
     stompClient.send(`/app/friend.getAllFriendPending/${id}`)
@@ -44,6 +49,7 @@ function onError(error) {
 function load_all_notification(res) {
     let data = JSON.parse(res.body);
     let html = '';
+    let showNotification = ``;
 
     let value = 0;
     for (let i = 0; i < data.length; i++) {
@@ -62,14 +68,15 @@ function load_all_notification(res) {
                                             </div>
                                         </a>
                                         ${string} </li>`;
+        showNotification = showNotification + `<li><div class="notifi-meta"><p>${data[i].title}</p>
+                                            <p>${data[i].content}</p>
+                                            <span>${data[i].createdAt}</span></div></li>`;
     }
 
     let noti = ``;
     if (value > 0) {
         noti = `<span>${value} New Notifications</span>`;
     }
-
-    console.log()
 
     let mainHtml = `<a href="#" title="Notification" data-ripple="">
                                 <i class="ti-bell"></i><span>${data.length}</span>
@@ -82,6 +89,11 @@ function load_all_notification(res) {
                             </div>`;
 
     $('#tabsNotifications').empty().append(mainHtml);
+
+    let notification = $('#all-notification');
+    if (notification) {
+        notification.empty().append(showNotification);
+    }
 }
 
 async function sendNotification(userID, data) {

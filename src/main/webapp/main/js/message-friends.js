@@ -48,6 +48,8 @@ async function appendListFriend(response) {
 async function appendListFollower(response) {
     let res = JSON.parse(response.body);
     let html = ``;
+    let follower = ``;
+    let follownig = ``;
     for (let i = 0; i < res.length; i++) {
         let item = res[i];
         html = html + ` <li><figure><img src="${item.avt}" alt=""></figure>
@@ -59,14 +61,37 @@ async function appendListFollower(response) {
                                                 </div>
                                                 </div>
                                             </li>`;
+        follower = follower + `<li> <div class="nearly-pepls">
+                                                            <figure>
+                                                                <a href="#" title=""><img src="${item.avt}" alt=""></a>
+                                                            </figure>
+                                                            <div class="pepl-info">
+                                                                <h4><a href="#" title="">${item.username}</a></h4>
+                                                                <span>${item.email}</span>
+                                                                <a style="cursor: pointer" onclick="removeFriends(${item.id});" title="" class="add-butn more-action" data-ripple="">delete Request</a>
+                                                                <a style="cursor: pointer" onclick="applyFriends(${item.id});" title="" class="add-butn" data-ripple="">Confirm</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>`;
+        follownig = follownig + `<li><figure><img src="${item.avt}" alt=""></figure>
+                                                <div class="friend-meta">
+                                                    <h4><a href="#" title="">${item.username}</a></h4>
+                                                    <a style="cursor: pointer" onclick="applyFriends(${item.id});" title="" class="underline">Confirm</a>
+                                                </div>
+                                            </li>`;
+
 
     }
     $('#listFollower').empty().append(html);
+    $('#countListFollow').text(res.length);
+    $('#mainListFollow').empty().append(follower);
+    $('#follownig').empty().append(follownig);
 }
 
 async function appendListUser(response) {
     let res = JSON.parse(response.body);
     let html = ``;
+    let allUser = ``;
     for (let i = 0; i < res.length; i++) {
         let item = res[i];
         html = html + `<li><figure><img src="${item.avt}" alt=""></figure>
@@ -75,9 +100,22 @@ async function appendListUser(response) {
                                                      <button onclick="addFriends(${item.id});" id="btnApplyFriend_${item.id}" class="underline small mr-2" style="background: #0a98dc; color: #FFFFFF">Add Friend</button>
                                                 </div>
                                             </li>`;
+        allUser = allUser + `<li><div class="nearly-pepls">
+                                                            <figure>
+                                                                <a href="#" title=""><img src="${item.avt}" alt=""></a>
+                                                            </figure>
+                                                            <div class="pepl-info">
+                                                                <h4><a href="#" title="">${item.username}</a></h4>
+                                                                <span>${item.email}</span>
+                                                                <a style="cursor: pointer" onclick="addFriends(${item.id});" title="" class="add-butn" data-ripple="">add friend</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>`;
 
     }
     $('#listUserNoFriend').empty().append(html);
+    $('#countListUserAll').text(res.length)
+    $('#mainListUserAll').empty().append(allUser);
 }
 
 async function addFriends(receiverID) {
@@ -107,10 +145,13 @@ async function addFriends(receiverID) {
                     stompClient.send(`/app/friend.getList/${userID}`)
                     stompClient.send(`/app/friend.getAllUser/${userID}`)
                     stompClient.send(`/app/friend.getAllFriendPending/${userID}`)
+                    stompClient.send(`/app/friend.getAllFriendApproved/${userID}`)
+
 
                     stompClient.send(`/app/friend.getList/${receiverID}`)
                     stompClient.send(`/app/friend.getAllUser/${receiverID}`)
                     stompClient.send(`/app/friend.getAllFriendPending/${receiverID}`)
+                    stompClient.send(`/app/friend.getAllFriendApproved/${receiverID}`)
                 }
             } else {
                 alert("Error! Please try again");
@@ -160,15 +201,18 @@ async function fetchUrl(url, data, cal) {
                     stompClient.send(`/app/friend.getList/${userID}`)
                     stompClient.send(`/app/friend.getAllUser/${userID}`)
                     stompClient.send(`/app/friend.getAllFriendPending/${userID}`)
+                    stompClient.send(`/app/friend.getAllFriendApproved/${userID}`)
 
                     if (cal == 0) {
                         stompClient.send(`/app/friend.getList/${data.id}`)
                         stompClient.send(`/app/friend.getAllUser/${data.id}`)
                         stompClient.send(`/app/friend.getAllFriendPending/${data.id}`)
+                        stompClient.send(`/app/friend.getAllFriendApproved/${data.id}`)
                     } else {
                         stompClient.send(`/app/friend.getList/${data.sender.id}`)
                         stompClient.send(`/app/friend.getAllUser/${data.sender.id}`)
                         stompClient.send(`/app/friend.getAllFriendPending/${data.sender.id}`)
+                        stompClient.send(`/app/friend.getAllFriendApproved/${data.sender.id}`)
                     }
                 }
 
@@ -177,4 +221,33 @@ async function fetchUrl(url, data, cal) {
             }
         })
         .catch(error => console.log(error));
+}
+
+async function supAppendFriend(response) {
+    let res = JSON.parse(response.body);
+    let html = ``;
+    let friend = ``;
+    for (let i = 0; i < res.length; i++) {
+        let item = res[i];
+        html = html + `<li><div class="nearly-pepls"><figure>
+                                                                <a href="#" title=""><img src="${item.avt}" alt=""></a>
+                                                            </figure>
+                                                            <div class="pepl-info">
+                                                                <h4><a href="#" title="">${item.username}</a></h4>
+                                                                <span>${item.email}</span>
+                                                                <a href="#" title="" class="add-butn more-action" data-ripple="">unfriend</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>`;
+        friend = friend + `<li><figure><img src="${item.avt}" alt="">
+                                                    <span class="status f-online"></span>
+                                                </figure>
+                                                <div class="friendz-meta">
+                                                    <a href="#">${item.username}</a>
+                                                </div>
+                                            </li>`;
+    }
+    $('#countListFriend').text(res.length);
+    $('#mainListFriend').empty().append(html);
+    $('#people-list').empty().append(friend);
 }
