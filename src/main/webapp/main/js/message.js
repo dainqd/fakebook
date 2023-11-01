@@ -100,10 +100,16 @@ async function showFormSendMessage(data) {
         currentUser = data.senderId;
     }
     let html = `<form id="sendMessage" data-id="${currentUser}">
-                                <textarea id="messageInput"></textarea>
+                                <textarea id="messageInput" onkeydown="processSendMessage(${currentUser})"></textarea>
                                 <button id="btnSendMessage" onclick="sendMessage(${currentUser})" type="button" title="send" data-id="${currentUser}"><i class="fa fa-paper-plane"></i></button>
                         </form>`;
     $('#formSendMessage').empty().append(html);
+}
+
+async function processSendMessage(id) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        await sendMessage(id);
+    }
 }
 
 async function sendMessage(receiverId) {
