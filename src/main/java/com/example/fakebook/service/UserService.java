@@ -242,13 +242,21 @@ public class UserService {
     }
 
     public List<AccountDto> getAllAccountByReceiverId(Long receiverId) {
-        List<FriendshipDto> friendships = friendShipService.getFriendships(receiverId);
-        List<Long> listID = friendships.stream()
-                .map(FriendshipDto::getId)
+        List<Accounts> accountsList = accountRepository.findNonFriendActiveUsers(receiverId);
+        return accountsList.stream()
+                .map(AccountDto::new)
                 .collect(Collectors.toList());
-        listID.add(receiverId);
+    }
 
-        List<Accounts> accountsList = accountRepository.findByIdNotIn(listID);
+    public List<AccountDto> getAllFriendByReceiverId(Long receiverId) {
+        List<Accounts> accountsList = accountRepository.findApprovedFriends(receiverId);
+        return accountsList.stream()
+                .map(AccountDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountDto> getAllFollowerByReceiverId(Long receiverId) {
+        List<Accounts> accountsList = accountRepository.findUsersWithPendingFriendship(receiverId);
         return accountsList.stream()
                 .map(AccountDto::new)
                 .collect(Collectors.toList());

@@ -46,6 +46,18 @@ $(document).ready(function () {
             navbarUser.removeClass('active');
             $('.navbarUserPhoto').addClass('active');
             break;
+        case 'friends':
+            navbarUser.removeClass('active');
+            $('.navbarUserFriend').addClass('active');
+            break;
+        case 'groups':
+            navbarUser.removeClass('active');
+            $('.navbarUserGroup').addClass('active');
+            break;
+        case 'notifications':
+            navbarUser.removeClass('active');
+            $('.navbarUserNotifications').addClass('active');
+            break;
         default:
             navbarUser.removeClass('active');
     }
@@ -103,6 +115,7 @@ async function checkAdmin() {
                 localStorage.setItem('user_id', response.id)
             $(".likeUser").text(response.likes);
             $(".viewUser").text(response.views);
+            userOpen();
             adminOpen();
         })
         .catch(error => console.log(error));
@@ -152,6 +165,15 @@ async function adminOpen() {
     } else {
         await admin.addClass('d-none');
     }
+}
+
+async function userOpen() {
+    let profile = $('#myProfile');
+    await profile.on('click', function () {
+        let port = `3000`;
+        const profileUrl = `${baseUrl}${port}/?accessToken=${token}&username=${username}&id=${userIdLogined}`;
+        window.open(profileUrl, "_blank");
+    })
 }
 
 function uploadImageMain(idInput) {

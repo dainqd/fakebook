@@ -18,6 +18,21 @@ function onConnected() {
     stompClient.subscribe(`/topic/publicNotification/${id}`, load_all_notification);
 
     stompClient.send(`/app/notify.getAllNotification/${id}`)
+
+
+    stompClient.subscribe(`/topic/friendShip/${id}`, appendListFriend);
+
+    stompClient.send(`/app/friend.getList/${id}`)
+
+
+    stompClient.subscribe(`/topic/publicFriend/${id}`, appendListUser);
+
+    stompClient.send(`/app/friend.getAllUser/${id}`)
+
+
+    stompClient.subscribe(`/topic/publicFriendPending/${id}`, appendListFollower);
+
+    stompClient.send(`/app/friend.getAllFriendPending/${id}`)
 }
 
 

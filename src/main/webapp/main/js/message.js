@@ -1,53 +1,24 @@
-var stompClient = null;
-
-function connect() {
-    var socket = new SockJS('/ws');
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, onConnected, onError);
-}
-
-connect();
-
-function onConnected() {
-    let userID = getCookieValue('userId');
-    let user = {
-        id: userID
+function connectedUser(receiverId) {
+    // let receiverId = $(this).data('id');
+    let data = {
+        senderId: userID,
+        receiverId: receiverId
     };
 
-    $(document).ready(function () {
-        $('.userConnected').on('click', function () {
-            let receiverId = $(this).data('id');
-            let data = {
-                senderId: userID,
-                receiverId: receiverId
-            };
+    let small = false;
+    if (userID < receiverId) {
+        small = true;
+    }
 
-            let small = false;
-            if (userID < receiverId) {
-                small = true;
-            }
-
-            if (small == true){
-                stompClient.subscribe(`/topic/publicChatRoom/${userID}/${receiverId}`, load_chat_history);
-                stompClient.send(`/app/chat.loadMessageHistory/${userID}/${receiverId}`, {}, JSON.stringify(data));
-            } else {
-                stompClient.subscribe(`/topic/publicChatRoom/${receiverId}/${userID}`, load_chat_history);
-                stompClient.send(`/app/chat.loadMessageHistory/${receiverId}/${userID}`, {}, JSON.stringify(data));
-            }
-        })
-
-        // $('#btnSendMessage').on('click', function () {
-        //     let receiverId = $(this).data('id');
-        //     sendMessage(receiverId);
-        // })
-    })
-}
-
-
-function onError(error) {
-    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-    connectingElement.style.color = 'red';
+    if (stompClient) {
+        if (small == true) {
+            stompClient.subscribe(`/topic/publicChatRoom/${userID}/${receiverId}`, load_chat_history);
+            stompClient.send(`/app/chat.loadMessageHistory/${userID}/${receiverId}`, {}, JSON.stringify(data));
+        } else {
+            stompClient.subscribe(`/topic/publicChatRoom/${receiverId}/${userID}`, load_chat_history);
+            stompClient.send(`/app/chat.loadMessageHistory/${receiverId}/${userID}`, {}, JSON.stringify(data));
+        }
+    }
 }
 
 async function load_chat_history(res) {
@@ -151,7 +122,7 @@ async function sendMessage(receiverId) {
             small = true;
         }
 
-        if (small == true){
+        if (small == true) {
             stompClient.send(`/app/chat.sendMessage/${userID}/${receiverId}`, {}, JSON.stringify(chatMessage));
         } else {
             stompClient.send(`/app/chat.sendMessage/${receiverId}/${userID}`, {}, JSON.stringify(chatMessage));

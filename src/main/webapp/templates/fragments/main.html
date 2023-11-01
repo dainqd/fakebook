@@ -87,32 +87,6 @@
                 <li id="tabsNotifications">
 
                 </li>
-                <li>
-                    <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span>12</span></a>
-                    <div class="dropdowns">
-                        <span>5 New Messages</span>
-                        <ul class="drops-menu">
-                            <li>
-                                <a href="notifications.html" title="">
-                                    <img th:src="@{/main/images/resources/thumb-1.jpg}" alt="">
-                                    <div class="mesg-meta">
-                                        <h6>sarah Loren</h6>
-                                        <span>Hi, how r u dear ...?</span>
-                                        <i>2 min ago</i>
-                                    </div>
-                                </a>
-                                <span class="tag green">New</span>
-                            </li>
-                        </ul>
-                        <a href="messages.html" title="" class="more-mesg">view more</a>
-                    </div>
-                </li>
-                <li><a href="#" title="Languages" data-ripple=""><i class="fa fa-globe"></i></a>
-                    <div class="dropdowns languages">
-                        <a href="/?lang=vi" title=""><i class="ti-check"></i>VietNam</a>
-                        <a href="/?lang=en" title="">English</a>
-                    </div>
-                </li>
             </ul>
             <div class="user-img">
                 <img class="avtCurrentUser" th:src="@{/main/images/resources/admin.jpg}" alt="" width="60px"
@@ -120,9 +94,8 @@
                 <span class="status f-online"></span>
                 <div class="user-setting">
                     <a href="#" id="myAdmin" class="d-none"><i class="ti-user"></i> admin</a>
-                    <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
                     <a onclick="messageUrl();" title=""><i class="ti-target"></i>message</a>
-                    <a href="#" title=""><i class="ti-settings"></i>account setting</a>
+                    <a href="#" id="myProfile" title=""><i class="ti-settings"></i>account setting</a>
                     <a onclick="logout();" title=""><i class="ti-power-off"></i>log out</a>
                 </div>
             </div>
@@ -171,10 +144,11 @@
                                 </li>
                                 <li>
                                     <a class="navbarUser navbarUserMessage" th:href="|/message|" title="" data-ripple="">Message</a>
+                                    <a class="navbarUser navbarUserNotifications" th:href="|/notifications|" title="" data-ripple="">Notifications</a>
                                     <a class="navbarUser navbarUserBlog" th:href="|/blog|" title="" data-ripple="">Blogs</a>
                                     <a class="navbarUser navbarUserPhoto" th:href="|/photos|" title="" data-ripple="">Photos</a>
-                                    <a class="navbarUser" th:href="|/friends|" title="" data-ripple="">Friends</a>
-                                    <a class="navbarUser" th:href="|/groups|" title="" data-ripple="">Groups</a>
+                                    <a class="navbarUser navbarUserFriend" th:href="|/friends|" title="" data-ripple="">Friends</a>
+                                    <a class="navbarUser navbarUserGroup" th:href="|/groups|" title="" data-ripple="">Groups</a>
                                 </li>
                             </ul>
                         </div>
