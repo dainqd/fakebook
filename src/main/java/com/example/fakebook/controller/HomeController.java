@@ -43,4 +43,25 @@ public class HomeController {
 
         return "v1/views/photos";
     }
+
+    @GetMapping("groups")
+    public String getGroupByUser(Model model,
+                                 HttpServletRequest request) {
+
+        return "v1/views/group";
+    }
+
+    @GetMapping("friends")
+    public String getFriendByUser(Model model,
+                                 HttpServletRequest request) {
+
+        return "v1/views/friend";
+    }
+
+    @GetMapping("notifications")
+    public String getNotificationsByUser(Model model,
+                                  HttpServletRequest request) {
+
+        return "v1/views/notifications";
+    }
 }

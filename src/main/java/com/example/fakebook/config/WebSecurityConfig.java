@@ -59,7 +59,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/v1/marketing/**",
             "/message/**",
             "/blog/**",
-            "/photos/**"
+            "/photos/**",
+            "/friends/**",
+            "/groups/**",
+            "/notifications/**"
     };
 
     private static final String[] USER_PATHS = {

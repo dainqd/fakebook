@@ -30,7 +30,7 @@ $(document).ready(function () {
 })
 
 async function processCreateComment(id, userBlog) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && !event.shiftKey) {
         await createComment(id, userBlog);
     }
 }

@@ -6,6 +6,8 @@ import com.example.fakebook.utils.Enums;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +36,17 @@ public interface AccountRepository extends JpaRepository<Accounts, Long> {
     Boolean existsByEmail(String email);
 
     List<Accounts> findByIdNotIn(List<Long> listId);
+
+    @Query("SELECT u FROM Accounts u WHERE u.id != :userId AND u.id NOT IN (SELECT f.receiver.id FROM Friendships f WHERE f.sender.id = :userId) AND u.id NOT IN (SELECT f.sender.id FROM Friendships f WHERE f.receiver.id = :userId) AND u.status = 'ACTIVE'")
+    List<Accounts> findNonFriendActiveUsers(@Param("userId") Long userId);
+
+    @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.receiver.id OR u.id = f.sender.id WHERE ((f.receiver.id = :userId AND u.id <> :userId) OR (f.sender.id = :userId AND u.id <> :userId)) AND f.status = 'APPROVED'")
+    List<Accounts> findApprovedFriends(@Param("userId") Long userId);
+
+    @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.receiver.id OR u.id = f.sender.id WHERE (f.receiver.id = :userId OR f.sender.id = :userId) AND f.status = 'PENDING'")
+    List<Accounts> findPendingFriends(@Param("userId") Long userId);
+
+    @Query("SELECT u FROM Accounts u JOIN Friendships f ON u.id = f.sender.id WHERE f.receiver.id = :userId AND f.status = 'PENDING'")
+    List<Accounts> findUsersWithPendingFriendship(@Param("userId") Long userId);
+
 }
