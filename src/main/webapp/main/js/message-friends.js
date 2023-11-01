@@ -1,53 +1,12 @@
 let userID = getCookieValue('userId');
 let tokenUser = getCookieValue('accessToken')
 
-$(document).ready(function () {
-    loadUserFriend();
-    loadUserFollower();
-    loadAllUser();
-})
-
-async function loadUserFriend() {
-    let url = `api/v1/friendships/getFriend/` + userID;
-
-    await $.ajax({
-        url: url,
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ` + `${tokenUser}`
-        },
-    })
-        .done(function (response) {
-            appendListFriend(response);
-        })
-        .fail(function (_, textStatus) {
-            console.log(textStatus)
-        });
-}
-
-async function loadUserFollower() {
-    let url = `api/v1/friendships/getFollower/` + userID;
-
-    await $.ajax({
-        url: url,
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ` + `${tokenUser}`
-        },
-    })
-        .done(function (response) {
-            appendListFollower(response);
-        })
-        .fail(function (_, textStatus) {
-            console.log(textStatus)
-        });
-}
-
-async function appendListFriend(res) {
+async function appendListFriend(response) {
+    let res = JSON.parse(response.body);
     let html = ``;
+    let sup = ``;
     for (let i = 0; i < res.length; i++) {
+        sup = `<sup class="text-danger">new</sup>`;
         let item = res[i];
         let state = null;
         if (item.receiver.id == userID) {
@@ -58,7 +17,7 @@ async function appendListFriend(res) {
             }
             let userItem = JSON.stringify(item.sender);
             userItem = "!!!" + userItem + "!!!";
-            html = html + `<li class="userConnected"  data-id="${item.sender.id}"><figure><img src="${item.sender.avt}" alt="">` +
+            html = html + `<li class="userConnected" onclick="connectedUser(${item.sender.id})" data-id="${item.sender.id}"><figure><img src="${item.sender.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
@@ -73,7 +32,7 @@ async function appendListFriend(res) {
             }
             let userItem = JSON.stringify(item.receiver);
             userItem = "!!!" + userItem + "!!!";
-            html = html + `<li class="userConnected" data-id="${item.receiver.id}"><figure><img src="${item.receiver.avt}" alt="">` +
+            html = html + `<li class="userConnected" onclick="connectedUser(${item.receiver.id})" data-id="${item.receiver.id}"><figure><img src="${item.receiver.avt}" alt="">` +
                 state +
                 `</figure>
                                                     <div class="people-name">
@@ -86,16 +45,17 @@ async function appendListFriend(res) {
     $('#listFriends').empty().append(html);
 }
 
-async function appendListFollower(res) {
+async function appendListFollower(response) {
+    let res = JSON.parse(response.body);
     let html = ``;
     for (let i = 0; i < res.length; i++) {
         let item = res[i];
-        html = html + ` <li><figure><img src="${item.sender.avt}" alt=""></figure>
+        html = html + ` <li><figure><img src="${item.avt}" alt=""></figure>
                                                 <div class="friend-meta">
-                                                    <h4><a href="#" title="">${item.sender.username}</a></h4>
+                                                    <h4><a href="#" title="">${item.username}</a></h4>
                                                     <div class="d-flex">
-                                                    <button onclick="applyFriends(${item.sender.id});" id="btnApplyFriend_${item.sender.id}" class="underline small mr-2" style="background: #0a98dc; color: #FFFFFF">Apply</button>
-                                                    <button onclick="removeFriends(${item.id});" id="btnRemoveFriend_${item.sender.id}" class="underline small" style="background: #cccccc; color: #FFFFFF">Remove</button>
+                                                    <button onclick="applyFriends(${item.id});" id="btnApplyFriend_${item.id}" class="underline small mr-2" style="background: #0a98dc; color: #FFFFFF">Apply</button>
+                                                    <button onclick="removeFriends(${item.id});" id="btnRemoveFriend_${item.id}" class="underline small" style="background: #cccccc; color: #FFFFFF">Remove</button>
                                                 </div>
                                                 </div>
                                             </li>`;
@@ -104,26 +64,8 @@ async function appendListFollower(res) {
     $('#listFollower').empty().append(html);
 }
 
-async function loadAllUser() {
-    let url = `api/v1/user/getUser/` + userID;
-
-    await $.ajax({
-        url: url,
-        method: 'GET',
-        headers: {
-            'content-type': 'application/json',
-            'Authorization': `Bearer ` + `${tokenUser}`
-        },
-    })
-        .done(function (response) {
-            appendListUser(response);
-        })
-        .fail(function (_, textStatus) {
-            console.log(textStatus)
-        });
-}
-
-async function appendListUser(res) {
+async function appendListUser(response) {
+    let res = JSON.parse(response.body);
     let html = ``;
     for (let i = 0; i < res.length; i++) {
         let item = res[i];
@@ -161,9 +103,15 @@ async function addFriends(receiverID) {
     })
         .then(response => {
             if (response.status == 200) {
-                loadAllUser();
-                loadUserFriend();
-                loadUserFollower();
+                if (stompClient) {
+                    stompClient.send(`/app/friend.getList/${userID}`)
+                    stompClient.send(`/app/friend.getAllUser/${userID}`)
+                    stompClient.send(`/app/friend.getAllFriendPending/${userID}`)
+
+                    stompClient.send(`/app/friend.getList/${receiverID}`)
+                    stompClient.send(`/app/friend.getAllUser/${receiverID}`)
+                    stompClient.send(`/app/friend.getAllFriendPending/${receiverID}`)
+                }
             } else {
                 alert("Error! Please try again");
             }
@@ -183,29 +131,20 @@ async function applyFriends(senderID) {
         }
     }
 
-    await fetchUrl(url, formData)
+    await fetchUrl(url, formData, 100)
 }
 
 async function removeFriends(senderID) {
     let url = `api/v1/friendships/unFriends`;
 
-    // let formData = {
-    //     receiver: {
-    //         id: userID
-    //     },
-    //     sender: {
-    //         id: senderID
-    //     }
-    // }
-
     let formData = {
         id: senderID
     }
 
-    await fetchUrl(url, formData)
+    await fetchUrl(url, formData, 0)
 }
 
-async function fetchUrl(url, data) {
+async function fetchUrl(url, data, cal) {
     await fetch(url, {
         method: 'POST',
         headers: {
@@ -217,26 +156,25 @@ async function fetchUrl(url, data) {
     })
         .then(response => {
             if (response.status == 200) {
-                loadUserFriend();
-                loadUserFollower();
+                if (stompClient) {
+                    stompClient.send(`/app/friend.getList/${userID}`)
+                    stompClient.send(`/app/friend.getAllUser/${userID}`)
+                    stompClient.send(`/app/friend.getAllFriendPending/${userID}`)
+
+                    if (cal == 0) {
+                        stompClient.send(`/app/friend.getList/${data.id}`)
+                        stompClient.send(`/app/friend.getAllUser/${data.id}`)
+                        stompClient.send(`/app/friend.getAllFriendPending/${data.id}`)
+                    } else {
+                        stompClient.send(`/app/friend.getList/${data.sender.id}`)
+                        stompClient.send(`/app/friend.getAllUser/${data.sender.id}`)
+                        stompClient.send(`/app/friend.getAllFriendPending/${data.sender.id}`)
+                    }
+                }
+
             } else {
                 alert("Error! Please try again");
             }
         })
         .catch(error => console.log(error));
-}
-
-function renderMessage(user) {
-    let html = ``;
-    let state = ``;
-    let sender = JSON.parse(user);
-    if (sender.state && sender.state == 'ONLINE') {
-        state = `<i>online</i>`
-    } else {
-        state = `<i>offline</i> `
-    }
-    html = ` <figure><img src="${sender.avt}" alt="">
-                                                    </figure>
-                                                    <span>${sender.username} ${state} </span>`;
-    $('#chatUserCurrent').empty().append(html);
 }
