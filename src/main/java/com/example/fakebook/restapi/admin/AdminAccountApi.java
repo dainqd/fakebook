@@ -30,7 +30,7 @@ public class AdminAccountApi {
 
     @GetMapping("")
     public Page<AccountDto> getList(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                                    @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                    @RequestParam(value = "size", required = false, defaultValue = "20") int size,
                                     @RequestParam(value = "status", required = false, defaultValue = "") Enums.AccountStatus status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         if (status != null) {

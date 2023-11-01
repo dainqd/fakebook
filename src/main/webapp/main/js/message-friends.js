@@ -179,7 +179,12 @@ async function removeFriends(senderID) {
     let url = `api/v1/friendships/unFriends`;
 
     let formData = {
-        id: senderID
+        receiver: {
+            id: userID
+        },
+        sender: {
+            id: senderID
+        }
     }
 
     await fetchUrl(url, formData, 0)

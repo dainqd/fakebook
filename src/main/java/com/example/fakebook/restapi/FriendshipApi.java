@@ -52,8 +52,8 @@ public class FriendshipApi {
 //    }
 
     @PostMapping("/unFriends")
-    public String unFriend(@RequestBody Long id) {
-        Optional<Friendships> optionalFriendships = friendShipService.findById(id);
+    public String unFriend(@RequestBody FriendshipDto friendshipDto) {
+        Optional<Friendships> optionalFriendships = friendShipService.findBySenderIdAndReceiverID(friendshipDto);
         if (!optionalFriendships.isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     messageResourceService.getMessage("id.not.found"));
